@@ -1,0 +1,24 @@
+:root {
+  --cr-b1: #000;
+  --cr-b2: #272727;
+  --cr-w1: rgba(255, 255, 255, 1);
+  --cr-w2: rgba(255, 255, 255, 0.6);
+  --cr-w3: rgba(255, 255, 255, 0.5);
+  --cr-g1: #efefef;
+  --cr-g2: #d8d8d8;
+  --cr-br1: #a18a68;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+}
+
+.mw {
+  max-width: 144rem;
+  width: calc(100% - 2.4rem);
+  margin: 0 auto;
+}
