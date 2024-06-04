@@ -1,25 +1,25 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
-    <div className="login">
+    <main className="login">
       <h2>로그인</h2>
-      <div class="login-container">
-        <div class="input-item">
+      <secion>
+        <div className="formGrup">
           <label for="email">이메일</label>
-          <input type="text" id="email" />
+          <input type="email" id="email" />
         </div>
-        <div class="input-item">
+        <div className="formGrup">
           <label for="password">비밀번호</label>
           <input type="password" id="password" />
         </div>
-        <button class="login-btn">로그인</button>
-        <div class="btn-group">
-          <span class="find-id-pw">아이디/비밀번호 찾기</span>
-          <span class="sign-up">회원가입</span>
+        <button className="">로그인</button>
+        <div>
+          <Link to="/">아이디/비밀번호 찾기</Link>
+          <Link to="/">회원가입</Link>
         </div>
-      </div>
-    </div>
+      </secion>
+    </main>
   );
 };
 
