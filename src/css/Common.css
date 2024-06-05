@@ -1,14 +1,6 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 :root {
-  --cr-b1: #000;
-  --cr-b2: #272727;
-  --cr-w1: rgba(255, 255, 255, 1); 
-  --cr-w2: rgba(255, 255, 255, 0.6);
-  --cr-w3: rgba(255, 255, 255, 0.5);
-  --cr-g1: #efefef;
-  --cr-g2: #d8d8d8;
-  --cr-br1: #a18a68;
   --cr-m-y: #ffc548;
   --cr-m-g: #15ca9f;
   --cr-bl1: #121212;
