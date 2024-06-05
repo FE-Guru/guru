@@ -13,6 +13,25 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
+.btn {
+  display: inline-block;
+  font-weight: 800;
+  letter-spacing: -0.025rem;
+  height: 4.2rem;
+  line-height: 4.2rem;
+  border-radius: 0.4rem;
+}
+.btn.primary {
+  border: 2px solid var(--cr-bl1);
+  color: var(--cr-bl1);
+}
+.btn.yellow {
+  background: var(--cr-m-y);
+}
+.btn.green {
+  background: var(--cr-m-g);
+}
+
 html {
   font-size: 62.5%;
 }
