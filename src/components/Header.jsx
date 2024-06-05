@@ -12,7 +12,7 @@ const Header = () => {
 
       <div className={style.gnb}>
         <nav>
-          <Link to="/">일자리찾기</Link>
+          <Link to="/findjob">일자리찾기</Link>
           <Link to="/">지원목록</Link>
           <Link to="/">공고관리</Link>
           <Link to="/">구인글 작성</Link>

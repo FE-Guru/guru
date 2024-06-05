@@ -84,10 +84,11 @@
 }
 
 .mypage {
+  display: none;
+  /* display: flex; */
   position: fixed;
   top: 9.7rem;
   right: 6.8rem;
-  display: flex;
   flex-direction: column;
   border: 1px solid var(--cr-line);
 }

@@ -1,0 +1,129 @@
+.jobItem {
+  width: 100%;
+  display: flex;
+  padding: 3.4rem 4rem;
+  background: var(--cr-w);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: 0.3s;
+}
+.jobItem:hover {
+  transform: translate(-0.4rem, -0.4rem);
+}
+
+.jobInfo {
+  display: flex;
+  gap: 4.6rem;
+  flex: 1;
+  align-items: center;
+}
+.thumb {
+  width: 12.6rem;
+  height: 12.6rem;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid var(--cr-bl1);
+}
+.thumb > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.jobDes {
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(100% - 20rem);
+}
+.jobDes > span {
+  color: #787878;
+  font-size: 1.4rem;
+  height: 3rem;
+  line-height: 3rem;
+  padding: 0 2rem;
+  background: var(--cr-g3);
+  border-radius: 100rem;
+  margin-right: 0.5rem;
+}
+
+.jobDes > h3 {
+  width: 100%;
+  margin: 1.2rem 0 1.4rem 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.jobDes > div {
+  display: flex;
+  align-items: flex-end;
+  font-weight: 800;
+  color: #8f8f8f;
+}
+.jobDes > div strong {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+  color: var(--cr-bl1);
+  padding: 0 0.3rem 0 1rem;
+}
+
+.AppInfo {
+  width: 25rem;
+  border-left: 1px solid var(--cr-line);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.AppInfo > strong {
+  text-align: right;
+  width: 100%;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--cr-blue);
+}
+.AppInfo > div {
+  width: 100%;
+  padding-left: 5rem;
+  display: flex;
+  gap: 1.4rem;
+  flex-direction: column;
+}
+.AppInfo .row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.AppInfo .row span {
+  color: var(--cr-g1);
+  letter-spacing: -0.025em;
+}
+.AppInfo .row p {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--cr-bl1);
+}
+@media (max-width: 1440px) {
+  .jobDes > h3 {
+    font-size: 2.4rem;
+  }
+  .jobInfo {
+    gap: 2.6rem;
+  }
+
+  .AppInfo {
+    width: 22rem;
+  }
+  .AppInfo > div {
+    padding-left: 2.5rem;
+  }
+  .jobDes {
+    width: calc(100% - 17rem);
+  }
+}

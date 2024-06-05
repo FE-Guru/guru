@@ -6,9 +6,14 @@
   --cr-bl1: #121212;
   --cr-g1: #8f8f8f;
   --cr-g2: #6f6f6f;
+  --cr-g3: #e1e3e9;
+  --cr-w: #fff;
   --cr-blue: #2c7cf2;
   --cr-red: #fa4d4d;
   --cr-line: #ddd;
+  --lg-gap: 6.8rem;
+  --md-gap: 2.8rem;
+  --sm-gap: 1.8rem;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
@@ -40,8 +45,47 @@ body {
   font-size: 1.6rem;
 }
 
+h2 {
+  font-weight: 800;
+  font-size: 3.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+h3 {
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+h4 {
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+
 .mw {
   max-width: 144rem;
   width: calc(100% - 2.4rem);
   margin: 0 auto;
+}
+
+@media (max-width: 1576px) {
+  .mw {
+    max-width: 100%;
+    width: calc(100% - var(--lg-gap) * 2);
+    margin: 0 auto;
+  }
+}
+@media (max-width: 1240px) {
+  .mw {
+    width: calc(100% - var(--md-gap) * 2);
+    margin: 0 auto;
+  }
+}
+@media (max-width: 640px) {
+  .mw {
+    width: calc(100% - var(--sm-gap) * 2);
+    margin: 0 auto;
+  }
 }

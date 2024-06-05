@@ -1,0 +1,153 @@
+/*topCon*/
+.topSection {
+  width: 100%;
+  padding: 4.2rem 0;
+  border-top: 3px solid var(--cr-bl1);
+  border-bottom: 3px solid var(--cr-bl1);
+  transition: 0.3s;
+  position: relative;
+}
+.onLine .topSection {
+  background: var(--cr-m-y);
+}
+.offLine .topSection {
+  background: var(--cr-m-g);
+}
+.topSection > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topSection h2 > span {
+  display: block;
+  font-size: 2.8rem;
+  opacity: 0.4;
+  line-height: 128%;
+}
+.topSection .tab {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid var(--cr-bl1);
+  background: var(--cr-w);
+  padding: 0.8rem 1.3rem;
+  border-radius: 100rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.topSection .tab button {
+  font-size: 1.8rem;
+  font-weight: 800;
+  height: 4.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  padding: 0 3.8rem;
+  border-radius: 100rem;
+  transition: background 0.8s;
+}
+.topSection .tab button.on {
+  border: 3px solid var(--cr-bl1);
+  color: var(--cr-bl1);
+}
+.onLine .topSection .tab button.on {
+  background: var(--cr-m-y);
+}
+.offLine .topSection .tab button.on {
+  background: var(--cr-m-g);
+}
+.topSection form label {
+  display: flex;
+  height: 5.9rem;
+  padding: 0 2.9rem;
+  border: 3px solid var(--cr-bl1);
+  background: var(--cr-w);
+  max-width: 35.6rem;
+  width: 100%;
+  border-radius: 100rem;
+}
+.topSection form label input {
+  border: 0;
+  font-weight: 600;
+}
+.topSection form label input::placeholder {
+  color: var(--cr-g1);
+  font-weight: 400;
+}
+.topSection form label button::after {
+  content: "\f002";
+  font: var(--fa-font-solid);
+  font-size: 1.8rem;
+  text-shadow: 1px 0 0 var(--cr-bl1);
+}
+
+.midSection {
+  margin: 7.3rem auto 8rem;
+  display: flex;
+  gap: 0 4.6rem;
+}
+
+/*filter*/
+.filter {
+  width: 24rem;
+}
+.filter > div > strong {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 3rem;
+  position: relative;
+  padding-left: 1rem;
+}
+.filter > div > strong::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 4px;
+  background: var(--cr-bl1);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/*Right Con*/
+.midSection .contents {
+  flex: 1;
+}
+.midSection .contents .conTitle {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+}
+.midSection .contents ul {
+  border: 3px solid var(--cr-bl1);
+  border-radius: 1rem;
+  padding: 4rem;
+}
+.onLine .contents ul {
+  background: #faf3e5;
+}
+.offLine .contents ul {
+  background: #e5f1ee;
+}
+.JobList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.JobList li > div {
+  box-shadow: 2px 3px 3px 0 rgba(0, 0, 0, 0.08);
+}
+.mapApiArea > div {
+  width: 100%;
+  padding-bottom: 28%;
+  background: #fff;
+}
+
+@media (max-width: 990px) {
+  .midSection {
+    flex-direction: column;
+  }
+}
