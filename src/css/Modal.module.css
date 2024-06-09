@@ -39,7 +39,8 @@
   color: var(--cr-bl1);
 }
 
-.terms {
+.terms,
+.alert {
   font-size: 14px;
   line-height: 1.78;
   letter-spacing: -0.25px;

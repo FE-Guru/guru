@@ -5,6 +5,11 @@ import style from "../css/Modal.module.css";
 
 const Signup = () => {
   const [modal, setModal] = useState(null);
+
+  const [svcAgree, setSvcAgree] = useState(false);
+  const [priAgree, setPriAgree] = useState(false);
+  const [mktAgree, setMktAgree] = useState(false);
+
   const [emailID, setEmailID] = useState("");
   const [password, setPassWord] = useState("");
   const [pwConfirm, setPwConfirm] = useState("");
@@ -32,6 +37,7 @@ const Signup = () => {
       },
     });
     console.log("response---", response);
+
     if (response.status === 200) {
       window.location.href = "/login";
     } else {
@@ -47,6 +53,23 @@ const Signup = () => {
     setModal(null);
   };
 
+  const cancelBtn = () => {
+    window.location.href = "/";
+  };
+
+  //false
+  const chkRequired = () => {
+    return svcAgree && priAgree;
+  };
+
+  const handleSubmit = (e) => {
+    if (!chkRequired()) {
+      //true
+      e.preventDefault();
+      setModal("required");
+    }
+  };
+
   return (
     <main className='signup mw'>
       <h2>회원가입</h2>
@@ -57,19 +80,36 @@ const Signup = () => {
           모든 약관을 확인하고 전체동의에 체크합니다.
         </label>
         <label htmlFor='service'>
-          <input type='checkbox' id='service' required />
+          <input
+            type='checkbox'
+            id='service'
+            checked={svcAgree}
+            onChange={() => setSvcAgree(!svcAgree)}
+            required
+          />
           서비스이용약관에 동의합니다.
           <span>(필수)</span>
           <span onClick={() => showPopup("content1")}>[전문보기]</span>
         </label>
         <label htmlFor='privacy'>
-          <input type='checkbox' id='privacy' required />
+          <input
+            type='checkbox'
+            id='privacy'
+            checked={priAgree}
+            onChange={() => setPriAgree(!priAgree)}
+            required
+          />
           개인정보취급방침에 동의합니다.
           <span>(필수)</span>
           <span onClick={() => showPopup("content2")}>[전문보기]</span>
         </label>
         <label htmlFor='marketing'>
-          <input type='checkbox' id='marketing' />
+          <input
+            type='checkbox'
+            id='marketing'
+            checked={mktAgree}
+            onChange={() => setMktAgree(!mktAgree)}
+          />
           마케팅 활용에 동의합니다.
           <span>(선택)</span>
           <span onClick={() => showPopup("content3")}>[전문보기]</span>
@@ -213,6 +253,12 @@ const Signup = () => {
             </pre>
           </div>
         )}
+        {modal === "required" && (
+          <div className={style.alert}>
+            <h3>GURU</h3>
+            <p>필수사항을 모두 선택해주세요!</p>
+          </div>
+        )}
       </Modal>
       <form className='signupCon' onSubmit={signup}>
         <div className='signupForm'>
@@ -303,10 +349,15 @@ const Signup = () => {
           </label>
         </div>
         <div className='submitBtn'>
-          <button type='button' className='cancelBtn'>
+          <button type='button' className='cancelBtn' onClick={cancelBtn}>
             취소
           </button>
-          <button type='submit' className='loginBtn'>
+          <button
+            type='submit'
+            className='signupBtn'
+            onClick={handleSubmit}
+            disabled={chkRequired()}
+          >
             회원가입
           </button>
         </div>
