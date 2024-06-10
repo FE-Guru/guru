@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { setCateType } from "../store/findjob";
 import { useDispatch, useSelector } from "react-redux";
-
+import { setCateType } from "../store/findjob";
 import JobItem from "../components/JobItem";
 import Filter from "../components/Filter";
 import "../css/Findjob.css";
@@ -24,7 +23,7 @@ const Findjob = () => {
 
   return (
     <main className={`${cateType} findjob`}>
-      <section className={`topSection`}>
+      <section className="topSection">
         <div className="mw">
           <h2>
             일자리 찾기

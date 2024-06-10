@@ -25,6 +25,7 @@
   height: 4.2rem;
   line-height: 4.2rem;
   border-radius: 0.4rem;
+  transition: 0.4s;
 }
 .btn.primary {
   border: 2px solid var(--cr-bl1);
@@ -35,6 +36,12 @@
 }
 .btn.green {
   background: var(--cr-m-g);
+}
+.btn:hover,
+.btn.yellow:hover,
+.btn.green:hover {
+  background: var(--cr-bl1);
+  color: var(--cr-w);
 }
 
 html {
@@ -70,6 +77,45 @@ h4 {
   margin: 0 auto;
 }
 
+.subPage {
+  width: 100%;
+  padding: 6.8rem 0 8rem 0;
+}
+.subPage > section {
+  display: flex;
+  gap: 4.6rem;
+}
+.subPage .contents {
+  flex-wrap: wrap;
+  display: flex;
+  gap: 1.6rem;
+  flex: 1;
+}
+.subPage .contents > h3 {
+  width: 100%;
+  padding: 0.6rem 0 0 0;
+}
+.subPage .contents > div {
+  border: 3px solid var(--cr-bl1);
+  padding: 3.4rem 3.6rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+}
+.subPage .contents .full {
+  flex: 1;
+}
+.btnWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btnWrap .btn {
+  width: 15.8rem;
+  height: 4.6rem;
+  line-height: 4.6rem;
+}
 @media (max-width: 1576px) {
   .mw {
     max-width: 100%;
