@@ -61,11 +61,12 @@
 }
 
 .modalBtn {
-  width: 35%;
-  padding: 18px 28px;
+  width: 100%;
   display: flex;
-  flex-direction: row;
-  align-self: center;
   justify-content: center;
   align-items: center;
+  border: 1px solid red;
+}
+.modalBtn > .modalInnerBtn {
+  width: 35%;
 }

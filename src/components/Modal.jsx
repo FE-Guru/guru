@@ -13,12 +13,11 @@ const Modal = ({ show, onClose, children }) => {
           &times;
         </button>
         {children}
-        <button
-          className={`btn primary yellow ${style.modalBtn}`}
-          onClick={onClose}
-        >
-          확인
-        </button>
+        <div className={style.modalBtn}>
+          <button className={`btn primary yellow ${style.modalInnerBtn}`} onClick={onClose}>
+            확인
+          </button>
+        </div>
       </div>
     </div>
   );
