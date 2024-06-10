@@ -1,7 +1,7 @@
 .formStyle {
   width: 100%;
 }
-.formStyle > div:first-of-type {
+.formStyle > div.formContainer {
   border: 3px solid var(--cr-bl1);
   padding: 3.4rem 3.6rem;
   margin-bottom: 1.5rem;
@@ -24,6 +24,37 @@
 .formStyle input::placeholder {
   font-weight: 400;
   color: var(--cr-g1);
+}
+
+.selectWrap {
+  display: flex;
+  align-items: center;
+}
+.selectWrap > span {
+  width: 4rem;
+  display: flex;
+  justify-content: center;
+}
+.formStyle .select > div {
+  border: 0;
+  border-bottom: 1px solid var(--cr-line);
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+}
+.formStyle .select > div > div:first-of-type,
+.formStyle .select > div > div:last-of-type {
+  padding: 0;
+  margin: 0;
+}
+.formStyle .select > div > div:first-of-type > div:first-of-type {
+  min-width: 10rem;
+}
+.formStyle .select > div > div:last-of-type > span {
+  display: none;
+}
+.formStyle .select > div > div:last-of-type > div {
+  padding-right: 0;
 }
 
 .formGrup {
@@ -67,6 +98,7 @@
   height: 4.2rem;
   line-height: 4.2rem;
   background: var(--cr-m-g);
+  color: var(--cr-w);
 }
 .formGrup.address > div > div {
   border-bottom: 1px solid #ccc;
@@ -74,4 +106,9 @@
   line-height: 4.2rem;
   color: var(--cr-bl1);
   font-weight: 700;
+}
+
+.addressModal > div {
+  padding-top: 2rem;
+  min-height: 40vh;
 }
