@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCateType } from "../store/findjob";
 import JobItem from "../components/JobItem";
 import Filter from "../components/Filter";
+import Map from "./Map";
 import "../css/Findjob.css";
 
 const Findjob = () => {
@@ -55,7 +56,7 @@ const Findjob = () => {
           <ul className="JobList">
             {cateType === "offLine" ? (
               <li className="mapApiArea">
-                <div>map</div>
+                <Map/>
               </li>
             ) : null}
             <li>
