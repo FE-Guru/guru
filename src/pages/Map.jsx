@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import styles from '../css/Map.module.css';
+
 const { kakao } = window;
 
-// 마커 데이터
+// 초기 위치 데이터 설정
 const initialLocationData = [
   {
     locationNum: [37.530344, 126.964869],
@@ -28,78 +30,83 @@ const initialLocationData = [
 
 const Map = () => {
   const [locationData, setLocationData] = useState(initialLocationData);
-  let openInfowindow = null;
+  let openOverlay = null;
 
   useEffect(() => {
-    // 지도 컨테이너를 설정하고 지도를 생성합니다.
-    var container = document.getElementById('map');
-    var options = {
+    const container = document.getElementById('map');
+    const options = {
       center: new kakao.maps.LatLng(37.530344, 126.964869),
       level: 3,
     };
-    var map = new kakao.maps.Map(container, options);
+    const map = new kakao.maps.Map(container, options);
 
-    // 클러스터러를 생성합니다.
-    var clusterer = new kakao.maps.MarkerClusterer({
-      map: map, // 클러스터러가 적용될 지도 객체
-      averageCenter: true, // 클러스터의 중심을 평균 좌표로 설정
-      minLevel: 6, // 클러스터가 생성될 최소 지도 레벨
+    const clusterer = new kakao.maps.MarkerClusterer({
+      map: map,
+      averageCenter: true,
+      minLevel: 6,
     });
 
-    // 마커 배열을 초기화합니다.
     const markers = [];
 
     for (let i = 0; i < locationData.length; i++) {
-      // 마커가 표시될 위치를 설정합니다.
-      var markerPosition = new kakao.maps.LatLng(
+      const markerPosition = new kakao.maps.LatLng(
         locationData[i].locationNum[0],
         locationData[i].locationNum[1]
       );
-      var marker = new kakao.maps.Marker({
+
+      // 마커 생성
+      const marker = new kakao.maps.Marker({
         position: markerPosition,
       });
       marker.setMap(map);
 
-      // 인포윈도우 내용을 생성합니다.
-      var infowindow = new kakao.maps.InfoWindow({
-        position: markerPosition,
-        content: `
-          <div>
-            <a href="${locationData[i].link}" target="_blank">
-              <span>${locationData[i].title}</span><br>
-              <span>${locationData[i].locationName}</span>
-            </a>
+      // 커스텀 오버레이에 표시할 컨텐츠
+      const content = document.createElement('div');
+      content.className = styles.wrap;
+      content.innerHTML = `
+        <div class="${styles.info}">
+          <div class="${styles.title}">
+            ${locationData[i].title}
+            <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>          
           </div>
-        `,
+          <div class="${styles.body}">
+            <div class="${styles.img}">
+              <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70">
+            </div>
+            <div class="${styles.desc}">
+              <div class="${styles.ellipsis}">${locationData[i].locationName}</div>
+              <div class="${styles.jibun}">용산역</div>
+              <div><a href="${locationData[i].link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 닫기 버튼에 이벤트 리스너 추가
+      const closeBtn = content.querySelector(`.${styles.close}`);
+      closeBtn.onclick = () => overlay.setMap(null);
+
+      // 커스텀 오버레이 생성
+      const overlay = new kakao.maps.CustomOverlay({
+        content: content,
+        position: marker.getPosition(),
       });
 
-      // 마커에 클릭 이벤트를 등록합니다.
-      kakao.maps.event.addListener(
-        marker,
-        'click',
-        makeClickListener(map, marker, infowindow)
-      );
+      overlay.setMap(null); // 초기에는 오버레이를 표시하지 않음
 
-      // 마커 배열에 마커를 추가합니다.
+      // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+      kakao.maps.event.addListener(marker, 'click', function () {
+        if (openOverlay) {
+          openOverlay.setMap(null);
+        }
+        overlay.setMap(map);
+        openOverlay = overlay;
+      });
+
       markers.push(marker);
     }
 
-    // 클러스터러에 마커들을 추가합니다.
     clusterer.addMarkers(markers);
-
-    // 클릭 리스너를 생성하는 함수입니다.
-    function makeClickListener(map, marker, infowindow) {
-      return function () {
-        // 열린 인포윈도우가 있으면 닫습니다.
-        if (openInfowindow) {
-          openInfowindow.close();
-        }
-        // 새로운 인포윈도우를 엽니다.
-        infowindow.open(map, marker);
-        // 현재 열린 인포윈도우를 갱신합니다.
-        openInfowindow = infowindow;
-      };
-    }
   }, [locationData]);
 
   return (
