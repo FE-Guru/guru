@@ -65,8 +65,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
 }
+
 .modalBtn > .modalInnerBtn {
   width: 35%;
 }
