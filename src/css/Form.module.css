@@ -1,0 +1,114 @@
+.formStyle {
+  width: 100%;
+}
+.formStyle > div.formContainer {
+  border: 3px solid var(--cr-bl1);
+  padding: 3.4rem 3.6rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.formStyle input,
+.formStyle select {
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  height: 4.2rem;
+  line-height: 4.2rem;
+  color: var(--cr-bl1);
+  font-weight: 700;
+}
+.formStyle input::placeholder {
+  font-weight: 400;
+  color: var(--cr-g1);
+}
+
+.selectWrap {
+  display: flex;
+  align-items: center;
+}
+.selectWrap > span {
+  width: 4rem;
+  display: flex;
+  justify-content: center;
+}
+.formStyle .select > div {
+  border: 0;
+  border-bottom: 1px solid var(--cr-line);
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+}
+.formStyle .select > div > div:first-of-type,
+.formStyle .select > div > div:last-of-type {
+  padding: 0;
+  margin: 0;
+}
+.formStyle .select > div > div:first-of-type > div:first-of-type {
+  min-width: 10rem;
+}
+.formStyle .select > div > div:last-of-type > span {
+  display: none;
+}
+.formStyle .select > div > div:last-of-type > div {
+  padding-right: 0;
+}
+
+.formGrup {
+  display: flex;
+  max-width: 50rem;
+}
+.formGrup > span:first-of-type {
+  color: var(--cr-g1);
+  height: 4.2rem;
+  width: 13rem;
+  padding-top: 1.2rem;
+}
+.formGrup > .row {
+  display: flex;
+  flex: 1;
+}
+
+.formGrup.formLabels label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 1.6rem;
+  cursor: pointer;
+}
+.formGrup.formLabels span {
+  font-weight: 500;
+}
+
+.formGrup.address > div.flexWrap {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 37rem;
+  gap: 1.5rem 0.6rem;
+}
+.formGrup.address > div.flexWrap > div.zonecode {
+  width: calc(100% - 11rem);
+}
+.formGrup.address > div.flexWrap > .addressBtn {
+  width: 10rem;
+  height: 4.2rem;
+  line-height: 4.2rem;
+  background: var(--cr-m-g);
+  color: var(--cr-w);
+}
+.formGrup.address > div > div {
+  border-bottom: 1px solid #ccc;
+  height: 4.2rem;
+  line-height: 4.2rem;
+  color: var(--cr-bl1);
+  font-weight: 700;
+}
+
+.addressModal > div {
+  padding-top: 2rem;
+  min-height: 40vh;
+}

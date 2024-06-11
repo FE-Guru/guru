@@ -6,11 +6,48 @@
   --cr-bl1: #121212;
   --cr-g1: #8f8f8f;
   --cr-g2: #6f6f6f;
+  --cr-g3: #e1e3e9;
+  --cr-w: #fff;
   --cr-blue: #2c7cf2;
   --cr-red: #fa4d4d;
   --cr-line: #ddd;
+  --lg-gap: 6.8rem;
+  --md-gap: 2.8rem;
+  --sm-gap: 1.8rem;
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+.btn {
+  display: inline-block;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: -0.025rem;
+  height: 4.3rem;
+  line-height: 4rem;
+  border-radius: 0.4rem;
+  transition: 0.4s;
+}
+.btn.primary {
+  border: 3px solid var(--cr-bl1);
+  color: var(--cr-bl1);
+}
+.btn.tertiary {
+  border: 3px solid var(--cr-line);
+  color: #787878;
+  background: var(--cr-g3);
+}
+.btn.yellow {
+  background: var(--cr-m-y);
+}
+.btn.green {
+  background: var(--cr-m-g);
+}
+.btn:hover,
+.btn.yellow:hover,
+.btn.green:hover {
+  background: var(--cr-bl1);
+  color: var(--cr-w);
 }
 
 html {
@@ -21,8 +58,139 @@ body {
   font-size: 1.6rem;
 }
 
+h2 {
+  font-weight: 800;
+  font-size: 3.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+h3 {
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+h4 {
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 127%;
+  color: var(--cr-bl1);
+}
+
 .mw {
   max-width: 144rem;
   width: calc(100% - 2.4rem);
   margin: 0 auto;
+}
+
+.subPage {
+  width: 100%;
+  padding: 6.8rem 0 8rem 0;
+}
+.subPage > section {
+  display: flex;
+  gap: 4.6rem;
+}
+.subPage .contents {
+  flex-wrap: wrap;
+  display: flex;
+  gap: 1.6rem;
+  flex: 1;
+}
+.subPage .contents > h3 {
+  width: 100%;
+  padding: 0.6rem 0 0 0;
+}
+.subPage .contents > div {
+  border: 3px solid var(--cr-bl1);
+  padding: 3.4rem 3.6rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+}
+.subPage .contents .full {
+  flex: 1;
+}
+.btnWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btnWrap .btn {
+  width: 15.8rem;
+  height: 4.8rem;
+  line-height: 4.6rem;
+}
+
+.fullLayout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  min-height: calc(100vh - 9.7rem - 13.2rem);
+}
+
+.fullLayout h2 {
+  text-align: center;
+  padding: 4rem 0 1.5rem 0;
+}
+.fullLayout h2 > span {
+  display: block;
+  font-size: 2.2rem;
+  color: var(--cr-g1);
+  font-weight: 500;
+}
+.fullLayout .boxCon {
+  border: 3px solid var(--cr-bl1);
+  min-width: 47.5rem;
+  padding: 3rem;
+  border-radius: 1rem;
+}
+.textList {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.7rem;
+  gap: 1.8rem;
+  color: var(--cr-bl1);
+}
+.textList p > span {
+  color: var(--cr-g1);
+  min-width: 9.3rem;
+  display: inline-block;
+}
+.textList p > strong {
+  font-weight: 800;
+}
+
+@media (max-width: 1576px) {
+  .mw {
+    max-width: 100%;
+    width: calc(100% - var(--lg-gap) * 2);
+    margin: 0 auto;
+  }
+}
+@media (max-width: 1240px) {
+  .mw {
+    width: calc(100% - var(--md-gap) * 2);
+    margin: 0 auto;
+  }
+}
+@media (max-width: 640px) {
+  .mw {
+    width: calc(100% - var(--sm-gap) * 2);
+    margin: 0 auto;
+  }
+  .btnWrap {
+    width: calc(100% - var(--sm-gap) * 2);
+  }
+  .btnWrap .btn {
+    width: auto;
+    flex: 1;
+  }
+  .fullLayout .boxCon {
+    width: calc(100% - var(--sm-gap) * 2);
+    min-width: auto;
+  }
 }

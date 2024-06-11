@@ -1,7 +1,7 @@
 const Main = () => {
   return (
     <div>
-      <h2>안녕 채린이야~</h2>
+      <h2>메인 리스트~</h2>
     </div>
   );
 };

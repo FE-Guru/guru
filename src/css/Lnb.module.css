@@ -1,0 +1,10 @@
+.lnb {
+  width: 24rem;
+}
+
+.lnb h2 > span {
+  display: block;
+  font-size: 2.8rem;
+  opacity: 0.4;
+  line-height: 128%;
+}
