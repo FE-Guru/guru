@@ -3,7 +3,7 @@ import styles from '../css/Map.module.css';
 
 const initialLocationData = [
   {
-    locationNum: [37.530344, 126.964869],
+    locationNum: [0, 0],
     title: '일거리1',
     locationName: '용산역',
     address: '서울특별시 용산구 한강대로23길 55',
@@ -11,7 +11,7 @@ const initialLocationData = [
     price: 12000,
   },
   {
-    locationNum: [37.529066239273085, 126.96789994653186],
+    locationNum: [0, 0],
     title: '일거리2',
     locationName: '신용산역',
     address: '서울 용산구 한강대로 지하 112',
@@ -19,7 +19,7 @@ const initialLocationData = [
     price: 12000,
   },
   {
-    locationNum: [37.52814944885297, 126.96591108854732],
+    locationNum: [0, 0],
     title: '일거리3',
     locationName: '용산역 앞 잔디 광장',
     address: '서울 용산구 한강로2가 421',
@@ -27,6 +27,35 @@ const initialLocationData = [
     price: 12000,
   },
 ];
+
+// initialLocationData.address를 위도 경도로 변환하여 initialLocationData.locationNum에 저장하는 함수
+async function changeLocationNum(locationData) {
+  if (!window.kakao || !window.kakao.maps) {
+    console.error('Kakao maps SDK not loaded');
+    return locationData;
+  }
+
+  const geocoder = new window.kakao.maps.services.Geocoder();
+
+  const promises = locationData.map(
+    (location) =>
+      new Promise((resolve, reject) => {
+        geocoder.addressSearch(location.address, (result, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            location.locationNum = [result[0].y, result[0].x];
+            resolve(location);
+          } else {
+            console.error(
+              `Geocode error for address ${location.address}: ${status}`
+            );
+            resolve(location);
+          }
+        });
+      })
+  );
+
+  return Promise.all(promises);
+}
 
 // 현재 사용자 위치 계산
 function getDistance(lat1, lon1, lat2, lon2, unit) {
@@ -59,7 +88,47 @@ function getDistance(lat1, lon1, lat2, lon2, unit) {
 const Map = () => {
   const [locationData, setLocationData] = useState(initialLocationData);
   const [center, setCenter] = useState(null); // 지도 중심 좌표 상태 추가
+  const [locationsUpdated, setLocationsUpdated] = useState(false); // 위치 데이터가 업데이트 되었는지 여부를 나타내는 상태 추가
   let openOverlay = null;
+
+  // 내 현재 위치 받아오기
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        setCenter({ latitude, longitude }); // 현재 위치를 지도 중심으로 설정
+
+        if (!locationsUpdated) {
+          const updatedLocationData = await changeLocationNum(locationData);
+
+          const locationDataWithDistance = updatedLocationData.map((location) => {
+            const distance = getDistance(
+              latitude,
+              longitude,
+              location.locationNum[0],
+              location.locationNum[1]
+            );
+            return {
+              ...location,
+              distance,
+            };
+          });
+
+          const sortedLocationData = locationDataWithDistance.sort(
+            (a, b) => a.distance - b.distance
+          );
+
+          setLocationData(sortedLocationData);
+          setLocationsUpdated(true); // 위치 데이터가 업데이트 되었음을 표시
+        }
+      },
+      (err) => {
+        console.error('Geolocation error:', err);
+      }
+    );
+  }, [locationsUpdated, locationData]);
 
   // 지도 연결
   useEffect(() => {
@@ -67,7 +136,7 @@ const Map = () => {
       // center가 설정된 후에만 지도 초기화
       const script = document.createElement('script');
       script.src =
-        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&libraries=clusterer';
+        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&libraries=services,clusterer';
       script.async = true;
       script.onload = () => {
         if (!window.kakao || !window.kakao.maps) {
@@ -78,10 +147,7 @@ const Map = () => {
         const container = document.getElementById('map');
         const options = {
           // 지도 첫 화면의 위도 경도
-          center: new window.kakao.maps.LatLng(
-            center.latitude,
-            center.longitude
-          ),
+          center: new window.kakao.maps.LatLng(center.latitude, center.longitude),
           level: 3,
         };
         const map = new window.kakao.maps.Map(container, options);
@@ -153,45 +219,6 @@ const Map = () => {
       document.head.appendChild(script);
     }
   }, [center, locationData]);
-
-  // 내 현재 위치 받아오기
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        console.log('latitude :', latitude);
-        console.log('longitude :', longitude);
-
-        setCenter({ latitude, longitude }); // 현재 위치를 지도 중심으로 설정
-
-        const updatedLocationData = locationData.map((location) => {
-          const distance = getDistance(
-            latitude,
-            longitude,
-            location.locationNum[0],
-            location.locationNum[1]
-          );
-          return {
-            ...location,
-            distance,
-          };
-        });
-
-        const sortedLocationData = updatedLocationData.sort(
-          (a, b) => a.distance - b.distance
-        );
-
-        setLocationData(sortedLocationData);
-
-        console.log('새로운 배열 -> ', sortedLocationData);
-      },
-      (err) => {
-        console.error('Geolocation error:', err);
-      }
-    );
-  }, []);
 
   return (
     <div>
