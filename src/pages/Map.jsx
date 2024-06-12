@@ -77,7 +77,7 @@ const Map = () => {
       // center가 설정된 후에만 지도 초기화
       const script = document.createElement('script');
       script.src =
-        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&libraries=clusterer';
+        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5=clusterer';
       script.async = true;
       script.onload = () => {
         if (!window.kakao || !window.kakao.maps) {
