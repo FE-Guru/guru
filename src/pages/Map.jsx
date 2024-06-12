@@ -3,7 +3,7 @@ import styles from '../css/Map.module.css';
 
 const initialLocationData = [
   {
-    locationNum:  [37.530344, 126.964869],
+    locationNum: [37.530344, 126.964869],
     title: '일거리1',
     locationName: '용산역',
     address: '서울특별시 용산구 한강대로23길 55',
@@ -11,7 +11,7 @@ const initialLocationData = [
     price: 12000,
   },
   {
-    locationNum:  [37.529066239273085, 126.96789994653186],
+    locationNum: [37.529066239273085, 126.96789994653186],
     title: '일거리2',
     locationName: '신용산역',
     address: '서울 용산구 한강대로 지하 112',
@@ -27,16 +27,6 @@ const initialLocationData = [
     price: 12000,
   },
 ];
-
-// initialLocationData.address 를 위도 경도로 initialLocationData.locationNum 으로 넣는 함수
-function changeLocationNum(params) {
-
-  
-}
-
-
-
-
 
 // 현재 사용자 위치 계산
 function getDistance(lat1, lon1, lat2, lon2, unit) {
@@ -77,7 +67,7 @@ const Map = () => {
       // center가 설정된 후에만 지도 초기화
       const script = document.createElement('script');
       script.src =
-        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5=clusterer';
+        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&libraries=clusterer';
       script.async = true;
       script.onload = () => {
         if (!window.kakao || !window.kakao.maps) {
@@ -170,6 +160,9 @@ const Map = () => {
       (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
+
+        console.log('latitude :', latitude);
+        console.log('longitude :', longitude);
 
         setCenter({ latitude, longitude }); // 현재 위치를 지도 중심으로 설정
 
