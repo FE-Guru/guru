@@ -110,6 +110,17 @@ h4 {
 .subPage .contents .full {
   flex: 1;
 }
+.subPage .h3Coment {
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--cr-g1);
+}
+.subPage .h3Coment.noti {
+  color: var(--cr-red);
+}
+
 .btnWrap {
   width: 100%;
   display: flex;
@@ -164,23 +175,106 @@ h4 {
   font-weight: 800;
 }
 
+/*date Picker*/
+.react-datepicker {
+  font-size: 1.6rem;
+  border: 3px solid var(--cr-bl1);
+  border-radius: 0.4rem;
+}
+.react-datepicker__header {
+  font-size: 1.6rem;
+  background: var(--cr-m-y);
+}
+.react-datepicker__current-month {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+.react-datepicker__day-names,
+.react-datepicker__week {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  padding: 0.5rem;
+}
+.react-datepicker__day-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  opacity: 0.9;
+  margin: 0.5rem;
+}
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.7rem;
+  height: 3.7rem;
+  line-height: 0;
+  margin: 0;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.react-datepicker__day--today {
+  background: #bad9f1;
+}
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  background: var(--cr-m-y);
+  color: var(--cr-w);
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+  background: var(--cr-m-y);
+  color: var(--cr-bl1);
+  font-weight: 600;
+}
+.react-datepicker__navigation {
+  top: 0.6rem;
+}
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow,
+.react-datepicker__navigation-icon::before {
+  border-color: var(--cr-bl1);
+  opacity: 0.5;
+}
+.react-datepicker__navigation:hover *::before {
+  border-color: var(--cr-bl1);
+  opacity: 1;
+}
+
 @media (max-width: 1576px) {
+  .App {
+    overflow: hidden;
+  }
   .mw {
     max-width: 100%;
     width: calc(100% - var(--lg-gap) * 2);
-    margin: 0 auto;
   }
 }
 @media (max-width: 1240px) {
   .mw {
     width: calc(100% - var(--md-gap) * 2);
-    margin: 0 auto;
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 990px) {
   .mw {
     width: calc(100% - var(--sm-gap) * 2);
-    margin: 0 auto;
+    flex-wrap: wrap;
   }
   .btnWrap {
     width: calc(100% - var(--sm-gap) * 2);
@@ -192,5 +286,37 @@ h4 {
   .fullLayout .boxCon {
     width: calc(100% - var(--sm-gap) * 2);
     min-width: auto;
+  }
+  .subPage {
+    flex-wrap: wrap;
+    padding: 4rem 0;
+  }
+  .subPage > section {
+    gap: 2rem;
+  }
+  .subPage .contents > h3 {
+    padding-top: 3.4rem;
+  }
+  .btnWrap {
+    width: 100%;
+    display: flex;
+  }
+  .btnWrap .btn {
+    width: auto;
+    flex: 1;
+  }
+  .btnWrap .btn,
+  .btn {
+    font-size: 1.8rem;
+    height: auto;
+    line-height: 100%;
+    padding: 1.8rem 0;
+    border-radius: 0.4rem;
+  }
+}
+@media (max-width: 370px) {
+  .btnWrap .btn,
+  .btn {
+    border-width: 2px;
   }
 }
