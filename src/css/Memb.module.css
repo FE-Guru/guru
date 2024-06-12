@@ -1,17 +1,9 @@
-.links {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 400;
-  color: var(--cr-g1);
-  margin-top: 20px;
-}
-
 .greenBtn {
   width: 10rem;
   height: 4.2rem;
   line-height: 4.2rem;
   background: var(--cr-m-g);
-  color: white;
+  color: var(--cr-w);
 }
 
 .yellowBtn {
@@ -21,4 +13,102 @@
   align-items: center;
   font-weight: normal;
   background: var(--cr-m-y);
+}
+
+.btnWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.btnWrap > button {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boxCon {
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginCon {
+  width: 100%;
+  padding: 10px;
+}
+
+.email,
+.password {
+  color: var(--cr-g1);
+  font-weight: 600;
+  border: 1px solid red;
+}
+
+.label1::before {
+  content: url("/public/img/common/email.png");
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: 1.6rem;
+  top: 1.6rem;
+}
+
+.label2::before {
+  content: url("/public/img/common/pw.svg");
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: 1.6rem;
+  top: 1.6rem;
+}
+
+.loginLabel {
+  display: flex;
+  position: relative;
+  margin-top: 10px;
+}
+
+.loginLabel .memInput {
+  border: 0;
+  width: 100%;
+  height: 45px;
+  /* box-sizing: border-box; */
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.loginLabel .placeholder {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+  /* pointer-events: none; */
+  transition: 0.3s ease all;
+  font-size: 1.4rem;
+}
+
+.loginLabel input:focus + .placeholder {
+  top: 0;
+  font-weight: 600;
+  color: var(--cr-g1);
+  bottom: 10px;
+}
+
+.memInput:focus {
+  background-color: rgba(255, 197, 72, 0.25);
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  color: var(--cr-g1);
+  margin-top: 20px;
+  width: 100%;
 }
