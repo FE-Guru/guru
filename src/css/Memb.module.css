@@ -1,3 +1,50 @@
+/*signup*/
+
+.agreeStyle h3 {
+  height: 40px;
+  margin-bottom: 10px;
+  font-size: 22px;
+  border-bottom: 1px solid #ccc;
+}
+
+.agreeStyle label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  padding: 10px 0 10px;
+  margin-bottom: 10px;
+}
+
+.agreeStyle input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.agreeStyle label:nth-of-type(2),
+.agreeStyle label:nth-of-type(3) {
+  border-bottom: 1px dotted #ccc;
+}
+
+.agreeStyle span {
+  margin-left: 5px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.agreeStyle .required {
+  color: var(--cr-red);
+}
+
+.agreeStyle .optional {
+  color: var(--cr-g1);
+}
+
+.agreeStyle span:last-of-type {
+  color: var(--cr-blue);
+  margin-left: auto;
+  cursor: pointer;
+}
+
 .greenBtn {
   width: 10rem;
   height: 4.2rem;
@@ -15,6 +62,7 @@
   background: var(--cr-m-y);
 }
 
+/*login*/
 .btnWrap {
   width: 100%;
   display: flex;
@@ -44,14 +92,10 @@
   padding: 10px;
 }
 
-.email,
-.password {
-  color: var(--cr-g1);
-  font-weight: 600;
-  border: 1px solid red;
+.emailLabel {
+  margin-bottom: 20px;
 }
-
-.label1::before {
+.emailLabel::before {
   content: url("/public/img/common/email.png");
   width: 10px;
   height: 10px;
@@ -60,7 +104,7 @@
   top: 1.6rem;
 }
 
-.label2::before {
+.pwLabel::before {
   content: url("/public/img/common/pw.svg");
   width: 10px;
   height: 10px;
@@ -72,15 +116,14 @@
 .loginLabel {
   display: flex;
   position: relative;
-  margin-top: 10px;
 }
 
 .loginLabel .memInput {
   border: 0;
   width: 100%;
   height: 45px;
-  /* box-sizing: border-box; */
-  margin-bottom: 5px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
   border-bottom: 1px solid #ccc;
 }
 
@@ -89,19 +132,20 @@
   top: 50%;
   transform: translateY(-50%);
   color: #ccc;
-  /* pointer-events: none; */
   transition: 0.3s ease all;
   font-size: 1.4rem;
 }
 
-.loginLabel input:focus + .placeholder {
+.loginLabel input:focus + .placeholder,
+.loginLabel input:not(:placeholder-shown) + .placeholder {
   top: 0;
   font-weight: 600;
   color: var(--cr-g1);
-  bottom: 10px;
+  bottom: 25px;
 }
 
-.memInput:focus {
+.memInput:focus,
+.loginLabel input:not(:placeholder-shown) {
   background-color: rgba(255, 197, 72, 0.25);
 }
 

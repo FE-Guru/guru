@@ -8,6 +8,7 @@ import mem from "../css/Memb.module.css";
 const Signup = () => {
   const [modal, setModal] = useState(null);
 
+  const [allAgree, setAllAgree] = useState(false);
   const [svcAgree, setSvcAgree] = useState(false);
   const [priAgree, setPriAgree] = useState(false);
   const [mktAgree, setMktAgree] = useState(false);
@@ -38,13 +39,32 @@ const Signup = () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("response---", response);
+    console.log("signupResponse : ", response);
 
     if (response.status === 200) {
       window.location.href = "/login";
     } else {
       alert("이미 존재하는 회원정보입니다");
     }
+  };
+
+  const handleAllChange = () => {
+    const newState = !allAgree;
+    setAllAgree(newState);
+    setSvcAgree(newState);
+    setPriAgree(newState);
+    setMktAgree(newState);
+  };
+  const handleSvcChange = () => {
+    const newState = !svcAgree;
+    setSvcAgree(newState);
+    setAllAgree(newState && priAgree);
+  };
+
+  const handlePriChange = () => {
+    const newState = !priAgree;
+    setPriAgree(newState);
+    setAllAgree(newState && svcAgree);
   };
 
   const showPopup = (content) => {
@@ -76,11 +96,16 @@ const Signup = () => {
     <main className='signup fullLayout'>
       <h2>회원가입</h2>
       <section className='boxCon'>
-        <div className={form.formStyle}>
+        <div className={mem.agreeStyle}>
           <h3>약관동의</h3>
           <label htmlFor='all' className={form.formGrup}>
-            <input type='checkbox' id='all' />
-            모든 약관을 확인하고 전체동의에 체크합니다.
+            <input
+              type='checkbox'
+              id='all'
+              checked={allAgree}
+              onChange={handleAllChange}
+            />
+            모든 약관을 확인하고 전체 동의합니다.
           </label>
           <label htmlFor='service'>
             <input
@@ -91,7 +116,7 @@ const Signup = () => {
               required
             />
             서비스이용약관에 동의합니다.
-            <span>(필수)</span>
+            <span className={mem.required}>(필수)</span>
             <span onClick={() => showPopup("content1")}>[전문보기]</span>
           </label>
           <label htmlFor='privacy'>
@@ -103,7 +128,7 @@ const Signup = () => {
               required
             />
             개인정보취급방침에 동의합니다.
-            <span>(필수)</span>
+            <span className={mem.required}>(필수)</span>
             <span onClick={() => showPopup("content2")}>[전문보기]</span>
           </label>
           <label htmlFor='marketing'>
@@ -114,7 +139,7 @@ const Signup = () => {
               onChange={() => setMktAgree(!mktAgree)}
             />
             마케팅 활용에 동의합니다.
-            <span>(선택)</span>
+            <span className={mem.optional}>(선택)</span>
             <span onClick={() => showPopup("content3")}>[전문보기]</span>
           </label>
         </div>

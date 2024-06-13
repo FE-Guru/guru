@@ -18,9 +18,9 @@ const Mypage = () => {
     () => ({
       subMenu: [
         { pageName: "프로필 수정", path: "/mypage/profileEdit" },
-        { pageName: "결제 관리", path: "/mypage" },
-        { pageName: "알람", path: "/mypage" },
-        { pageName: "회원정보 수정", path: "/mypage" },
+        { pageName: "결제 관리", path: "/mypage/guruPayment" },
+        { pageName: "알람", path: "/mypage/guruAlert" },
+        { pageName: "회원정보 수정", path: "/mypage/personalEdit" },
       ],
     }),
     []
@@ -30,8 +30,8 @@ const Mypage = () => {
     dispatch(setSubPage(subPage));
   }, [dispatch, pageInfo]);
   return (
-    <main className="subPage">
-      <section className="mw">
+    <main className='subPage'>
+      <section className='mw'>
         <Lnb />
         <Outlet></Outlet>
       </section>

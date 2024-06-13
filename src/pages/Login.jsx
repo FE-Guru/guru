@@ -28,6 +28,7 @@ const Login = () => {
   if (redirect) {
     return <Navigate to='/' />;
   }
+
   return (
     <main className='login fullLayout'>
       <h2>로그인</h2>
@@ -35,11 +36,12 @@ const Login = () => {
         <div className={mem.loginCon}>
           <form className={`${mem.form}`} onSubmit={login}>
             <div className='full'>
-              <div className={`${mem.loginLabel} ${mem.label1}`}>
+              <div className={`${mem.loginLabel} ${mem.emailLabel}`}>
                 <input
                   className={`${mem.memInput}`}
                   type='email'
                   value={emailID}
+                  placeholder=' '
                   onChange={(e) => {
                     setEmailID(e.target.value);
                   }}
@@ -48,11 +50,12 @@ const Login = () => {
                   이메일
                 </label>
               </div>
-              <div className={`${mem.loginLabel} ${mem.label2}`}>
+              <div className={`${mem.loginLabel} ${mem.pwLabel}`}>
                 <input
                   className={`${mem.memInput}`}
                   type='password'
                   value={password}
+                  placeholder=' '
                   onChange={(e) => {
                     setPassWord(e.target.value);
                   }}
