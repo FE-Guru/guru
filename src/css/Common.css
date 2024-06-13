@@ -32,15 +32,15 @@
   border: 3px solid var(--cr-bl1);
   color: var(--cr-bl1);
 }
-.btn.tertiary {
+.tertiary {
   border: 3px solid var(--cr-line);
   color: #787878;
   background: var(--cr-g3);
 }
-.btn.yellow {
+.yellow {
   background: var(--cr-m-y);
 }
-.btn.green {
+.green {
   background: var(--cr-m-g);
 }
 .btn:hover,
@@ -101,11 +101,29 @@ h4 {
   width: 100%;
   padding: 0.6rem 0 0 0;
 }
-.subPage .contents > div {
+.subPage .contents > .conTitle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: flex-end;
+}
+.appliedList .contents > .boxContainer,
+.jobOffer .contents > .boxContainer {
+  background: #f1f1f1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.appliedList .contents > .boxContainer li,
+.jobOffer .contents > .boxContainer li {
+  width: 100%;
+}
+.subPage .contents > .boxContainer {
   border: 3px solid var(--cr-bl1);
   padding: 3.4rem 3.6rem;
   margin-bottom: 1.5rem;
   border-radius: 1rem;
+  width: 100%;
 }
 .subPage .contents .full {
   flex: 1;

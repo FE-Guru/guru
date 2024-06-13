@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { setPageInfo } from "../store/pageInfo";
 import { useForm, Controller } from "react-hook-form";
 import { url } from "../store/ref";
@@ -14,6 +15,7 @@ import style from "../css/Form.module.css";
 
 const JobWrit = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [modal, setModal] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
   const [jobType, setJobType] = useState("onLine");
@@ -23,6 +25,8 @@ const JobWrit = () => {
   const [filteredEndTimeOp, setFilteredEndTimeOp] = useState([]);
   const [zonecode, setZonecode] = useState("");
   const [address, setAddress] = useState("");
+  const [mapX, setMapX] = useState(null);
+  const [mapY, setMapY] = useState(null);
   const {
     register,
     handleSubmit,
@@ -59,6 +63,25 @@ const JobWrit = () => {
       setWorkDateFn(workDate);
     }
   }, [workDate]);
+
+  /*위도,경도*/
+  useEffect(() => {
+    setValue("zonecode", zonecode);
+    setValue("address", address);
+    if (address) {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.addressSearch(address, (result, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setMapY(result[0].y);
+          setMapX(result[0].x);
+        } else {
+          console.error("잘못된 주소", status);
+          setMapY(null);
+          setMapX(null);
+        }
+      });
+    }
+  }, [zonecode, address, setValue]);
 
   /*유형 성택에 따른 주소영역 핸들링  */
   const jobTypeFn = (e) => {
@@ -195,6 +218,8 @@ const JobWrit = () => {
           zonecode,
           address,
           detailedAddress,
+          mapX,
+          mapY,
         },
         pay,
         desc,
@@ -211,6 +236,8 @@ const JobWrit = () => {
     });
     if (response.ok) {
       console.log(response);
+      alert("구인글이 정상적으로 작성되었습니다.");
+      navigate("/findjob");
     }
   };
 
