@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// 공통 함수 정의
 const formatDate = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -29,10 +28,10 @@ const findjobSlice = createSlice({
   name: "findjob",
   initialState: {
     cateType: "",
-    workStartDate: null,
-    workEndDate: null,
-    endDate: null,
-    dFormat: null,
+    workStartDate: { date: "", time: "" },
+    workEndDate: { date: "", time: "" },
+    endDate: { date: "", time: "" },
+    dFormat: "",
   },
   reducers: {
     setCateType: (state, action) => {
