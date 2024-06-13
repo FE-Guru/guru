@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCateType } from "../store/findjob";
+import { url } from "../store/ref";
 import JobItem from "../components/JobItem";
 import Filter from "../components/Filter";
 import Map from "./Map";
@@ -8,19 +9,23 @@ import "../css/Findjob.css";
 
 const Findjob = () => {
   const dispatch = useDispatch();
+  const [jobList, setJobList] = useState([]);
+  const cateType = useSelector((state) => state.findjob.cateType);
   useEffect(() => {
     dispatch(setCateType({ cateType: "onLine" }));
   }, [dispatch]);
-  const cateType = useSelector((state) => state.findjob.cateType);
-
   const callOnLine = () => {
     dispatch(setCateType({ cateType: "onLine" }));
   };
   const callOffLine = () => {
     dispatch(setCateType({ cateType: "offLine" }));
   };
-
   const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
+  useEffect(() => {
+    fetch(`${url}/job/find${cateType}`)
+      .then((res) => res.json())
+      .then((data) => setJobList(data));
+  }, [cateType]);
 
   return (
     <main className={`${cateType} findjob`}>
@@ -56,24 +61,14 @@ const Findjob = () => {
           <ul className="JobList">
             {cateType === "offLine" ? (
               <li className="mapApiArea">
-                <Map/>
+                <Map />
               </li>
             ) : null}
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
+            {jobList.map((item) => (
+              <li key={item._id}>
+                <JobItem item={item} findjob={true} />
+              </li>
+            ))}
           </ul>
         </div>
       </section>
