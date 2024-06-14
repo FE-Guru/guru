@@ -1,6 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { url } from "../store/ref";
 import { useState } from "react";
+import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 
 const Login = () => {
@@ -38,7 +39,7 @@ const Login = () => {
             <div className='full'>
               <div className={`${mem.loginLabel} ${mem.emailLabel}`}>
                 <input
-                  className={`${mem.memInput}`}
+                  className={`${mem.memInput} ${form.row}`}
                   type='email'
                   value={emailID}
                   placeholder=' '
@@ -52,7 +53,7 @@ const Login = () => {
               </div>
               <div className={`${mem.loginLabel} ${mem.pwLabel}`}>
                 <input
-                  className={`${mem.memInput}`}
+                  className={`${mem.memInput} ${form.row}`}
                   type='password'
                   value={password}
                   placeholder=' '
