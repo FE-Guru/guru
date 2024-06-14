@@ -1,0 +1,21 @@
+.category {
+  /* max-width: 144rem; */
+  width: calc(100% - 14rem);
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  padding: 5.3rem 0 5.3rem 0;
+  gap: 4rem;
+}
+.category a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.1rem;
+  border: 4px solid var(--cr-bl1);
+  border-radius: 1.6rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
