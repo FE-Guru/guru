@@ -16,6 +16,7 @@ const Header = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const response = await fetch(`${url}/profile`, {
+        method: "GET",
         credentials: "include",
       });
       if (response.ok) {
