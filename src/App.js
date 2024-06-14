@@ -11,6 +11,9 @@ import AppliedList from "./pages/AppliedList";
 import JobOffer from "./pages/JobOffer";
 import "./css/Reset.css";
 import "./css/Common.css";
+import "swiper/css";
+import "swiper/css/pagination";
+import "./css/Swiper.css";
 
 function App() {
   return (
