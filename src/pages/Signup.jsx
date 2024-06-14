@@ -72,6 +72,12 @@ const Signup = () => {
     }
   };
 
+  const phoneChange = (e) => {
+    const input = e.target.value;
+    const phoneValue = input.replace(/[^0-9]/g, "");
+    setPhone(phoneValue);
+  };
+
   //agreement func
   const handleAllChange = () => {
     if (allAgree === false) {
@@ -348,45 +354,53 @@ const Signup = () => {
           </div>
         )}
       </Modal>
-      <form className={mem.signupForm} onSubmit={chkSubmit}>
-        <section className='boxCon'>
-          <div className={mem.formDiv}>
-            <span>이메일(아이디)</span>
-            <input
-              type='email'
-              placeholder=' '
-              value={emailID}
-              onChange={(e) => {
-                setEmailID(e.target.value);
-              }}
-            />
+      <form className={` ${form.formStyle} signupForm`} onSubmit={chkSubmit}>
+        <div className={form.formContainer}>
+          <div className={`${form.formGrup} ${idMsg ? mem.errorForm : ""}`}>
+            <span className={idMsg ? mem.errorTitle : ""}>이메일(아이디)</span>
+            <div className={`${form.formCon} `}>
+              <input
+                type='email'
+                placeholder=' '
+                value={emailID}
+                onChange={(e) => {
+                  setEmailID(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{idMsg}</p>
+            </div>
           </div>
-          <p className={mem.error}>{idMsg}</p>
-          <div className={mem.formDiv}>
-            <span>비밀번호</span>
-            <input
-              type='password'
-              placeholder=' '
-              value={password}
-              onChange={(e) => {
-                setPassWord(e.target.value);
-              }}
-            />
+          <div className={`${form.formGrup} ${pwMsg ? mem.errorForm : ""}`}>
+            <span className={pwMsg ? mem.errorTitle : ""}>비밀번호</span>
+            <div className={form.formCon}>
+              <input
+                type='password'
+                placeholder=' '
+                value={password}
+                onChange={(e) => {
+                  setPassWord(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{pwMsg}</p>
+            </div>
           </div>
-          <p className={mem.error}>{pwMsg}</p>
-          <div className={mem.formDiv}>
-            <span>비밀번호 확인</span>
-            <input
-              type='password'
-              placeholder=' '
-              value={pwConfirm}
-              onChange={(e) => {
-                setPwConfirm(e.target.value);
-              }}
-            />
+          <div className={`${form.formGrup} ${pwConMsg ? mem.errorForm : ""}`}>
+            <span className={pwConMsg ? mem.errorTitle : ""}>
+              비밀번호 확인
+            </span>
+            <div className={form.formCon}>
+              <input
+                type='password'
+                placeholder=' '
+                value={pwConfirm}
+                onChange={(e) => {
+                  setPwConfirm(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{pwConMsg}</p>
+            </div>
           </div>
-          <p className={mem.error}>{pwConMsg}</p>
-          <div className={mem.formDiv}>
+          <div className={form.formGrup}>
             <span>이름</span>
             <input
               type='text'
@@ -397,7 +411,7 @@ const Signup = () => {
               }}
             />
           </div>
-          <div className={mem.formDiv}>
+          <div className={form.formGrup}>
             <span>닉네임</span>
             <input
               type='text'
@@ -408,27 +422,23 @@ const Signup = () => {
               }}
             />
           </div>
-          <div className={`${mem.formDiv} ${mem.phoneCon}`}>
-            <div className={mem.phone}>
-              <span>연락처</span>
-              <div className={mem.right}>
+          <div className={`${form.formGrup} ${mem.phoneGrup}`}>
+            <span>연락처</span>
+            <div className={mem.phoneInner}>
+              <div className={mem.phoneAuth}>
                 <input
                   type='text'
-                  className={mem.phone}
                   placeholder=' '
                   value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                  }}
+                  onChange={phoneChange}
                   maxLength='11'
                 />
+                <p className={mem.time}></p>
                 <button className={`btn primary green ${mem.greenBtn}`}>
                   인증하기
                 </button>
               </div>
-            </div>
-            <div className={mem.auth}>
-              <div className={mem.rightAuth}>
+              <div className={mem.phoneConfirm}>
                 <input type='text' placeholder='인증번호 입력' />
                 <p className={mem.time}>00:00</p>
                 <button className={`btn primary yellow ${mem.yellowBtn}`}>
@@ -437,7 +447,7 @@ const Signup = () => {
               </div>
             </div>
           </div>
-          <div className={mem.formDiv}>
+          <div className={form.formGrup}>
             <span>계좌번호</span>
             <input
               type='text'
@@ -448,7 +458,7 @@ const Signup = () => {
               }}
             />
           </div>
-        </section>
+        </div>
         <div className={`${mem.btnWrap} btnWrap`}>
           <button type='button' className='btn tertiary' onClick={cancelBtn}>
             취소

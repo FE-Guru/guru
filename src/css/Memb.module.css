@@ -42,91 +42,60 @@
   cursor: pointer;
 }
 
-.formDiv {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  gap: 5px;
+.error {
+  font-size: 13px;
 }
 
-.formDiv span {
-  font-size: 14px;
-  color: var(--cr-g1);
+.errorForm {
+  color: var(--cr-red);
 }
 
-.formDiv input {
-  width: 70%;
-  border: 0;
-  border-bottom: 1px solid var(--cr-g1);
-  height: 4.2rem;
-  line-height: 4.2rem;
-  color: var(--cr-bl1);
-  font-weight: 700;
+.errorTitle {
+  color: var(--cr-red) !important;
 }
 
-.phoneCon {
+.errorForm input {
+  border-color: var(--cr-red);
+}
+
+.errorForm p {
+  color: var(--cr-red);
+}
+
+.phoneGrup {
+  display: block;
+}
+
+.phoneInner {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-.phone {
-  width: 100%;
-  flex-grow: 0;
+.phoneGrup {
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  flex-wrap: wrap;
 }
-
-.right {
-  width: 70%;
-  display: flex;
-  gap: 5px;
-  margin-left: auto;
+.phoneAuth {
   justify-content: space-between;
 }
 
-.right input {
-  justify-content: flex-end;
-}
-
-.auth {
-  width: 97%;
+.phoneAuth,
+.phoneConfirm {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.auth input {
-  width: 58%;
+.phoneAuth input {
+  width: calc(100% - 12rem);
 }
 
-.auth input::placeholder {
-  color: var(--cr-g1);
-  font-size: 15px;
-  font-weight: normal;
-}
-
-.auth .rightAuth {
-  display: flex;
-  gap: 5px;
-  margin-left: auto;
-  align-items: center;
-}
-
-.auth .time {
+.time {
   color: var(--cr-red);
-  display: block;
-}
-
-.error {
-  display: block;
-  font-size: 13px;
-  color: var(--cr-red);
-  /* padding: 1rem 0; */
+  font-size: 1.48rem;
 }
 
 .greenBtn {
@@ -237,6 +206,7 @@
 .loginLabel input:not(:placeholder-shown),
 .formDiv input:focus,
 .formDiv input:not(:placeholder-shown) {
+  border-bottom: 2px solid var(--cr-bl1);
   background-color: rgba(255, 197, 72, 0.25);
 }
 
