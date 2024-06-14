@@ -11,16 +11,20 @@ const formatDate = (date) => {
     time: `${hours}:${minutes}`,
   };
 };
+
 const calculateDFormat = (endDate) => {
   const today = new Date();
-  const diffTime = endDate - today;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  today.setHours(0, 0, 0, 0);
+  const end = new Date(endDate);
+  end.setHours(0, 0, 0, 0);
+  const diffTime = end - today;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   if (diffDays > 0) {
     return `D-${diffDays}`;
   } else if (diffDays === 0) {
     return "D-Day";
   } else {
-    return `D+${Math.abs(diffDays)}`;
+    return `지원마감`;
   }
 };
 
@@ -28,21 +32,20 @@ const findjobSlice = createSlice({
   name: "findjob",
   initialState: {
     cateType: "",
-    workStartDate: { date: "", time: "" },
-    workEndDate: { date: "", time: "" },
-    endDate: { date: "", time: "" },
-    dFormat: "",
   },
   reducers: {
     setCateType: (state, action) => {
       state.cateType = action.payload.cateType;
     },
     setDates: (state, action) => {
-      const { workStartDate, workEndDate, endDate } = action.payload;
-      state.workStartDate = formatDate(new Date(workStartDate));
-      state.workEndDate = formatDate(new Date(workEndDate));
-      state.endDate = formatDate(new Date(endDate));
-      state.dFormat = calculateDFormat(new Date(endDate));
+      const { id, workStartDate, workEndDate, endDate } = action.payload;
+      state[id] = {
+        workStartDate: formatDate(new Date(workStartDate)),
+        workEndDate: formatDate(new Date(workEndDate)),
+        endDate: formatDate(new Date(endDate)),
+        dFormat: calculateDFormat(new Date(endDate)),
+      };
+      console.log("업데이트 상태:", state);
     },
   },
 });

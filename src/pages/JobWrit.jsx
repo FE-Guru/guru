@@ -10,6 +10,7 @@ import Select from "react-select";
 import DaumPostcode from "react-daum-postcode";
 import Lnb from "../components/Lnb";
 import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 import "react-datepicker/dist/react-datepicker.css";
 import style from "../css/Form.module.css";
 
@@ -235,8 +236,7 @@ const JobWrit = () => {
       },
     });
     if (response.ok) {
-      console.log(response);
-      alert("구인글이 정상적으로 작성되었습니다.");
+      showPopup("WriteOk");
       navigate("/findjob");
     }
   };
@@ -448,6 +448,7 @@ const JobWrit = () => {
               </div>
             </div>
             <div className="btnWrap">
+              <button onClick={() => showPopup("alert")}>ttt</button>
               <button type="submit" className="btn primary yellow">
                 구인글 작성
               </button>
@@ -456,13 +457,14 @@ const JobWrit = () => {
         </div>
       </section>
       {modal && (
-        <Modal show={modal !== null} onClose={closePopup}>
+        <Modal show={modal !== null} onClose={closePopup} type={"alert"}>
           {modal === "findAddress" && (
             <div className={style.addressModal}>
               <h3>주소검색</h3>
               <DaumPostcode onComplete={completeHandler} />
             </div>
           )}
+          {/* {modal === "alert" && <ModalAlert close={closePopup} title={"타이틀이에요~"} desc={"설명입니다~"} error={false} confirm={false} />} */}
         </Modal>
       )}
     </main>
