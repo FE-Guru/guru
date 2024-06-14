@@ -17,8 +17,11 @@ const pageInfoSlice = createSlice({
     setSubPage: (state, action) => {
       state.subMenu = action.payload.subMenu;
     },
+    resetSubPage: (state) => {
+      state.subMenu = [];
+    },
   },
 });
 
-export const { setPageInfo, setSubPage } = pageInfoSlice.actions;
+export const { setPageInfo, setSubPage, resetSubPage } = pageInfoSlice.actions;
 export default pageInfoSlice.reducer;

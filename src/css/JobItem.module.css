@@ -1,3 +1,10 @@
+.itemWrap {
+  border: 3px solid transparent;
+  transition: 0.3s;
+}
+.itemWrap:hover {
+  border: 3px solid var(--cr-bl1);
+}
 .jobItem {
   width: 100%;
   display: flex;
@@ -6,12 +13,8 @@
   background: var(--cr-w);
   border-radius: 0.5rem;
   transition: 0.3s;
-  border: 3px solid var(--cr-w);
 }
 
-.jobItem:hover {
-  border: 3px solid var(--cr-bl1);
-}
 .jobItem.onLine:hover {
 }
 .jobItem.offLine:hover {
@@ -72,7 +75,7 @@
 
 .jobDes > h4 {
   width: 100%;
-  margin: 1.2rem 0 1.4rem 0;
+  padding: 1.2rem 0 1.7rem 0;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
@@ -84,7 +87,7 @@
   padding: 0.8rem 2rem;
   border-radius: 50rem;
   position: relative;
-  top: -0.3rem;
+  top: -0.5rem;
   margin-right: 1rem;
 }
 .offLine .jobDes > h4 .jobCate {
@@ -166,8 +169,4 @@
   .jobDes {
     width: calc(100% - 17rem);
   }
-}
-
-.userSlide {
-  width: 100%;
 }
