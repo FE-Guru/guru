@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import style from "../css/Modal.module.css";
@@ -21,8 +21,33 @@ const Signup = () => {
   const [phone, setPhone] = useState("");
   const [account, setAccount] = useState("");
 
+  const [idMsg, setIdMsg] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwConMsg, setPwConMsg] = useState("");
+
   const signup = async (e) => {
     e.preventDefault();
+
+    if (!/^[A-Za-z0-9]+@[A-Za-z0-9]+$/.test(emailID)) {
+      setIdMsg("공백없는 이메일 형태로 만들어주세요.");
+      return;
+    } else {
+      setIdMsg("");
+    }
+
+    if (password.length < 4) {
+      setPwMsg("최소 4자 이상으로 만들어주세요.");
+      return;
+    } else {
+      setPwMsg("");
+    }
+
+    if (password !== pwConfirm) {
+      setPwConMsg("비밀번호가 일치하지 않습니다.");
+      return;
+    } else {
+      setPwConMsg("");
+    }
 
     const response = await fetch(`${url}/signup`, {
       method: "POST",
@@ -39,33 +64,60 @@ const Signup = () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("signupResponse : ", response);
 
     if (response.status === 200) {
       window.location.href = "/login";
     } else {
-      alert("이미 존재하는 회원정보입니다");
+      setModal("userrequired");
     }
   };
 
+  //agreement func
   const handleAllChange = () => {
-    const newState = !allAgree;
-    setAllAgree(newState);
-    setSvcAgree(newState);
-    setPriAgree(newState);
-    setMktAgree(newState);
+    if (allAgree === false) {
+      setAllAgree(true);
+      setSvcAgree(true);
+      setPriAgree(true);
+      setMktAgree(true);
+    } else {
+      setAllAgree(false);
+      setSvcAgree(false);
+      setPriAgree(false);
+      setMktAgree(false);
+    }
   };
+
   const handleSvcChange = () => {
-    const newState = !svcAgree;
-    setSvcAgree(newState);
-    setAllAgree(newState && priAgree);
+    if (svcAgree === false) {
+      setSvcAgree(true);
+    } else {
+      setSvcAgree(false);
+    }
   };
 
   const handlePriChange = () => {
-    const newState = !priAgree;
-    setPriAgree(newState);
-    setAllAgree(newState && svcAgree);
+    if (priAgree === false) {
+      setPriAgree(true);
+    } else {
+      setPriAgree(false);
+    }
   };
+
+  const handleMktChange = () => {
+    if (mktAgree === false) {
+      setMktAgree(true);
+    } else {
+      setMktAgree(false);
+    }
+  };
+
+  useEffect(() => {
+    if (svcAgree === true && priAgree === true && mktAgree === true) {
+      setAllAgree(true);
+    } else {
+      setAllAgree(false);
+    }
+  }, [svcAgree, priAgree, mktAgree]);
 
   const showPopup = (content) => {
     setModal(content);
@@ -82,8 +134,9 @@ const Signup = () => {
   const chkRequired = () => {
     return svcAgree && priAgree;
   };
+  // console.log("chkRequired", chkRequired());
 
-  const handleSubmit = (e) => {
+  const chkSubmit = (e) => {
     e.preventDefault();
     if (!chkRequired()) {
       setModal("required");
@@ -112,7 +165,7 @@ const Signup = () => {
               type='checkbox'
               id='service'
               checked={svcAgree}
-              onChange={() => setSvcAgree(!svcAgree)}
+              onChange={handleSvcChange}
               required
             />
             서비스이용약관에 동의합니다.
@@ -124,7 +177,7 @@ const Signup = () => {
               type='checkbox'
               id='privacy'
               checked={priAgree}
-              onChange={() => setPriAgree(!priAgree)}
+              onChange={handlePriChange}
               required
             />
             개인정보취급방침에 동의합니다.
@@ -136,7 +189,7 @@ const Signup = () => {
               type='checkbox'
               id='marketing'
               checked={mktAgree}
-              onChange={() => setMktAgree(!mktAgree)}
+              onChange={handleMktChange}
             />
             마케팅 활용에 동의합니다.
             <span className={mem.optional}>(선택)</span>
@@ -288,117 +341,123 @@ const Signup = () => {
             <p>필수사항을 모두 선택해주세요!</p>
           </div>
         )}
+        {modal === "userrequired" && (
+          <div className={style.alert}>
+            <h3>GURU</h3>
+            <p>입력하신 정보를 확인해주세요!</p>
+          </div>
+        )}
       </Modal>
-      <section className='boxCon'>
-        <form className={form.formStyle} onSubmit={handleSubmit}>
-          <div className='full'>
-            <label className={form.formGrup}>
-              <span>이메일(아이디)</span>
-              <input
-                className={form.row}
-                type='email'
-                id='email'
-                value={emailID}
-                onChange={(e) => {
-                  setEmailID(e.target.value);
-                }}
-              />
-            </label>
-            <p>이메일 양식에 맞춰 작성해주세요</p>
-            <label className={form.formGrup}>
-              <span>비밀번호</span>
-              <input
-                className={form.row}
-                type='password'
-                id='password'
-                value={password}
-                onChange={(e) => {
-                  setPassWord(e.target.value);
-                }}
-              />
-            </label>
-            <p>영문,숫자,특수문자 조합 8자리 이상 작성해주세요.</p>
-            <label className={form.formGrup}>
-              <span>비밀번호 확인</span>
-              <input
-                className={form.row}
-                type='password'
-                id='pwConfirm'
-                value={pwConfirm}
-                onChange={(e) => {
-                  setPwConfirm(e.target.value);
-                }}
-              />
-            </label>
-            <p>비밀번호와 입력한 값이 다릅니다.</p>
-            <label className={form.formGrup}>
-              <span>이름</span>
-              <input
-                type='text'
-                id='name'
-                value={userName}
-                onChange={(e) => {
-                  setuserName(e.target.value);
-                }}
-              />
-            </label>
-            <label className={form.formGrup}>
-              <span>닉네임</span>
-              <input
-                type='text'
-                id='nickname'
-                value={nickName}
-                onChange={(e) => {
-                  setNickName(e.target.value);
-                }}
-              />
-            </label>
-            <label className={form.formGrup}>
+      <form className={mem.signupForm} onSubmit={chkSubmit}>
+        <section className='boxCon'>
+          <div className={mem.formDiv}>
+            <span>이메일(아이디)</span>
+            <input
+              type='email'
+              placeholder=' '
+              value={emailID}
+              onChange={(e) => {
+                setEmailID(e.target.value);
+              }}
+            />
+          </div>
+          <p className={mem.error}>{idMsg}</p>
+          <div className={mem.formDiv}>
+            <span>비밀번호</span>
+            <input
+              type='password'
+              placeholder=' '
+              value={password}
+              onChange={(e) => {
+                setPassWord(e.target.value);
+              }}
+            />
+          </div>
+          <p className={mem.error}>{pwMsg}</p>
+          <div className={mem.formDiv}>
+            <span>비밀번호 확인</span>
+            <input
+              type='password'
+              placeholder=' '
+              value={pwConfirm}
+              onChange={(e) => {
+                setPwConfirm(e.target.value);
+              }}
+            />
+          </div>
+          <p className={mem.error}>{pwConMsg}</p>
+          <div className={mem.formDiv}>
+            <span>이름</span>
+            <input
+              type='text'
+              placeholder=' '
+              value={userName}
+              onChange={(e) => {
+                setuserName(e.target.value);
+              }}
+            />
+          </div>
+          <div className={mem.formDiv}>
+            <span>닉네임</span>
+            <input
+              type='text'
+              placeholder=' '
+              value={nickName}
+              onChange={(e) => {
+                setNickName(e.target.value);
+              }}
+            />
+          </div>
+          <div className={`${mem.formDiv} ${mem.phoneCon}`}>
+            <div className={mem.phone}>
               <span>연락처</span>
-              <input
-                className={form.row}
-                type='text'
-                id='phone'
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                }}
-              />
-              <button className={mem.greenBtn}>인증하기</button>
-            </label>
-            <label className={form.formGrup}>
-              <input className={form.row} type='text' id='certiNum' />
-              <button className={`btn primary yellow ${mem.yellowBtn}`}>
-                확인
-              </button>
-            </label>
-            <label className={form.formGrup}>
-              <span>계좌번호</span>
-              <input
-                className={form.row}
-                type='text'
-                id='account'
-                value={account}
-                onChange={(e) => {
-                  setAccount(e.target.value);
-                }}
-              />
-            </label>
+              <div className={mem.right}>
+                <input
+                  type='text'
+                  className={mem.phone}
+                  placeholder=' '
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
+                  maxLength='11'
+                />
+                <button className={`btn primary green ${mem.greenBtn}`}>
+                  인증하기
+                </button>
+              </div>
+            </div>
+            <div className={mem.auth}>
+              <div className={mem.rightAuth}>
+                <input type='text' placeholder='인증번호 입력' />
+                <p className={mem.time}>00:00</p>
+                <button className={`btn primary yellow ${mem.yellowBtn}`}>
+                  확인
+                </button>
+              </div>
+            </div>
           </div>
-          <div className='btnWrap'>
-            <button type='button' className='btn tertiary' onClick={cancelBtn}>
-              취소
-            </button>
-            <button
-              type='submit'
-              className='btn primary yellow'
-              disabled={!chkRequired()}
-            >
-              회원가입
-            </button>
+          <div className={mem.formDiv}>
+            <span>계좌번호</span>
+            <input
+              type='text'
+              placeholder=' '
+              value={account}
+              onChange={(e) => {
+                setAccount(e.target.value);
+              }}
+            />
           </div>
-        </form>
-      </section>
+        </section>
+        <div className={`${mem.btnWrap} btnWrap`}>
+          <button type='button' className='btn tertiary' onClick={cancelBtn}>
+            취소
+          </button>
+          <button type='submit' className='btn primary yellow'>
+            회원가입
+          </button>
+        </div>
+      </form>
     </main>
   );
 };
