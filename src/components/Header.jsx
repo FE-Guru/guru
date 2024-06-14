@@ -46,6 +46,10 @@ const Header = () => {
     setIsMypage(!isMypage); // 마이페이지 상태 반전
   };
 
+  useEffect(() => {
+    setIsMypage(false);
+  }, [location, setIsMypage]);
+
   return (
     <header className={style.header}>
       <h1>
