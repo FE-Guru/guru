@@ -61,7 +61,7 @@ const Findjob = () => {
           <ul className="JobList">
             {cateType === "offLine" ? (
               <li className="mapApiArea">
-                <Map />
+                <Map jobList={jobList} />
               </li>
             ) : null}
             {jobList.map((item) => (

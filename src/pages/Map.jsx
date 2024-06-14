@@ -1,224 +1,123 @@
+/* global kakao */
 import React, { useEffect, useState } from 'react';
 import styles from '../css/Map.module.css';
 
-const initialLocationData = [
-  {
-    locationNum: [0, 0],
-    title: '일거리1',
-    locationName: '용산역',
-    address: '서울특별시 용산구 한강대로23길 55',
-    link: '일거리1링크주소',
-    price: 12000,
-  },
-  {
-    locationNum: [0, 0],
-    title: '일거리2',
-    locationName: '신용산역',
-    address: '서울 용산구 한강대로 지하 112',
-    link: '일거리2링크주소',
-    price: 12000,
-  },
-  {
-    locationNum: [0, 0],
-    title: '일거리3',
-    locationName: '용산역 앞 잔디 광장',
-    address: '서울 용산구 한강로2가 421',
-    link: '일거리3링크주소',
-    price: 12000,
-  },
-];
+const loadKakaoMapScript = (callback) => {
+  const script = document.createElement('script');
+  script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&autoload=false`;
+  script.async = true;
+  script.onload = () => {
+    kakao.maps.load(callback);
+  };
+  document.head.appendChild(script);
+};
 
-// initialLocationData.address를 위도 경도로 변환하여 initialLocationData.locationNum에 저장하는 함수
-async function changeLocationNum(locationData) {
-  if (!window.kakao || !window.kakao.maps) {
-    console.error('Kakao maps SDK not loaded');
-    return locationData;
-  }
+// 날짜 포맷
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString('ko-KR', options);
+};
 
-  const geocoder = new window.kakao.maps.services.Geocoder();
+const Map = ({ jobList }) => {
+  const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 }); // 기본 위치 설정
+  const [mapLoaded, setMapLoaded] = useState(false); // 지도 로드 상태
 
-  const promises = locationData.map(
-    (location) =>
-      new Promise((resolve, reject) => {
-        geocoder.addressSearch(location.address, (result, status) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            location.locationNum = [result[0].y, result[0].x];
-            resolve(location);
-          } else {
-            console.error(
-              `Geocode error for address ${location.address}: ${status}`
-            );
-            resolve(location);
-          }
-        });
-      })
-  );
-
-  return Promise.all(promises);
-}
-
-// 현재 사용자 위치 계산
-function getDistance(lat1, lon1, lat2, lon2, unit) {
-  if (lat1 === lat2 && lon1 === lon2) {
-    return 0;
-  } else {
-    var radlat1 = (Math.PI * lat1) / 180;
-    var radlat2 = (Math.PI * lat2) / 180;
-    var theta = lon1 - lon2;
-    var radtheta = (Math.PI * theta) / 180;
-    var dist =
-      Math.sin(radlat1) * Math.sin(radlat2) +
-      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-      dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515;
-    if (unit === 'K') {
-      dist = dist * 1.609344;
-    }
-    if (unit === 'N') {
-      dist = dist * 0.8684;
-    }
-    return dist;
-  }
-}
-
-const Map = () => {
-  const [locationData, setLocationData] = useState(initialLocationData);
-  const [center, setCenter] = useState(null); // 지도 중심 좌표 상태 추가
-  const [locationsUpdated, setLocationsUpdated] = useState(false); // 위치 데이터가 업데이트 되었는지 여부를 나타내는 상태 추가
-  let openOverlay = null;
-
-  // 내 현재 위치 받아오기
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        setCenter({ latitude, longitude }); // 현재 위치를 지도 중심으로 설정
-
-        if (!locationsUpdated) {
-          const updatedLocationData = await changeLocationNum(locationData);
-
-          const locationDataWithDistance = updatedLocationData.map((location) => {
-            const distance = getDistance(
-              latitude,
-              longitude,
-              location.locationNum[0],
-              location.locationNum[1]
-            );
-            return {
-              ...location,
-              distance,
-            };
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
           });
-
-          const sortedLocationData = locationDataWithDistance.sort(
-            (a, b) => a.distance - b.distance
-          );
-
-          setLocationData(sortedLocationData);
-          setLocationsUpdated(true); // 위치 데이터가 업데이트 되었음을 표시
+        },
+        (error) => {
+          console.error(error);
+          // Geolocation 실패 시 기본 위치 유지
         }
-      },
-      (err) => {
-        console.error('Geolocation error:', err);
-      }
-    );
-  }, [locationsUpdated, locationData]);
+      );
+    }
+  }, []);
 
-  // 지도 연결
   useEffect(() => {
-    if (center) {
-      // center가 설정된 후에만 지도 초기화
-      const script = document.createElement('script');
-      script.src =
-        'http://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&libraries=services,clusterer';
-      script.async = true;
-      script.onload = () => {
-        if (!window.kakao || !window.kakao.maps) {
-          console.error('Kakao maps SDK not loaded');
-          return;
-        }
-
-        const container = document.getElementById('map');
-        const options = {
-          // 지도 첫 화면의 위도 경도
-          center: new window.kakao.maps.LatLng(center.latitude, center.longitude),
+    if (!mapLoaded) {
+      loadKakaoMapScript(() => {
+        const mapContainer = document.getElementById('map');
+        const mapOption = {
+          center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
           level: 3,
         };
-        const map = new window.kakao.maps.Map(container, options);
 
-        const clusterer = new window.kakao.maps.MarkerClusterer({
+        const map = new kakao.maps.Map(mapContainer, mapOption);
+        setMapLoaded(true);
+
+        // 마커 클러스터러를 생성합니다
+        const clusterer = new kakao.maps.MarkerClusterer({
           map: map,
           averageCenter: true,
-          minLevel: 6,
+          minLevel: 4,
         });
 
-        const markers = [];
-
-        locationData.forEach((location) => {
-          const markerPosition = new window.kakao.maps.LatLng(
-            location.locationNum[0],
-            location.locationNum[1]
-          );
-
-          const marker = new window.kakao.maps.Marker({
-            position: markerPosition,
+        const markers = jobList.map((job) => {
+          const marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(
+              job.location.mapY,
+              job.location.mapX
+            ), // 각 일거리의 좌표
           });
-          marker.setMap(map);
+
+          // 날짜 형식 수정 ex) 2024-06-24 ~ 2024-06-24
+          const workStartDate = formatDate(job.workStartDate);
+          const workEndDate = formatDate(job.workEndDate);
 
           const content = document.createElement('div');
-          content.className = styles.wrap;
           content.innerHTML = `
-            <div class="${styles.info}">
-              <div class="${styles.title}">
-                ${location.title}
-                <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
-              </div>
-              <div class="${styles.body}">
-                <div class="${styles.img}">
-                  <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="63" height="60">
+            <div class="${styles.wrap}">
+              <div class="${styles.info}">
+                <div class="${styles.title}">
+                  ${job.title}
+                  <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
                 </div>
-                <div class="${styles.desc}">
-                  <div class="${styles.ellipsis}">${location.locationName}</div>
-                  <div class="${styles.jibun}">용산역</div>
-                  <div><a href="${location.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
+                <div class="${styles.body}">
+                  <div class="${styles.img}">
+                    <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="63" height="60">
+                  </div>
+                  <div class="${styles.desc}">
+                    <div class="${styles.ellipsis}">${job.location.address}</div>
+                    <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
+                    <div><a href="${job.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
+                  </div>
                 </div>
               </div>
             </div>
           `;
 
-          const closeBtn = content.querySelector(`.${styles.close}`);
-          closeBtn.onclick = () => overlay.setMap(null);
-
-          const overlay = new window.kakao.maps.CustomOverlay({
+          const overlay = new kakao.maps.CustomOverlay({
             content: content,
             position: marker.getPosition(),
           });
 
-          overlay.setMap(null);
-
-          window.kakao.maps.event.addListener(marker, 'click', () => {
-            if (openOverlay) {
-              openOverlay.setMap(null);
-            }
+          kakao.maps.event.addListener(marker, 'click', function () {
             overlay.setMap(map);
-            openOverlay = overlay;
           });
 
-          markers.push(marker);
+          // 오버레이 닫기 함수
+          function closeOverlay() {
+            overlay.setMap(null);
+          }
+
+          // 닫기 버튼에 이벤트 리스너 추가
+          const closeBtn = content.querySelector(`.${styles.close}`);
+          closeBtn.addEventListener('click', closeOverlay);
+
+          return marker;
         });
 
+        // 클러스터러에 마커들을 추가합니다
         clusterer.addMarkers(markers);
-      };
-
-      document.head.appendChild(script);
+      });
     }
-  }, [center, locationData]);
+  }, [location, mapLoaded, jobList]);
 
   return (
     <div>
