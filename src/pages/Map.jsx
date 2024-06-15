@@ -1,18 +1,25 @@
 /* global kakao */
 import React, { useEffect, useState } from 'react';
 import styles from '../css/Map.module.css';
+//코드 추가 
+//추가 작성
 
+// Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
   const script = document.createElement('script');
-  script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}`;
+  script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}&libraries=services,clusterer`;
   script.async = true;
   script.onload = () => {
-    kakao.maps.load(callback);
+    if (window.kakao && window.kakao.maps) {
+      window.kakao.maps.load(callback);
+    } else {
+      console.error('Failed to load Kakao Maps API.');
+    }
   };
   document.head.appendChild(script);
 };
 
-// 날짜 포맷
+// 날짜 포맷 함수
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
   return new Date(dateString).toLocaleDateString('ko-KR', options);
@@ -23,7 +30,7 @@ const Map = ({ jobList }) => {
   const [map, setMap] = useState(null); // 지도 객체 상태
 
   // 현재 위치 파악
-  useEffect(() => {
+  const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -38,12 +45,16 @@ const Map = ({ jobList }) => {
         }
       );
     }
-  }, []);
+  };
 
   // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
     loadKakaoMapScript(() => {
       const mapContainer = document.getElementById('map');
+      if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+      }
       const mapOption = {
         center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
         level: 3,
@@ -51,12 +62,22 @@ const Map = ({ jobList }) => {
 
       const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
       setMap(mapInstance);
+
+      // 현재 위치를 비동기로 가져오기
+      getCurrentLocation();
     });
-  }, [location]);
+  }, []);
+
+  // 지도의 중심을 현재 위치로 업데이트
+  useEffect(() => {
+    if (map) {
+      const moveLatLon = new kakao.maps.LatLng(location.lat, location.lon);
+      map.setCenter(moveLatLon);
+    }
+  }, [location, map]);
 
   // 지도와 마커 클러스터러 설정
   useEffect(() => {
-    //map 이 로드 되면 아래 기능 구현
     if (map) {
       // 마커 클러스터러를 생성합니다
       const clusterer = new kakao.maps.MarkerClusterer({
