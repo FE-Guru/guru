@@ -7,6 +7,7 @@ import Findjob from "./pages/Findjob";
 import JobWrit from "./pages/JobWrit";
 import Mypage from "./pages/Mypage";
 import ProfileEdit from "./pages/ProfileEdit";
+import PersonalEdit from "./pages/PersonalEdit";
 import AppliedList from "./pages/AppliedList";
 import JobOffer from "./pages/JobOffer";
 import "./css/Reset.css";
@@ -17,18 +18,19 @@ import "./css/Swiper.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Header />
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/findjob" element={<Findjob />} />
-        <Route path="/applied-list" element={<AppliedList />} />
-        <Route path="/job-offer" element={<JobOffer />} />
-        <Route path="/job-wirt" element={<JobWrit />} />
-        <Route path="/mypage" element={<Mypage />}>
-          <Route path="profileEdit" element={<ProfileEdit />} />
+        <Route path='/' element={<Main />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/findjob' element={<Findjob />} />
+        <Route path='/applied-list' element={<AppliedList />} />
+        <Route path='/job-offer' element={<JobOffer />} />
+        <Route path='/job-wirt' element={<JobWrit />} />
+        <Route path='/mypage' element={<Mypage />}>
+          <Route path='profileEdit' element={<ProfileEdit />} />
+          <Route path='personalEdit' element={<PersonalEdit />} />
         </Route>
       </Routes>
     </div>
