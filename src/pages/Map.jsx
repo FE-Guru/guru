@@ -4,7 +4,7 @@ import styles from '../css/Map.module.css';
 
 const loadKakaoMapScript = (callback) => {
   const script = document.createElement('script');
-  script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=aabd871dd02ef84bd5ee8aa2dfc5fbf5&autoload=false`;
+  script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}`;
   script.async = true;
   script.onload = () => {
     kakao.maps.load(callback);
