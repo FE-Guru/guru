@@ -1,8 +1,6 @@
 /* global kakao */
 import React, { useEffect, useState } from 'react';
 import styles from '../css/Map.module.css';
-//코드 추가 
-//추가 작성
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
