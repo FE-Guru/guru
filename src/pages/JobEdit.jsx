@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { setPageInfo } from "../store/pageInfo";
 import { useForm, Controller } from "react-hook-form";
 import { url } from "../store/ref";
@@ -14,10 +14,12 @@ import ModalAlert from "../components/ModalAlert";
 import "react-datepicker/dist/react-datepicker.css";
 import style from "../css/Form.module.css";
 
-const JobWrit = () => {
+const JobEdit = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const location = useLocation();
+  const { _id } = location.state || {};
   const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
   const [jobType, setJobType] = useState("onLine");
   const [workDate, setWorkDate] = useState(null);
@@ -36,36 +38,117 @@ const JobWrit = () => {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm();
-  const workEndDate = watch("workEndDate");
+  } = useForm({});
+  const endDate = watch("endDate");
 
+  const setWorkDateFn = useCallback(
+    (date) => {
+      if (workStartTime && workStartTime.value) {
+        const workStartTimeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), workStartTime.value.getHours(), workStartTime.value.getMinutes());
+        setWorkStartTime((prev) => ({ ...prev, value: workStartTimeDate }));
+
+        if (workEndTime && workEndTime.value) {
+          const workEndTimeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), workEndTime.value.getHours(), workEndTime.value.getMinutes());
+          setWorkEndTime((prev) => ({ ...prev, value: workEndTimeDate }));
+        }
+      }
+    },
+    [workStartTime, workEndTime]
+  );
+  const workDateChange = (date, field) => {
+    setWorkDate(date);
+    setWorkDateFn(date);
+    field.onChange(date);
+  };
+  const selectTimeOp = (workDate) => {
+    const times = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const hourStr = hour < 10 ? `0${hour}` : hour;
+        const minuteStr = minute < 10 ? `0${minute}` : minute;
+        const dateSet = workDate || new Date();
+        const timeValue = new Date(dateSet.getFullYear(), dateSet.getMonth(), dateSet.getDate(), hour, minute);
+        times.push({ value: timeValue, label: `${hourStr}:${minuteStr}` });
+      }
+    }
+    return times;
+  };
+  const workStartTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
+  const workEndTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
   /*page 셋팅*/
   const currentPage = useSelector((state) => state.pageInfo.currentPage);
-  const pageInfo = useMemo(
-    () => ({
-      menuKR: "구인글 작성",
-      menuEn: "Job Offer",
-      currentPage: { pageName: "구인글 작성", path: "/job-wirt" },
-    }),
-    []
-  );
   useEffect(() => {
-    dispatch(setPageInfo(pageInfo));
-  }, [dispatch, pageInfo]);
+    dispatch(
+      setPageInfo({
+        menuKR: "구인글 수정",
+        menuEn: "Job Offer",
+        currentPage: { pageName: "구인글 수정", path: "/job-edit" },
+      })
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!_id) {
+      showAlert("none_id");
+    } else {
+      const fetchJob = async () => {
+        const res = await fetch(`${url}/job/jobEdit/${_id}`);
+        const result = await res.json();
+        if (result.category.jobType === "offLine") {
+          setIsOffline(true);
+        }
+        setValue("title", result.title);
+        setJobType(result.category.jobType);
+        setValue("detailedAddress", result.location.detailedAddress);
+        setZonecode(result.location.zonecode);
+        setAddress(result.location.address);
+        setMapX(result.location.mapX);
+        setMapY(result.location.mapY);
+        setValue("endDate", new Date(result.endDate));
+        setValue("workDate", new Date(result.workStartDate));
+        setWorkDate(new Date(result.workStartDate));
+        const resultStartTime = new Date(result.workStartDate);
+        const resultEndTime = new Date(result.workEndDate);
+        const formatTime = (date) => {
+          const hours = date.getHours().toString().padStart(2, "0");
+          const minutes = date.getMinutes().toString().padStart(2, "0");
+          return `${hours}:${minutes}`;
+        };
+        setWorkStartTime({ value: resultStartTime, label: formatTime(resultStartTime) });
+        setWorkEndTime({ value: resultEndTime, label: formatTime(resultEndTime) });
+        setValue("workStartTime", { value: resultStartTime, label: formatTime(resultStartTime) });
+        setValue("workEndTime", { value: resultEndTime, label: formatTime(resultEndTime) });
+        setValue("pay", result.pay);
+        setValue(
+          "cateTalent",
+          cateTalentOp.find((option) => option.value === result.category.talent)
+        );
+        setValue(
+          "cateField",
+          cateFieldOp.find((option) => option.value === result.category.field)
+        );
+        setValue("desc", result.desc);
+      };
+      fetchJob();
+    }
+  }, [_id]);
+
   useEffect(() => {
     if (workStartTime) {
       setFilteredEndTimeOp(workEndTimeOp.filter((option) => option.value > workStartTime.value));
     } else {
       setFilteredEndTimeOp(workEndTimeOp);
     }
-  }, [workStartTime]);
-  useEffect(() => {
-    if (workDate) {
-      setWorkDateFn(workDate);
-    }
-  }, [workDate]);
+  }, [workStartTime, workEndTimeOp]);
 
-  /*위도,경도*/
+  useEffect(() => {
+    if (workStartTime) {
+      setFilteredEndTimeOp(workEndTimeOp.filter((option) => option.value > workStartTime.value));
+    } else {
+      setFilteredEndTimeOp(workEndTimeOp);
+    }
+  }, [workStartTime, workEndTimeOp]);
+
   useEffect(() => {
     setValue("zonecode", zonecode);
     setValue("address", address);
@@ -123,35 +206,6 @@ const JobWrit = () => {
     }),
   };
 
-  const setWorkDateFn = (date) => {
-    setWorkDate(date);
-    if (workStartTime) {
-      const workStartTimeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), workStartTime.value.getHours(), workStartTime.value.getMinutes());
-      setWorkStartTime({ ...workStartTime, value: workStartTimeDate });
-
-      if (workEndTime) {
-        const workEndTimeDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), workEndTime.value.getHours(), workEndTime.value.getMinutes());
-        setWorkEndTime({ ...workEndTime, value: workEndTimeDate });
-      }
-    }
-  };
-
-  const selectTimeOp = (workDate) => {
-    const times = [];
-    for (let hour = 0; hour < 24; hour++) {
-      for (let minute = 0; minute < 60; minute += 30) {
-        const hourStr = hour < 10 ? `0${hour}` : hour;
-        const minuteStr = minute < 10 ? `0${minute}` : minute;
-        const dateSet = workDate || new Date();
-        const timeValue = new Date(dateSet.getFullYear(), dateSet.getMonth(), dateSet.getDate(), hour, minute);
-        times.push({ value: timeValue, label: `${hourStr}:${minuteStr}` });
-      }
-    }
-    return times;
-  };
-  const workStartTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
-  const workEndTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
-
   const cateTalentOp = [
     { value: "재능무관", label: "재능무관" },
     { value: "디자인", label: "디자인" },
@@ -186,6 +240,12 @@ const JobWrit = () => {
   const closePopup = () => {
     setModal(null);
   };
+  const showAlert = (content) => {
+    setModalAlert(content);
+  };
+  const closeAlert = () => {
+    setModalAlert(null);
+  };
 
   /* 주소 API */
   const completeHandler = (data) => {
@@ -196,48 +256,51 @@ const JobWrit = () => {
     setValue("zonecode", zonecode);
     trigger("zonecode");
   };
-  const closeHandler = (state) => {
-    if (state === "FORCE_CLOSE" || state === "COMPLETE_CLOSE") {
-      setModal(false);
-    }
-  };
+  // const closeHandler = (state) => {
+  //   if (state === "FORCE_CLOSE" || state === "COMPLETE_CLOSE") {
+  //     setModal(false);
+  //   }
+  // };
 
   const onSubmit = async (data) => {
     const { title, endDate, detailedAddress, pay, cateTalent, cateField, desc } = data;
-    const workStartTimeUTC = new Date(workStartTime.value).toISOString();
-    const workEndTimeUTC = new Date(workEndTime.value).toISOString();
-    const response = await fetch(`${url}/job/jobWrit`, {
-      method: "POST",
-      body: JSON.stringify({
-        emailID: "abc@asdf.com",
-        nickName: "Sample Nickname",
-        title,
-        endDate,
-        workStartDate: workStartTimeUTC,
-        workEndDate: workEndTimeUTC,
-        location: {
-          zonecode,
-          address,
-          detailedAddress,
-          mapX,
-          mapY,
+
+    if (workStartTime && workEndTime) {
+      const workStartTimeUTC = new Date(workStartTime.value).toISOString();
+      const workEndTimeUTC = new Date(workEndTime.value).toISOString();
+      const response = await fetch(`${url}/job/jobEdit/${_id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          title,
+          endDate,
+          workStartDate: workStartTimeUTC,
+          workEndDate: workEndTimeUTC,
+          location: {
+            zonecode,
+            address,
+            detailedAddress,
+            mapX,
+            mapY,
+          },
+          pay,
+          desc,
+          category: {
+            jobType,
+            time: `${Math.floor((new Date(workEndTimeUTC) - new Date(workStartTimeUTC)) / 60000)}`,
+            talent: cateTalent.value,
+            field: cateField.value,
+          },
+        }),
+        headers: {
+          "Content-Type": "application/json",
         },
-        pay,
-        desc,
-        category: {
-          jobType,
-          time: `${Math.floor((new Date(workEndTimeUTC) - new Date(workStartTimeUTC)) / 60000)}`,
-          talent: cateTalent.value,
-          field: cateField.value,
-        },
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.ok) {
-      showPopup("WriteOk");
-      navigate("/findjob");
+        credentials: "include",
+      });
+      if (response.ok) {
+        showAlert("WriteOk");
+      } else {
+        showAlert("Error");
+      }
     }
   };
 
@@ -263,11 +326,11 @@ const JobWrit = () => {
               <div className={`${style.formGrup} ${style.formLabels}`}>
                 <span>유형선택</span>
                 <label>
-                  <input type="radio" name="cateType" value={"onLine"} onChange={jobTypeFn} checked={jobType == "onLine"} />
+                  <input type="radio" name="cateType" value={"onLine"} onChange={jobTypeFn} checked={jobType === "onLine"} />
                   <span>온라인</span>
                 </label>
                 <label>
-                  <input type="radio" name="cateType" value={"offLine"} onChange={jobTypeFn} checked={jobType == "offLine"} />
+                  <input type="radio" name="cateType" value={"offLine"} onChange={jobTypeFn} checked={jobType === "offLine"} />
                   <span>오프라인</span>
                 </label>
               </div>
@@ -319,14 +382,11 @@ const JobWrit = () => {
                       <DatePicker
                         locale={ko}
                         dateFormat="yyyy-MM-dd"
-                        minDate={workEndDate || new Date()}
+                        minDate={endDate || new Date()}
                         closeOnScroll={true}
-                        placeholderText="근로 날짜를 선택"
-                        selected={workDate}
-                        onChange={(date) => {
-                          setWorkDate(date);
-                          field.onChange(date); // react-hook-form의 상태도 업데이트
-                        }}
+                        placeholderText="근로 날짜 선택"
+                        selected={field.value || workDate}
+                        onChange={(date) => workDateChange(date, field)}
                       />
                     )}
                   />
@@ -448,7 +508,6 @@ const JobWrit = () => {
               </div>
             </div>
             <div className="btnWrap">
-              <button onClick={() => showPopup("alert")}>ttt</button>
               <button type="submit" className="btn primary yellow">
                 구인글 작성
               </button>
@@ -457,18 +516,24 @@ const JobWrit = () => {
         </div>
       </section>
       {modal && (
-        <Modal show={modal !== null} onClose={closePopup} type={"alert"}>
+        <Modal show={modal !== null} onClose={closePopup} type="address">
           {modal === "findAddress" && (
             <div className={style.addressModal}>
               <h3>주소검색</h3>
               <DaumPostcode onComplete={completeHandler} />
             </div>
           )}
-          {/* {modal === "alert" && <ModalAlert close={closePopup} title={"타이틀이에요~"} desc={"설명입니다~"} error={false} confirm={false} />} */}
+        </Modal>
+      )}
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "WriteOk" && <ModalAlert close={closeAlert} title={"구인글 수정 메시지"} desc={"구인글이 정상적으로 수정되었습니다."} error={false} confirm={false} goPage={"/job-offer"} />}
+          {modalAlert === "Error" && <ModalAlert close={closeAlert} title={"구인글 수정  메시지"} desc={"구인글 수정 중 오류가 발생했습니다."} error={true} confirm={false} />}
+          {modalAlert === "none_id" && <ModalAlert close={closeAlert} title={"구인글 수정  메시지"} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
         </Modal>
       )}
     </main>
   );
 };
 
-export default JobWrit;
+export default JobEdit;

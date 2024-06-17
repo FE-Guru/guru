@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setPageInfo, setSubPage } from "../store/pageInfo";
+import { setPageInfo, setSubPage, resetSubPage } from "../store/pageInfo";
 import Lnb from "../components/Lnb";
 
 const Mypage = () => {
@@ -28,10 +28,13 @@ const Mypage = () => {
   useEffect(() => {
     dispatch(setPageInfo(pageInfo));
     dispatch(setSubPage(subPage));
-  }, [dispatch, pageInfo]);
+    return () => {
+      dispatch(resetSubPage());
+    };
+  }, [dispatch, pageInfo, subPage]);
   return (
-    <main className='subPage'>
-      <section className='mw'>
+    <main className="subPage">
+      <section className="mw">
         <Lnb />
         <Outlet></Outlet>
       </section>
