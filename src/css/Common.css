@@ -87,12 +87,13 @@ progress {
   -webkit-appearance: none;
   height: 0.8rem;
 }
-::-webkit-progress-bar {
+progress::-webkit-progress-bar {
   background-color: #f1f1f1;
   border-radius: 100rem;
 }
 
-::-webkit-progress-value {
+progress::-webkit-progress-value {
+  transition: 0.3s;
   background-color: var(--cr-m-y);
   border-radius: 100rem;
 }
@@ -111,6 +112,9 @@ progress {
   gap: 1.6rem;
   flex: 1;
 }
+.subPage.jobOffer .contents {
+  overflow-y: hidden;
+}
 .subPage .contents > h3 {
   width: 100%;
   padding: 0.6rem 0 0 0;
@@ -121,6 +125,19 @@ progress {
   width: 100%;
   align-items: flex-end;
 }
+.LobHandler {
+  color: #748787;
+}
+.LobHandler::before {
+  content: "\f362";
+  font: var(--fa-font-solid);
+  font-size: 1.4rem;
+  padding-right: 0.7rem;
+}
+.LobHandler::after {
+  content: "필터";
+}
+
 .appliedList .contents > .boxContainer,
 .jobOffer .contents > .boxContainer {
   background: #f1f1f1;
@@ -311,6 +328,9 @@ progress {
   .mw {
     width: calc(100% - var(--md-gap) * 2);
   }
+  .subPage > section {
+    gap: 2.8rem;
+  }
 }
 @media (max-width: 990px) {
   .mw {
@@ -336,9 +356,29 @@ progress {
   .subPage > section {
     gap: 2rem;
   }
+  .subPage .contents > .boxContainer {
+    padding: 2.4rem;
+  }
   .subPage .contents > h3 {
     padding-top: 3.4rem;
   }
+  .subPage .contents > .conTitle {
+    align-items: center;
+  }
+  .LobHandler {
+    padding-top: 0.5rem;
+  }
+  .LobHandler::before {
+    content: "\f002";
+    font: var(--fa-font-solid);
+    font-size: 1.6rem;
+    padding-right: 0.7rem;
+  }
+  .LobHandler::after {
+    content: "상세검색";
+    font-size: 1.8rem;
+  }
+
   .btnWrap {
     width: 100%;
     display: flex;
