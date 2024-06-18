@@ -3,12 +3,25 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userState } from "../store/userStore";
 import { url } from "../store/ref";
+import Modal from "../components/Modal";
+import Profile from "../components/Profile";
 import style from "../css/Header.module.css";
 
 const Header = () => {
   const [isMypage, setIsMypage] = useState(false);
   // const [login, setLogin] = useState(false); // 로그인 상태 변수
   const [isIconChanged, setIsIconChanged] = useState(false); // 아이콘 상태 변수
+  const [modal, setModal] = useState(null);
+  const showPpup = (content) => {
+    setModal(content);
+  };
+  const closePopup = () => {
+    setModal(null);
+  };
+ useEffect(() => {
+  showPpup("profile")
+ }, [])
+ 
 
   const dispatch = useDispatch();
   const location = useLocation();
@@ -148,6 +161,14 @@ const Header = () => {
       <button onClick={mypageClick}>
         <i className={isIconChanged ? "fa-solid fa-x" : "fa-solid fa-bars"}></i>
       </button> */}
+      {modal &&(
+        <Modal show={modal !== null} onclose={closePopup} type={"profile"}>
+        {modal === "profile" && (
+          
+          <Profile />
+        )}
+      </Modal>
+      )}
     </header>
   );
 };
