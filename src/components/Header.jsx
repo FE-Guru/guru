@@ -47,7 +47,7 @@ const Header = () => {
   const user = useSelector((state) => state.user.user);
   const emailID = user ? user.emailID : null;
   const nickName = user ? user.nickName : null;
-  console.log("user---", user);
+  // console.log("user---", user);
 
   const logout = (e) => {
     e.preventDefault();
