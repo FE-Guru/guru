@@ -48,6 +48,7 @@
 .btn.green:hover {
   background: var(--cr-bl1);
   color: var(--cr-w);
+  border-color: var(--cr-bl1);
 }
 
 html {

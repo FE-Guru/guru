@@ -1,21 +1,25 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
+import UserProfile from "./UserProfile";
+import { url } from "../store/ref";
 
-const UserSlide = () => {
+const UserSlide = ({ item }) => {
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [swiper, setSwiper] = useState(null);
+  const [itemAppli, setItemAppli] = useState();
+  const [userList, setUserList] = useState([]);
+  const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
+
   const prevPage = () => {
     swiper?.slidePrev();
   };
   const nextPage = () => {
     swiper?.slideNext();
   };
-  const slides = [
-    { id: 1, name: "자유로운 도비", trust: 25 },
-    { id: 2, name: "나길동", trust: 25 },
-    { id: 3, name: "김구루", trust: 25 },
-    { id: 4, name: "존도", trust: 25 },
-  ];
+
   useEffect(() => {
     if (swiper) {
       swiper.on("slideChange", () => {
@@ -25,9 +29,53 @@ const UserSlide = () => {
   }, [swiper]);
 
   useEffect(() => {
-    console.log("Current swiperIndex:", swiperIndex);
-  }, [swiperIndex]);
+    if (item) {
+      setItemAppli(item.applicants);
+    }
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (itemAppli) {
+        try {
+          const response = await fetch(`${url}/job/userList`, {
+            method: "POST",
+            body: JSON.stringify({
+              itemAppli,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setUserList(data);
+          } else {
+            console.error("서버에러");
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+        }
+      }
+    };
+    fetchData();
+  }, [itemAppli]);
 
+  const showPopup = useCallback((content, user) => {
+    setModal({ content, user });
+  }, []);
+  const closePopup = useCallback(() => {
+    setModal(null);
+  }, []);
+  const showAlert = useCallback((content) => {
+    setModalAlert(content);
+  }, []);
+  const closeAlert = useCallback(() => {
+    setModalAlert(null);
+  }, [modalAlert]);
+
+  const userProfile = (user) => {
+    showPopup("userProfile", user);
+  };
   return (
     <div className="userSlide">
       <Swiper
@@ -50,19 +98,19 @@ const UserSlide = () => {
             spaceBetween: 10,
           },
         }}>
-        {slides.map((slide) => (
-          <SwiperSlide key={slide.id}>
-            <div className="userCard">
+        {userList.map((user) => (
+          <SwiperSlide key={user?._id}>
+            <div className="userCard" onClick={() => userProfile(user)}>
               <div className="thumb">
                 <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" />
               </div>
               <div className="userInfo">
                 <strong>
-                  {slide.name}
+                  {user?.nickName}
                   <span>님</span>
                 </strong>
                 <label htmlFor="trust">신뢰도</label>
-                <progress id="trust" max="100" value={slide.trust}></progress>
+                <progress id="trust" max="100" value="20"></progress>
               </div>
             </div>
           </SwiperSlide>
@@ -71,9 +119,19 @@ const UserSlide = () => {
       <button className={`userPrevBtn ${swiperIndex === 0 ? "disabled" : ""}`} disabled={swiperIndex === 0} onClick={prevPage}>
         <img src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`} alt="prev 없음" />
       </button>
-      <button className={`userNextBtn ${swiperIndex === slides.length - 1 ? "disabled" : ""}`} disabled={swiperIndex === slides.length - 1} onClick={nextPage}>
+      <button className={`userNextBtn ${swiperIndex === userList.length - 1 ? "disabled" : ""}`} disabled={swiperIndex === userList.length - 1} onClick={nextPage}>
         <img src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`} alt="next" />
       </button>
+      {modal && (
+        <Modal show={modal !== null} onClose={closePopup} type="userProfile">
+          {modal.content === "userProfile" && (
+            <div>
+              <h3 style={{ marginBottom: "1.4rem" }}>{modal.user.nickName}님 상세보기</h3>
+              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} itemId={item._id} />
+            </div>
+          )}
+        </Modal>
+      )}
     </div>
   );
 };

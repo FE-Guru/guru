@@ -63,8 +63,9 @@
   font-weight: 400;
   font-size: 1.7rem;
   letter-spacing: -0.25px;
-  line-height: 182%;
+  line-height: 148%;
   min-height: 6rem;
+  padding-bottom: 2rem;
 }
 
 .closeBtn {
