@@ -12,6 +12,7 @@ import PersonalEdit from "./pages/PersonalEdit";
 import AppliedList from "./pages/AppliedList";
 import JobOffer from "./pages/JobOffer";
 import JobDetail from "./pages/JobDetail";
+import AcctDelete from "./pages/AcctDelete";
 import "./css/Reset.css";
 import "./css/Common.css";
 import "swiper/css";
@@ -20,21 +21,22 @@ import "./css/Swiper.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <Header />
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/findjob" element={<Findjob />} />
-        <Route path="/applied-list" element={<AppliedList />} />
-        <Route path="/job-offer" element={<JobOffer />} />
-        <Route path="/job-write" element={<JobWrite />} />
-        <Route path="/job-edit" element={<JobEdit />} />
-        <Route path="/job-detail" element={<JobDetail />} />
-        <Route path="/mypage" element={<Mypage />}>
-          <Route path="profileEdit" element={<ProfileEdit />} />
-          <Route path="personalEdit" element={<PersonalEdit />} />
+        <Route path='/' element={<Main />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/findjob' element={<Findjob />} />
+        <Route path='/applied-list' element={<AppliedList />} />
+        <Route path='/job-offer' element={<JobOffer />} />
+        <Route path='/job-write' element={<JobWrite />} />
+        <Route path='/job-edit' element={<JobEdit />} />
+        <Route path='/job-detail' element={<JobDetail />} />
+        <Route path='/mypage' element={<Mypage />}>
+          <Route path='profileEdit' element={<ProfileEdit />} />
+          <Route path='personalEdit' element={<PersonalEdit />} />
+          <Route path='acctDelete' element={<AcctDelete />} />
         </Route>
       </Routes>
     </div>

@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { url } from "../store/ref";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 
 const PersonalEdit = () => {
+  const navigate = useNavigate();
+
+  const accountDel = () => {
+    navigate("/mypage/acctDelete");
+  };
+
   const [formData, setFormData] = useState({
     password: "",
     nickName: "",
@@ -35,7 +42,6 @@ const PersonalEdit = () => {
       if (response.ok) {
         alert("회원 정보가 성공적으로 수정되었습니다.");
       } else {
-        // 오류 처리
         alert("회원 정보 수정에 실패했습니다.");
       }
     } catch (error) {
@@ -59,11 +65,11 @@ const PersonalEdit = () => {
           <div className={form.formContainer}>
             <div className={`${form.formGrup} `}>
               <span>이메일(아이디)</span>
-              <span>{emailID}</span>
+              <span className={mem.editSpan}>{emailID}</span>
             </div>
             <div className={form.formGrup}>
               <span>이름</span>
-              <span>{userName}</span>
+              <span className={mem.editSpan}>{userName}</span>
             </div>
             <div className={`${form.formGrup} `}>
               <span>비밀번호</span>
@@ -115,7 +121,7 @@ const PersonalEdit = () => {
               />
             </div>
           </div>
-          <div className='accountDel'>
+          <div className={mem.accountDel} onClick={accountDel}>
             <span>회원탈퇴</span>
           </div>
           <div className={`${mem.btnWrap} btnWrap`}>

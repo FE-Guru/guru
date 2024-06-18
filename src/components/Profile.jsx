@@ -68,25 +68,25 @@ const Profile = ({}) => {
         <div className={style.formContainer}>
           <div className={style.formThumb}>
             {imagePreview ? (
-              <img src={imagePreview} alt="Profile Preview" />
+              <img src={imagePreview} alt='Profile Preview' />
             ) : (
               <img
                 src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
-                alt="logo"
+                alt='logo'
               />
             )}
             <input
-              type="file"
-              name="files"
-              id="files"
+              type='file'
+              name='files'
+              id='files'
               onChange={handleFileChange}
             />
-            <i className="fa-solid fa-camera-retro">
+            <i className='fa-solid fa-camera-retro'>
               <p>이미지 등록</p>
             </i>
           </div>
           <span>님</span>
-          <progress id="trust" max="100" value="25"></progress>
+          <progress id='trust' max='100' value='25'></progress>
         </div>
         <div className={`${style.formContainer}`}>
           <div className={style.formGrup}>
@@ -94,10 +94,10 @@ const Profile = ({}) => {
             <div className={`${style.formCon} ${style.addItem}`}>
               <input
                 {...register("career")}
-                placeholder="경력을 입력해주세요."
+                placeholder='경력을 입력해주세요.'
               />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
+              <button type='button' className={style.addBtn}>
+                <i className='fa-solid fa-plus'></i>
               </button>
             </div>
           </div>
@@ -106,10 +106,10 @@ const Profile = ({}) => {
             <div className={`${style.formCon} ${style.addItem}`}>
               <input
                 {...register("certi")}
-                placeholder="면허 / 자격증을 입력해주세요."
+                placeholder='면허 / 자격증을 입력해주세요.'
               />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
+              <button type='button' className={style.addBtn}>
+                <i className='fa-solid fa-plus'></i>
               </button>
             </div>
           </div>
@@ -118,32 +118,32 @@ const Profile = ({}) => {
             <div className={`${style.formCon} ${style.addItem}`}>
               <input
                 {...register("skill")}
-                placeholder="재능 / 스킬을 입력해주세요."
+                placeholder='재능 / 스킬을 입력해주세요.'
               />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
+              <button type='button' className={style.addBtn}>
+                <i className='fa-solid fa-plus'></i>
               </button>
             </div>
           </div>
           <div className={style.formGrup}>
             <span>시간</span>
             <div className={`${style.formCon} ${style.addItem}`}>
-              <input {...register("time")} placeholder="시간을 입력해주세요." />
+              <input {...register("time")} placeholder='시간을 입력해주세요.' />
             </div>
           </div>
           <div className={style.formGrup}>
             <span>자기소개</span>
             <div className={`${style.formCon} ${style.addItem}`}>
               <textarea
-                id="introduce"
+                id='introduce'
                 {...register("introduce")}
-                placeholder="자기소개를 입력해주세요."
+                placeholder='자기소개를 입력해주세요.'
               />
             </div>
           </div>
         </div>
-        <div className="btnWrap">
-          <button type="submit" className="btn primary yellow">
+        <div className='btnWrap'>
+          <button type='submit' className='btn primary yellow'>
             프로필 등록
           </button>
         </div>
