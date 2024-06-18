@@ -15,13 +15,30 @@ const Header = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await fetch(`${url}/profile`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (response.ok) {
-        const userInfo = await response.json();
-        dispatch(userState(userInfo));
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.warn("로그인하지 않은 상태입니다.");
+          return;
+        }
+
+        const response = await fetch(`${url}/profile`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const userInfo = await response.json();
+          dispatch(userState(userInfo));
+        } else if (response.status === 401) {
+          throw new Error("로그인이 필요합니다.");
+        } else {
+          console.error("fetch profile erroor");
+        }
+      } catch (error) {
+        console.error("Fetch error: ", error);
       }
     };
     fetchProfile();
@@ -53,16 +70,19 @@ const Header = () => {
   return (
     <header className={style.header}>
       <h1>
-        <Link to="/">
-          <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="logo" />
+        <Link to='/'>
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/logo.svg`}
+            alt='logo'
+          />
         </Link>
       </h1>
       <div className={style.gnb}>
         <nav>
-          <Link to="/findjob">일자리찾기</Link>
-          <Link to="/applied-list">지원목록</Link>
-          <Link to="/job-offer">공고관리</Link>
-          <Link to="/job-write">구인글 작성</Link>
+          <Link to='/findjob'>일자리찾기</Link>
+          <Link to='/applied-list'>지원목록</Link>
+          <Link to='/job-offer'>공고관리</Link>
+          <Link to='/job-write'>구인글 작성</Link>
         </nav>
 
         {emailID ? (
@@ -76,37 +96,52 @@ const Header = () => {
               <span></span>
             </button> */}
             <div className={style.thumb} onClick={mypageClick}>
-              <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="logo" />
+              <img
+                src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
+                alt='logo'
+              />
             </div>
-            <div className={style.mypage} style={{ display: isMypage ? "flex" : "none" }}>
+            <div
+              className={style.mypage}
+              style={{ display: isMypage ? "flex" : "none" }}
+            >
               <span>현재 로그인 계정</span>
               <div className={style.myprofile}>
-                <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="logo" />
+                <img
+                  src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
+                  alt='logo'
+                />
                 <div>
                   <h2>{nickName ? nickName : "닉네임을 설정해주세요"}</h2>
                   <p>{emailID}</p>
                 </div>
               </div>
               <div className={style.logoutBtn}>
-                <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
+                <Link
+                  to='/signup'
+                  className={`${style.goJoin} btn primary yellow`}
+                >
                   회원가입
                 </Link>
-                <Link to="/login" className={`${style.goLogin} btn primary yellow`}>
+                <Link
+                  to='/login'
+                  className={`${style.goLogin} btn primary yellow`}
+                >
                   로그인
                 </Link>
               </div>
               <div className={style.cate1}>
                 <span>빠른메뉴</span>
                 <span>메뉴</span>
-                <Link to="/findjob">일자리 찾기</Link>
-                <Link to="/applied-list">내가 지원한 일자리</Link>
-                <Link to="/job-write">구인글 작성</Link>
-                <Link to="/job-offer">구인글 관리</Link>
+                <Link to='/findjob'>일자리 찾기</Link>
+                <Link to='/applied-list'>내가 지원한 일자리</Link>
+                <Link to='/job-write'>구인글 작성</Link>
+                <Link to='/job-offer'>구인글 관리</Link>
               </div>
               <div className={style.cate2}>
-                <Link to="/mypage/profileEdit">프로필 수정</Link>
-                <Link to="/mypage/personalEdit">회원정보 수정</Link>
-                <Link to="/logout" onClick={logout}>
+                <Link to='/mypage/profileEdit'>프로필 수정</Link>
+                <Link to='/mypage/personalEdit'>회원정보 수정</Link>
+                <Link to='/logout' onClick={logout}>
                   로그아웃
                 </Link>
               </div>
@@ -114,10 +149,10 @@ const Header = () => {
           </div>
         ) : (
           <div className={style.logoutDiv}>
-            <Link to="/login" className={style.goLogin}>
-              <i className="fa-regular fa-user"></i>
+            <Link to='/login' className={style.goLogin}>
+              <i className='fa-regular fa-user'></i>
             </Link>
-            <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
+            <Link to='/signup' className={`${style.goJoin} btn primary yellow`}>
               회원가입
             </Link>
           </div>
