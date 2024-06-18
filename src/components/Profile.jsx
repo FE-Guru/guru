@@ -150,7 +150,6 @@ const Profile = ({}) => {
       </form>
     </div>
   );
-}
+};
 
-
-export default Profile
+export default Profile;

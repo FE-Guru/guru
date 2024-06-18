@@ -3,6 +3,15 @@
   width: 100%;
 }
 
+.modalprofile h3 {
+  margin-bottom: 2.1rem;
+}
+.formStyle.formProfile {
+  flex-direction: row;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
 .formStyle > div.formContainer {
   border: 3px solid var(--cr-bl1);
   padding: 3.4rem 3.6rem;
@@ -12,6 +21,43 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+}
+.formStyle.formProfile > div.formContainer {
+  width: auto;
+}
+.formStyle.formProfile .formContainer:first-of-type {
+  padding: 3.4rem 4.6rem;
+}
+.formStyle.formProfile .formContainer:nth-of-type(2) {
+  flex: 1;
+}
+/* dd */
+.formProfile .formThumb {
+  width: 14.2rem;
+  height: 14.2rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  /* border: 2px solid var(--cr-bl1); */
+  cursor: pointer;
+}
+.formProfile .formThumb img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.formProfile input[type="file"] {
+  position: absolute;
+  top:0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  opacity: 0;
 }
 
 .formStyle input {
