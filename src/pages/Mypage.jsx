@@ -8,7 +8,7 @@ const Mypage = () => {
   const dispatch = useDispatch();
   const pageInfo = useMemo(
     () => ({
-      menuKR: "마이 페이지",
+      menuKR: "마이페이지",
       menuEn: "My Page",
       currentPage: { pageName: "마이페이지", path: "/mypage" },
     }),
@@ -33,8 +33,8 @@ const Mypage = () => {
     };
   }, [dispatch, pageInfo, subPage]);
   return (
-    <main className="subPage">
-      <section className="mw">
+    <main className='subPage'>
+      <section className='mw'>
         <Lnb />
         <Outlet></Outlet>
       </section>
