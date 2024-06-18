@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { setDates } from "../store/findjob";
-import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import Detail from "./Detail";
@@ -29,7 +28,6 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
     }
     return null;
   }, [item?.category?.jobType]);
-
   useEffect(() => {
     if (item) {
       const { workStartDate, workEndDate, endDate } = item;
@@ -43,9 +41,12 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
       );
     }
   }, [item, dispatch]);
-
   const toggleUserSlide = () => {
-    setShow(!show);
+    if (item.applicants.length > 0) {
+      setShow(!show);
+    } else {
+      setModalAlert("noneAppli");
+    }
   };
 
   const showPopup = (content) => {
@@ -58,25 +59,9 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
     setModalAlert(content);
   }, []);
   const closeAlert = useCallback(() => {
-    if (modalAlert === "deleteOk") {
-      onDel(item._id);
-    }
     setModalAlert(null);
   }, [modalAlert, onDel, item._id]);
 
-  const deleteJob = useCallback(async () => {
-    try {
-      const response = await fetch(`${url}/job/deleteJob/${item._id}`, {
-        method: "DELETE",
-      });
-      const res = await response.json();
-      if (res.message === "ok") {
-        showAlert("deleteOk");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [url, item._id, showAlert]);
   const goDetail = () => {
     if (findjob) {
       navigate("/job-detail", { state: { _id: item._id } });
@@ -110,14 +95,6 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
             </div>
             {jobOffer ? (
               <div className={style.btnWrap}>
-                <button
-                  className="btn tertiary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalAlert("deleteJob");
-                  }}>
-                  삭제하기
-                </button>
                 <button
                   className="btn tertiary"
                   onClick={(e) => {
@@ -169,7 +146,7 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
       </div>
       {jobOffer ? (
         <motion.div initial={false} animate={{ height: show ? "auto" : 0 }} style={{ overflow: "hidden" }} transition={{ duration: 0.3 }}>
-          <UserSlide />
+          <UserSlide item={item} />
         </motion.div>
       ) : null}
 
@@ -185,8 +162,22 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
       )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "deleteJob" && <ModalAlert close={closeAlert} title={"구인글 수정 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
-          {modalAlert === "deleteOk" && <ModalAlert close={closeAlert} title={"구인글 수정 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
+          {modalAlert === "deleteOk" && <ModalAlert close={closeAlert} title={"구인관리 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
+          {modalAlert === "noneAppli" && (
+            <ModalAlert
+              close={closeAlert}
+              title={"구인관리 메시지"}
+              desc={
+                <>
+                  지원한 지원자가 없습니다.
+                  <br />
+                  조금더 기다려주세요.
+                </>
+              }
+              error={false}
+              confirm={false}
+            />
+          )}
         </Modal>
       )}
     </div>
