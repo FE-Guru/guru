@@ -1,5 +1,5 @@
 /* global kakao */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../css/Map.module.css';
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
@@ -14,6 +14,9 @@ const loadKakaoMapScript = (callback) => {
       console.error('Failed to load Kakao Maps API.');
     }
   };
+  script.onerror = () => {
+    console.error('Error loading Kakao Maps API script.');
+  };
   document.head.appendChild(script);
 };
 
@@ -23,12 +26,40 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('ko-KR', options);
 };
 
-const Map = ({ jobList }) => {
+// 현재 사용자 위치 계산
+const getDistance = (lat1, lon1, lat2, lon2, unit) => {
+  if (lat1 === lat2 && lon1 === lon2) {
+    return 0;
+  } else {
+    const radlat1 = (Math.PI * lat1) / 180;
+    const radlat2 = (Math.PI * lat2) / 180;
+    const theta = lon1 - lon2;
+    const radtheta = (Math.PI * theta) / 180;
+    let dist =
+      Math.sin(radlat1) * Math.sin(radlat2) +
+      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+      dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515;
+    if (unit === 'K') {
+      dist = dist * 1.609344;
+    }
+    if (unit === 'N') {
+      dist = dist * 0.8684;
+    }
+    return dist;
+  }
+};
+
+const Map = ({ jobList, updateJobList }) => {
   const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 }); // 기본 위치 설정
   const [map, setMap] = useState(null); // 지도 객체 상태
 
   // 현재 위치 파악
-  const getCurrentLocation = () => {
+  const getCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -43,7 +74,7 @@ const Map = ({ jobList }) => {
         }
       );
     }
-  };
+  }, []);
 
   // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
@@ -64,7 +95,7 @@ const Map = ({ jobList }) => {
       // 현재 위치를 비동기로 가져오기
       getCurrentLocation();
     });
-  }, []);
+  }, [getCurrentLocation, location.lat, location.lon]);
 
   // 지도의 중심을 현재 위치로 업데이트
   useEffect(() => {
@@ -76,7 +107,7 @@ const Map = ({ jobList }) => {
 
   // 지도와 마커 클러스터러 설정
   useEffect(() => {
-    if (map) {
+    if (map && jobList.length > 0) {
       // 마커 클러스터러를 생성합니다
       const clusterer = new kakao.maps.MarkerClusterer({
         map: map,
@@ -138,8 +169,26 @@ const Map = ({ jobList }) => {
 
       // 클러스터러에 마커들을 추가합니다
       clusterer.addMarkers(markers);
+
+      // 현재위치 기준으로 가까운 순 리스트 만들기
+      const newJobList = jobList
+        .map((job) => ({
+          ...job,
+          distance: getDistance(
+            location.lat,
+            location.lon,
+            job.location.mapY,
+            job.location.mapX,
+            'K'
+          ),
+        }))
+        .sort((a, b) => a.distance - b.distance);
+
+      console.log('새로운 배열 newJobList -> ', newJobList); // 여기에 distance 보관됨
+      // Findjob.jsx로 newJobList 전달
+      updateJobList(newJobList);
     }
-  }, [map, jobList]);
+  }, [map, jobList, location]);
 
   return (
     <div>
