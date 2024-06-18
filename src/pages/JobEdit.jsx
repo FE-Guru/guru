@@ -92,7 +92,9 @@ const JobEdit = () => {
       showAlert("none_id");
     } else {
       const fetchJob = async () => {
-        const res = await fetch(`${url}/job/jobEdit/${_id}`);
+        const res = await fetch(`${url}/job/jobEdit/${_id}`, {
+          method: "GET",
+        });
         const result = await res.json();
         if (result.category.jobType === "offLine") {
           setIsOffline(true);
