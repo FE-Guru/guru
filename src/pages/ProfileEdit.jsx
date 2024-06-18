@@ -6,7 +6,7 @@ const ProfileEdit = () => {
   const dispatch = useDispatch();
   const pageInfo = useMemo(
     () => ({
-      menuKR: "마이 페이지",
+      menuKR: "마이페이지",
       menuEn: "My Page",
       currentPage: { pageName: "프로필 수정", path: "/mypage/profileEdit" },
     }),
@@ -17,9 +17,9 @@ const ProfileEdit = () => {
     dispatch(setPageInfo(pageInfo));
   }, [dispatch, pageInfo]);
   return (
-    <div className="contents">
+    <div className='contents'>
       <h3>{currentPage.pageName}</h3>
-      <div className="full"></div>
+      <div className='full'></div>
     </div>
   );
 };

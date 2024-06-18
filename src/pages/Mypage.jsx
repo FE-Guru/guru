@@ -1,14 +1,14 @@
 import { useEffect, useMemo } from "react";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setPageInfo, setSubPage } from "../store/pageInfo";
+import { setPageInfo, setSubPage, resetSubPage } from "../store/pageInfo";
 import Lnb from "../components/Lnb";
 
 const Mypage = () => {
   const dispatch = useDispatch();
   const pageInfo = useMemo(
     () => ({
-      menuKR: "마이 페이지",
+      menuKR: "마이페이지",
       menuEn: "My Page",
       currentPage: { pageName: "마이페이지", path: "/mypage" },
     }),
@@ -28,7 +28,10 @@ const Mypage = () => {
   useEffect(() => {
     dispatch(setPageInfo(pageInfo));
     dispatch(setSubPage(subPage));
-  }, [dispatch, pageInfo]);
+    return () => {
+      dispatch(resetSubPage());
+    };
+  }, [dispatch, pageInfo, subPage]);
   return (
     <main className='subPage'>
       <section className='mw'>

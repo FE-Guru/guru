@@ -11,18 +11,27 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-
-    const response = await fetch(`${url}/login`, {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify({ emailID, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    if (data.emailID) {
-      setRedirect(true);
+    try {
+      const response = await fetch(`${url}/login`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({ emailID, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.token);
+        if (data.emailID) {
+          setRedirect(true);
+        }
+        console.log("로그인 성공:", data);
+      } else {
+        console.error("로그인 실패", response.statusText);
+      }
+    } catch (error) {
+      console.error("로그인 중 오류 발생:", error);
     }
   };
 

@@ -28,13 +28,30 @@ const Header = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await fetch(`${url}/profile`, {
-        method: "GET",
-        credentials: "include",
-      });
-      if (response.ok) {
-        const userInfo = await response.json();
-        dispatch(userState(userInfo));
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.warn("로그인하지 않은 상태입니다.");
+          return;
+        }
+
+        const response = await fetch(`${url}/profile`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const userInfo = await response.json();
+          dispatch(userState(userInfo));
+        } else if (response.status === 401) {
+          throw new Error("로그인이 필요합니다.");
+        } else {
+          console.error("fetch profile erroor");
+        }
+      } catch (error) {
+        console.error("Fetch error: ", error);
       }
     };
     fetchProfile();
@@ -43,7 +60,7 @@ const Header = () => {
   const user = useSelector((state) => state.user.user);
   const emailID = user ? user.emailID : null;
   const nickName = user ? user.nickName : null;
-  console.log("user---", user);
+  // console.log("user---", user);
 
   const logout = (e) => {
     e.preventDefault();
@@ -78,19 +95,19 @@ const Header = () => {
           <Link to='/findjob'>일자리찾기</Link>
           <Link to='/applied-list'>지원목록</Link>
           <Link to='/job-offer'>공고관리</Link>
-          <Link to='/job-wirt'>구인글 작성</Link>
+          <Link to='/job-write'>구인글 작성</Link>
         </nav>
 
         {emailID ? (
           <div className={style.loginDiv}>
-            <button>
-              <i className='fa-regular fa-bell'></i>
+            {/* <button>
+              <i className="fa-regular fa-bell"></i>
               <span></span>
             </button>
             <button>
-              <i className='fa-regular fa-comment-dots'></i>
+              <i className="fa-regular fa-comment-dots"></i>
               <span></span>
-            </button>
+            </button> */}
             <div className={style.thumb} onClick={mypageClick}>
               <img
                 src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
@@ -131,11 +148,11 @@ const Header = () => {
                 <span>메뉴</span>
                 <Link to='/findjob'>일자리 찾기</Link>
                 <Link to='/applied-list'>내가 지원한 일자리</Link>
-                <Link to='/job-wirt'>구인글 작성</Link>
+                <Link to='/job-write'>구인글 작성</Link>
                 <Link to='/job-offer'>구인글 관리</Link>
               </div>
               <div className={style.cate2}>
-                <Link to='/mypage/ProfileEdit'>프로필 수정</Link>
+                <Link to='/mypage/profileEdit'>프로필 수정</Link>
                 <Link to='/mypage/personalEdit'>회원정보 수정</Link>
                 <Link to='/logout' onClick={logout}>
                   로그아웃
