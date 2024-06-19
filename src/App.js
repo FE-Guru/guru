@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import SignupOk from "./pages/SignupOk";
 import Findjob from "./pages/Findjob";
 import JobWrite from "./pages/JobWrite";
 import JobEdit from "./pages/JobEdit";
@@ -13,6 +14,8 @@ import AppliedList from "./pages/AppliedList";
 import JobOffer from "./pages/JobOffer";
 import JobDetail from "./pages/JobDetail";
 import AcctDelete from "./pages/AcctDelete";
+import AcctBye from "./pages/AcctBye";
+import Footer from "./components/Footer";
 import "./css/Reset.css";
 import "./css/Common.css";
 import "swiper/css";
@@ -27,6 +30,7 @@ function App() {
         <Route path='/' element={<Main />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/signupok' element={<SignupOk />} />
         <Route path='/findjob' element={<Findjob />} />
         <Route path='/applied-list' element={<AppliedList />} />
         <Route path='/job-offer' element={<JobOffer />} />
@@ -38,7 +42,9 @@ function App() {
           <Route path='personalEdit' element={<PersonalEdit />} />
           <Route path='acctDelete' element={<AcctDelete />} />
         </Route>
+        <Route path='acctbye' element={<AcctBye />} />
       </Routes>
+      <Footer />
     </div>
   );
 }

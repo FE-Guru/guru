@@ -3,11 +3,17 @@ import { url } from "../store/ref";
 import { useState } from "react";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
+import Modal from "../components/Modal";
 
 const Login = () => {
   const [emailID, setEmailID] = useState("");
   const [password, setPassWord] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [modal, setModal] = useState(null);
+
+  const closePopup = () => {
+    setModal(null);
+  };
 
   const login = async (e) => {
     e.preventDefault();
@@ -25,13 +31,14 @@ const Login = () => {
         localStorage.setItem("token", data.token);
         if (data.emailID) {
           setRedirect(true);
+        } else {
+          setModal("loginfailed");
         }
-        console.log("로그인 성공:", data);
       } else {
         console.error("로그인 실패", response.statusText);
       }
     } catch (error) {
-      console.error("로그인 중 오류 발생:", error);
+      console.error("로그인 오류 발생:", error);
     }
   };
 
@@ -90,6 +97,14 @@ const Login = () => {
           </p>
         </div>
       </section>
+      <Modal show={modal !== null} onClose={closePopup}>
+        {modal === "loginfailed" && (
+          <div className='alert'>
+            <h3>GURU</h3>
+            <p>아이디나 비밀번호를 다시 확인해주세요.</p>
+          </div>
+        )}
+      </Modal>
     </main>
   );
 };

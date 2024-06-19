@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { userState } from "../store/userStore";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import style from "../css/Modal.module.css";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const [modal, setModal] = useState(null);
@@ -24,6 +26,8 @@ const Signup = () => {
   const [idMsg, setIdMsg] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwConMsg, setPwConMsg] = useState("");
+
+  const dispatch = useDispatch();
 
   const signup = async (e) => {
     e.preventDefault();
@@ -66,7 +70,13 @@ const Signup = () => {
     });
 
     if (response.status === 200) {
-      window.location.href = "/login";
+      const signupData = await response.json();
+      dispatch(userState(signupData));
+      window.location.href = `/signupok?emailID=${signupData.emailID}
+      &userName=${signupData.userName}
+      &nickName=${signupData.nickName}
+      &phone=${signupData.phone}
+      &account=${signupData.account}`;
     } else {
       setModal("userrequired");
     }
@@ -140,7 +150,6 @@ const Signup = () => {
   const chkRequired = () => {
     return svcAgree && priAgree;
   };
-  // console.log("chkRequired", chkRequired());
 
   const chkSubmit = (e) => {
     e.preventDefault();
@@ -298,10 +307,10 @@ const Signup = () => {
               있습니다.
               <br />
               8. 개인정보 보호책임자 <br />
-              • 이름: [이름] <br />
-              • 직위: [직위] <br />
-              • 연락처: [연락처] <br />
-              • 이메일: [이메일] <br />
+              • 이름: [김구루] <br />
+              • 직위: [CPO] <br />
+              • 연락처: [1577-0000] <br />
+              • 이메일: [privacy@guru.com] <br />
             </pre>
           </div>
         )}
