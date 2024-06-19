@@ -9,6 +9,7 @@ const Detail = ({ _id }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const [modalAlert, setModalAlert] = useState(null);
+  const [popupVisible, setPopupVisible] = useState(false);
   const [item, setItem] = useState(null);
   const [author, setAuthor] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -164,31 +165,15 @@ const Detail = ({ _id }) => {
         </div>
       </section>
 
+      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" />}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "deleteJob" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
-          {modalAlert === "appCancell" && (
-            <ModalAlert
-              close={closeAlert}
-              title={"상세페이지 메시지"}
-              desc={
-                <>
-                  지금 취소하시면 패널티가 부과되며
-                  <br />
-                  서비스 이용에 제약을 받을수 있습니다
-                  <br />
-                  정말 취소하시겠습니까?
-                </>
-              }
-              error={true}
-              confirm={true}
-              throwFn={appDelete}
-            />
-          )}
+          {modalAlert === "appCancell" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정말 취소하겠습니까?"} error={true} confirm={true} throwFn={appDelete} />}
           {modalAlert === "deleteOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
           {modalAlert === "none_id" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
           {modalAlert === "appError" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={errorMessage} error={true} confirm={false} />}
-          {modalAlert === "appOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정상적으로 처리되었습니다."} error={false} confirm={false} />}
+          {modalAlert === "appOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"지원이 정상적으로 처리되었습니다."} error={false} confirm={false} />}
         </Modal>
       )}
     </>
