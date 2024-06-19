@@ -84,7 +84,7 @@ const Detail = ({ _id }) => {
     const data = await response.json();
     if (response.ok) {
       const newApplicant = {
-        email: user.emailID,
+        emailID: user.emailID,
         status: 1,
         matched: false,
         applicationDate: new Date(),
@@ -129,7 +129,7 @@ const Detail = ({ _id }) => {
               삭제하기
             </button>
           ) : null}
-          {status.some((applicant) => applicant.email === user?.emailID && applicant.status === 1 && applicant.matched) ? (
+          {status.some((applicant) => applicant.email === user?.emailID && applicant.status === 2 && applicant.matched) ? (
             <button
               className="btn tertiary"
               onClick={(e) => {
@@ -137,7 +137,7 @@ const Detail = ({ _id }) => {
               }}>
               취소하기
             </button>
-          ) : status.some((applicant) => applicant.email === user?.emailID && applicant.status === 1) ? (
+          ) : status.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
             <button className="btn tertiary" onClick={appDelete}>
               지원취소
             </button>
@@ -145,11 +145,11 @@ const Detail = ({ _id }) => {
             <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id } })}>
               수정하기
             </button>
-          ) : (
+          ) : status.every((applicant) => applicant.emailID !== user?.emailID) ? (
             <button className="btn yellow" onClick={application}>
               지원하기
             </button>
-          )}
+          ) : null}
           <button className="btn yellow" onClick={completion}>
             결제 및 완료
           </button>

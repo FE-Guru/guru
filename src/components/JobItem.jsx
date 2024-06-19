@@ -28,6 +28,18 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
     }
     return null;
   }, [item?.category?.jobType]);
+
+  let itemStatus;
+  if (item.status === 2) {
+    itemStatus = { text: "예약중", val: "stat2" };
+  } else if (item.status === 3) {
+    itemStatus = { text: "완료", val: "stat3" };
+  } else if (item.status === -1) {
+    itemStatus = { text: "취소", val: "stat-1" };
+  } else {
+    itemStatus = { text: memoizedData.dFormat, val: "stat1" };
+  }
+
   useEffect(() => {
     if (item) {
       const { workStartDate, workEndDate, endDate } = item;
@@ -41,6 +53,7 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
       );
     }
   }, [item, dispatch]);
+
   const toggleUserSlide = () => {
     if (item.applicants.length > 0) {
       setShow(!show);
@@ -69,6 +82,7 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
       showPopup("getDetail");
     }
   };
+
   return (
     <div className={`${style.itemWrap} ${findjob ? style.findJob : ""}`}>
       <div className={`${style.jobItem} ${style[item?.category?.jobType]}`} onClick={goDetail}>
@@ -121,7 +135,7 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
           </div>
         </div>
         <div className={style.AppInfo}>
-          <strong>{memoizedData.dFormat}</strong>
+          <strong className={`${style[itemStatus.val]}`}>{itemStatus.text}</strong>
           <div>
             {item?.location?.address ? (
               <div className={style.row}>

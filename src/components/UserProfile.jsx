@@ -16,10 +16,12 @@ const UserProfile = ({ show, onClose, user, itemId }) => {
       },
       credentials: "include",
     });
+    const data = await response.json();
+
     if (response.ok) {
       console.log(response);
     } else {
-      alert("Error");
+      console.log(data.message);
     }
   };
   return (
