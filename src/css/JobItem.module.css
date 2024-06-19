@@ -136,6 +136,18 @@
   letter-spacing: -0.05em;
   color: var(--cr-blue);
 }
+.AppInfo > strong.stat1 {
+}
+.AppInfo > strong.stat2 {
+  color: var(--cr-m-y);
+}
+.AppInfo > strong.stat3 {
+  color: var(--cr-m-bl1);
+}
+.AppInfo > strong.stat-1 {
+  color: var(--cr-red);
+}
+
 .AppInfo > div {
   width: 100%;
   padding-left: 5rem;

@@ -76,6 +76,7 @@ const UserSlide = ({ item }) => {
   const userProfile = (user) => {
     showPopup("userProfile", user);
   };
+  console.log(userList);
   return (
     <div className="userSlide">
       <Swiper
