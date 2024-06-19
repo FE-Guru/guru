@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
+import SatisfactionModal from "./SatisfactionModal";
 
 const Detail = ({ _id }) => {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ const Detail = ({ _id }) => {
     });
     const oData = await response.json();
     if (response.ok) {
+      setStatus(oData.jobPost.applicants);
       setStatus(oData.applicants);
       setBtnWrapStatus(oData.status);
       showAlert("appOk");
@@ -101,6 +103,7 @@ const Detail = ({ _id }) => {
     });
     const cData = await response.json();
     if (response.ok) {
+      console.log(cData);
       setStatus(cData.jobPost.applicants);
       setBtnWrapStatus(cData.jobPost.status);
       showAlert("appOk");
@@ -155,13 +158,24 @@ const Detail = ({ _id }) => {
               <button className="btn tertiary" onClick={() => setModalAlert("appCancell")}>
                 취소하기
               </button>
-              <button className="btn yellow" onClick={completion}>
+              <button
+                className="btn yellow"
+                onClick={() => {
+                  setPopupVisible(true);
+                }}>
                 결제 및 완료
               </button>
             </>
           )}
           {btnWrapStatus === -1 && <p>취소 된 공고입니다.</p>}
           {btnWrapStatus === 3 && <p>완료 된 공고입니다.</p>}
+          <button
+            className="btn yellow"
+            onClick={() => {
+              setPopupVisible(true);
+            }}>
+            결제 및 완료
+          </button>
         </div>
       </section>
 
