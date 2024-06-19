@@ -52,7 +52,7 @@ const PersonalEdit = () => {
 
   const user = useSelector((state) => state.user.user);
   const emailID = user ? user.emailID : null;
-  const userName = user ? user.nickName : null;
+  const nickName = user ? user.nickName : null;
 
   return (
     <div className='contents'>
@@ -69,7 +69,7 @@ const PersonalEdit = () => {
             </div>
             <div className={form.formGrup}>
               <span>이름</span>
-              <span className={mem.editSpan}>{userName}</span>
+              <span className={mem.editSpan}>{nickName}</span>
             </div>
             <div className={`${form.formGrup} `}>
               <span>비밀번호</span>

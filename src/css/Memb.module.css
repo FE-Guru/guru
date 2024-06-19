@@ -248,3 +248,16 @@
 .delDesc p {
   padding: 30px 0 0;
 }
+
+/* acctbye */
+.spanMsgCon span:first-of-type {
+  margin-top: 20px;
+}
+
+.spanMsgCon span:last-of-type {
+  margin-top: -20px;
+}
+
+.spanMsg {
+  font-size: 1.85rem !important;
+}

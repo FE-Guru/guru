@@ -17,18 +17,24 @@ const AcctDelete = () => {
 
   const acctDelBtn = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
 
-    const response = await fetch(`${url}/mypage/acctDelete`, {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    if (token) {
+      const response = await fetch(`${url}/mypage/acctDelete`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (response.status === 200) {
-      window.location.href = "/";
-      setModal("deleteComplete");
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        window.location.href = "/acctbye";
+      }
+    } else {
+      setModal("notoken");
     }
   };
 
@@ -69,10 +75,10 @@ const AcctDelete = () => {
         </button>
       </div>
       <Modal show={modal !== null} onClose={closePopup}>
-        {modal === "deleteComplete" && (
+        {modal === "notoken" && (
           <div className='alert'>
             <h3>GURU</h3>
-            <p>회원탈퇴가 완료되었습니다.</p>
+            <p>로그인이 필요합니다.</p>
           </div>
         )}
       </Modal>
