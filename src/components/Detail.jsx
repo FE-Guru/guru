@@ -7,12 +7,13 @@ import ModalAlert from "../components/ModalAlert";
 
 const Detail = ({ _id }) => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.user);
   const [modalAlert, setModalAlert] = useState(null);
   const [item, setItem] = useState(null);
   const [author, setAuthor] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [status, setStatus] = useState(item?.applicants || []);
-  const user = useSelector((state) => state.user.user);
+  const [btnWrapStatus, setBtnWrapStatus] = useState(0);
 
   useEffect(() => {
     if (!_id) {
@@ -34,17 +35,21 @@ const Detail = ({ _id }) => {
   }, [item]);
 
   useEffect(() => {
+    if (item) {
+      setStatus(item.applicants || []);
+      setBtnWrapStatus(item.status || 0);
+    }
     if (item?.emailID) {
-      const fetchUSer = async () => {
+      const fetchUser = async () => {
         try {
-          const res = await fetch(`${url}/profile/${item.emailID}`);
+          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
           const result = await res.json();
           setAuthor(result);
         } catch (error) {
           console.error(error);
         }
       };
-      fetchUSer();
+      fetchUser();
     }
   }, [item]);
 
@@ -73,26 +78,18 @@ const Detail = ({ _id }) => {
     }
   }, [_id, showAlert]);
 
-  console.log("job 정보-", item);
-  console.log("글쓴이 정보-", author);
-
   const application = async () => {
     const response = await fetch(`${url}/job/application/${_id}`, {
       method: "PUT",
       credentials: "include",
     });
-    const data = await response.json();
+    const oData = await response.json();
     if (response.ok) {
-      const newApplicant = {
-        emailID: user.emailID,
-        status: 1,
-        matched: false,
-        applicationDate: new Date(),
-      };
-      setStatus([...status, newApplicant]);
+      setStatus(oData.applicants);
+      setBtnWrapStatus(oData.status);
       showAlert("appOk");
     } else {
-      setErrorMessage(data.message);
+      setErrorMessage(oData.message);
       showAlert("appError");
     }
   };
@@ -101,15 +98,17 @@ const Detail = ({ _id }) => {
       method: "PUT",
       credentials: "include",
     });
-    const data = await response.json();
+    const cData = await response.json();
     if (response.ok) {
-      setStatus(status.map((applicant) => (applicant.email === user.emailID ? { ...applicant, status: -1 } : applicant)));
+      setStatus(cData.jobPost.applicants);
+      setBtnWrapStatus(cData.jobPost.status);
       showAlert("appOk");
     } else {
-      setErrorMessage(data.message);
+      setErrorMessage(cData.message);
       showAlert("appError");
     }
   };
+
   const completion = () => {};
 
   return (
@@ -120,7 +119,7 @@ const Detail = ({ _id }) => {
       </section>
       <section className="midSection">
         <div className="btnWrap">
-          {user?.emailID === "admin" ? (
+          {user?.emailID === "admin" && (
             <button
               className="btn tertiary"
               onClick={(e) => {
@@ -128,41 +127,68 @@ const Detail = ({ _id }) => {
               }}>
               삭제하기
             </button>
-          ) : null}
-          {status.some((applicant) => applicant.email === user?.emailID && applicant.status === 2 && applicant.matched) ? (
-            <button
-              className="btn tertiary"
-              onClick={(e) => {
-                setModalAlert("appCancell");
-              }}>
-              취소하기
-            </button>
-          ) : status.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
-            <button className="btn tertiary" onClick={appDelete}>
-              지원취소
-            </button>
-          ) : user?.emailID === item?.emailID ? (
-            <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id } })}>
-              수정하기
-            </button>
-          ) : status.every((applicant) => applicant.emailID !== user?.emailID) ? (
-            <button className="btn yellow" onClick={application}>
-              지원하기
-            </button>
-          ) : null}
-          <button className="btn yellow" onClick={completion}>
-            결제 및 완료
-          </button>
+          )}
+          {btnWrapStatus === 1 && (
+            <>
+              {user?.emailID === item?.emailID ? (
+                <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id: item._id } })}>
+                  수정하기
+                </button>
+              ) : (
+                <>
+                  {status?.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
+                    <button className="btn tertiary" onClick={appDelete}>
+                      지원취소(모집전)
+                    </button>
+                  ) : (
+                    <button className="btn yellow" onClick={application}>
+                      지원하기
+                    </button>
+                  )}
+                </>
+              )}
+            </>
+          )}
+          {btnWrapStatus === 2 && (
+            <>
+              <button className="btn tertiary" onClick={() => setModalAlert("appCancell")}>
+                취소하기
+              </button>
+              <button className="btn yellow" onClick={completion}>
+                결제 및 완료
+              </button>
+            </>
+          )}
+          {btnWrapStatus === -1 && <p>취소 된 공고입니다.</p>}
+          {btnWrapStatus === 3 && <p>완료 된 공고입니다.</p>}
         </div>
       </section>
+
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "deleteJob" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
-          {modalAlert === "appCancell" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정말 취소하겠습니까?"} error={true} confirm={true} throwFn={appDelete} />}
+          {modalAlert === "appCancell" && (
+            <ModalAlert
+              close={closeAlert}
+              title={"상세페이지 메시지"}
+              desc={
+                <>
+                  지금 취소하시면 패널티가 부과되며
+                  <br />
+                  서비스 이용에 제약을 받을수 있습니다
+                  <br />
+                  정말 취소하시겠습니까?
+                </>
+              }
+              error={true}
+              confirm={true}
+              throwFn={appDelete}
+            />
+          )}
           {modalAlert === "deleteOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
           {modalAlert === "none_id" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
           {modalAlert === "appError" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={errorMessage} error={true} confirm={false} />}
-          {modalAlert === "appOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"지원이 정상적으로 처리되었습니다."} error={false} confirm={false} />}
+          {modalAlert === "appOk" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정상적으로 처리되었습니다."} error={false} confirm={false} />}
         </Modal>
       )}
     </>
