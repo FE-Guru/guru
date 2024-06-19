@@ -151,22 +151,29 @@
 .emailLabel {
   margin-bottom: 20px;
 }
+
 .emailLabel::before {
-  content: url("/public/img/common/email.png");
-  width: 10px;
-  height: 10px;
+  content: "";
+  width: 20px;
+  height: 20px;
   position: absolute;
   right: 1.6rem;
   top: 1.6rem;
+  background-image: var(--email-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .pwLabel::before {
-  content: url("/public/img/common/pw.svg");
-  width: 10px;
-  height: 10px;
+  content: "";
+  width: 20px;
+  height: 20px;
   position: absolute;
   right: 1.6rem;
   top: 1.6rem;
+  background-image: var(--pw-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .loginLabel {
@@ -260,4 +267,48 @@
 
 .spanMsg {
   font-size: 1.85rem !important;
+}
+
+/* findacct*/
+.findCon {
+  border: none !important;
+  position: relative;
+  text-align: center;
+}
+
+.tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  margin: 0 123px 30px;
+}
+
+.tab button {
+  display: flex;
+  align-items: center;
+  padding: 10px 40px;
+  opacity: 0.8;
+  color: var(--cr-g1);
+  border-bottom: solid 1px transparent;
+}
+
+.tab button.active {
+  color: var(--cr-bl1);
+  border-bottom: solid 1.5px var(--cr-bl1);
+}
+
+.findForm {
+  margin: 5rem 0;
+}
+
+.findLabel {
+  margin-bottom: 25px;
+}
+
+.findBtn {
+  width: 30%;
+  margin: 0 auto;
+  display: block;
 }

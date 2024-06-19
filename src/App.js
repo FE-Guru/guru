@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
+import FindAcct from "./pages/FindAcct";
 import Signup from "./pages/Signup";
 import SignupOk from "./pages/SignupOk";
 import Findjob from "./pages/Findjob";
@@ -29,6 +30,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/findacct' element={<FindAcct />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/signupok' element={<SignupOk />} />
         <Route path='/findjob' element={<Findjob />} />

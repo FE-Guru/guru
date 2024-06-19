@@ -92,7 +92,7 @@ const Login = () => {
             </div>
           </form>
           <p className={mem.links}>
-            <Link to='/findAccount'>아이디/비밀번호 찾기</Link>
+            <Link to='/findacct'>아이디/비밀번호 찾기</Link>
             <Link to='/signup'>회원가입</Link>
           </p>
         </div>

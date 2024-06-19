@@ -11,7 +11,7 @@ const SignupOk = () => {
     const nickName = query.get("nickName");
     const phone = query.get("phone");
     const account = query.get("account");
-    // console.log("가입완료:", { emailID, userName, nickName, phone, account });
+    console.log("가입완료:", { emailID, userName, nickName, phone, account });
   }, [location.search]);
 
   return (
