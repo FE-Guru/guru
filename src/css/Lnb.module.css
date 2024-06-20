@@ -13,8 +13,6 @@
 .lnb nav {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
   gap: 10px;
 }
 
@@ -23,9 +21,10 @@
   font-weight: 600;
   line-height: 1.76;
   color: var(--cr-g1);
-  transition: 0.2s;
+  transition: 0.3s;
 }
 
+.lnb nav a.on,
 .lnb nav a:hover {
   color: var(--cr-b1);
   text-decoration: underline;

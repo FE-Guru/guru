@@ -136,10 +136,9 @@
   letter-spacing: -0.05em;
   color: var(--cr-blue);
 }
-.AppInfo > strong.stat1 {
-}
+
 .AppInfo > strong.stat2 {
-  color: var(--cr-m-y);
+  color: #f7af15;
 }
 .AppInfo > strong.stat3 {
   color: var(--cr-m-bl1);
@@ -175,6 +174,7 @@
 @media (min-width: 1024px) {
   .itemWrap:hover {
     border: 3px solid var(--cr-bl1);
+    border-radius: 0.5rem;
   }
   .jobItem.onLine:hover {
     background: var(--cr-m-y);

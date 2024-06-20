@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { setDates } from "../store/findjob";
+import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import Detail from "./Detail";
 import UserSlide from "./UserSlide";
+import UserProfile from "./UserProfile";
 import style from "../css/JobItem.module.css";
 
-const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
+const JobItem = ({ item, jobOffer, findjob }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const data = useSelector((state) => state.findjob);
@@ -18,8 +20,15 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
   const newAddress = address?.slice(0, 2).join(" ");
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(null);
+  const [modalUser, setModalUser] = useState(null);
   const [modalAlert, setModalAlert] = useState(null);
 
+  /*매칭된 유저 찾기*/
+  const matchingUser = item.applicants.find((applicant) => applicant.matched);
+  const matchingID = matchingUser ? matchingUser.emailID : null;
+  const matchingStatus = matchingUser ? matchingUser.status : null;
+
+  /*on/off 상태관리*/
   const onOff = useMemo(() => {
     if (item?.category?.jobType === "onLine") {
       return "온라인";
@@ -29,15 +38,16 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
     return null;
   }, [item?.category?.jobType]);
 
-  let itemStatus;
+  /*모집상태 바인딩*/
+  let appliStatus;
   if (item.status === 2) {
-    itemStatus = { text: "예약중", val: "stat2" };
+    appliStatus = { text: "예약중", val: "stat2" };
   } else if (item.status === 3) {
-    itemStatus = { text: "완료", val: "stat3" };
+    appliStatus = { text: "완료", val: "stat3" };
   } else if (item.status === -1) {
-    itemStatus = { text: "취소", val: "stat-1" };
+    appliStatus = { text: "취소", val: "stat-1" };
   } else {
-    itemStatus = { text: memoizedData.dFormat, val: "stat1" };
+    appliStatus = { text: memoizedData.dFormat, val: "stat1" };
   }
 
   useEffect(() => {
@@ -54,27 +64,71 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
     }
   }, [item, dispatch]);
 
-  const toggleUserSlide = () => {
-    if (item.applicants.length > 0) {
-      setShow(!show);
-    } else {
+  /*지원자 확인 클릭이벤트*/
+  const aapliHandler = () => {
+    if (item.status === 1 && item.applicants.length === 0) {
       setModalAlert("noneAppli");
+    } else if (matchingUser) {
+      if (item.status === 2 || item.status === 3 || item.status === -1) {
+        const fetchMatchingUser = async () => {
+          if (item.status === -1 && matchingStatus === 2) {
+            setModalAlert("cancellJob");
+          } else if (matchingID) {
+            try {
+              const response = await fetch(`${url}/job/findUserData/${matchingID}`, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+              const user = await response.json();
+              if (response.ok) {
+                showUser("appliUser", user);
+              } else {
+                console.error("서버에러");
+                alert("serverError");
+              }
+            } catch (error) {
+              console.error("Fetch error:", error);
+              alert("fetchError");
+            }
+          }
+        };
+        fetchMatchingUser();
+      }
+    } else if (!matchingUser) {
+      if (item.status === -1) {
+        setModalAlert("cancellJob");
+      } else if (item.status === 1) {
+        setShow(!show);
+      }
     }
   };
 
-  const showPopup = (content) => {
+  /*모달*/
+  const showPopup = useCallback((content) => {
     setModal(content);
-  };
-  const closePopup = () => {
+  }, []);
+  const closePopup = useCallback(() => {
     setModal(null);
-  };
+  }, []);
   const showAlert = useCallback((content) => {
     setModalAlert(content);
   }, []);
   const closeAlert = useCallback(() => {
     setModalAlert(null);
-  }, [modalAlert, onDel, item._id]);
+  }, []);
+  const showUser = useCallback(
+    (content, user) => {
+      setModalUser({ content, user });
+    },
+    [modalUser]
+  );
+  const closeUser = useCallback(() => {
+    setModalUser(null);
+  }, []);
 
+  /*디테일페이지 모달 or 페이지이동*/
   const goDetail = () => {
     if (findjob) {
       navigate("/job-detail", { state: { _id: item._id } });
@@ -109,33 +163,31 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
             </div>
             {jobOffer ? (
               <div className={style.btnWrap}>
-                <button
-                  className="btn tertiary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate("/job-edit", { state: { _id: item._id } });
-                  }}>
-                  수정하기
-                </button>
+                {item.status === 1 && (
+                  <button
+                    className="btn tertiary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate("/job-edit", { state: { _id: item._id } });
+                    }}>
+                    수정하기
+                  </button>
+                )}
+
                 <button
                   className="btn yellow"
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleUserSlide();
+                    aapliHandler();
                   }}>
                   지원자 확인
                 </button>
               </div>
             ) : null}
-            {/* {applied ? (
-              <div className={`${style.btnWrap} ${style.applied}`}>
-                <button className="btn tertiary">취소하기</button>
-              </div>
-            ) : null} */}
           </div>
         </div>
         <div className={style.AppInfo}>
-          <strong className={`${style[itemStatus.val]}`}>{itemStatus.text}</strong>
+          <strong className={`${style[appliStatus.val]}`}>{appliStatus.text}</strong>
           <div>
             {item?.location?.address ? (
               <div className={style.row}>
@@ -158,6 +210,7 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
           </div>
         </div>
       </div>
+
       {jobOffer ? (
         <motion.div initial={false} animate={{ height: show ? "auto" : 0 }} style={{ overflow: "hidden" }} transition={{ duration: 0.3 }}>
           <UserSlide item={item} />
@@ -169,14 +222,25 @@ const JobItem = ({ item, jobOffer, findjob, applied, onDel }) => {
           {modal === "getDetail" && (
             <main>
               <h3 style={{ marginBottom: "1.4rem" }}>상세보기</h3>
-              <Detail _id={item?._id} />
+              <Detail _id={item?._id} closeDetail={closePopup} />
             </main>
+          )}
+        </Modal>
+      )}
+      {modalUser && (
+        <Modal show={modalUser !== null} onClose={closeUser} type="userProfile">
+          {modalUser.content === "appliUser" && (
+            <div>
+              <h3 style={{ marginBottom: "1.4rem" }}>{modalUser.user.nickName}님 상세보기</h3>
+              <UserProfile show={modalUser !== null} onClose={closeUser} user={modalUser.user} item={item} mactcing={true} />
+            </div>
           )}
         </Modal>
       )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "deleteOk" && <ModalAlert close={closeAlert} title={"구인관리 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
+          {modalAlert === "cancellJob" && <ModalAlert close={closeAlert} title={"구인관리 메시지"} desc={`${item.nickName}님이 취소 하신 구인글입니다.`} error={true} confirm={false} />}
           {modalAlert === "noneAppli" && (
             <ModalAlert
               close={closeAlert}

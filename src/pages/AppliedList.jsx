@@ -41,11 +41,15 @@ const AppliedList = () => {
             <button>필터</button>
           </div>
           <ul className="boxContainer">
-            {jobList.map((item) => (
-              <li key={item._id}>
-                <JobItem item={item} applied={true} />
-              </li>
-            ))}
+            {jobList.length === 0 ? (
+              <li>지원한 이력이 없습니다.</li>
+            ) : (
+              jobList.map((item) => (
+                <li key={item._id}>
+                  <JobItem item={item} applied={true} />
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </section>

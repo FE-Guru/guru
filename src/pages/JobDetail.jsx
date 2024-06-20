@@ -1,8 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Detail from "../components/Detail";
 
 const JobDetail = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { _id } = location.state || {};
 

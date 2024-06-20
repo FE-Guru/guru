@@ -7,16 +7,18 @@ const Lnb = () => {
   const menuEn = useSelector((state) => state.pageInfo.menuEn);
   const subMenu = useSelector((state) => state.pageInfo.subMenu);
   const currentPage = useSelector((state) => state.pageInfo.currentPage);
+  console.log(currentPage);
   return (
     <div className={style.lnb}>
       <h2>
         {menuKR}
         <span>{menuEn}</span>
       </h2>
+      {currentPage.path === "/job-offer" && <div>123123</div>}
       {subMenu.length > 0 && (
         <nav>
           {subMenu.map((menu) => (
-            <Link to={menu.path} className={`${currentPage === menu.pageName ? "on" : ""}`} key={menu.pageName}>
+            <Link to={menu.path} className={`${style.menuLink} ${currentPage.pageName === menu.pageName ? style.on : ""}`} key={menu.pageName}>
               {menu.pageName}
             </Link>
           ))}
