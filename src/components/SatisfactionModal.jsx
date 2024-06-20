@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import style from '../css/Modal.module.css';
+//주석 추가
 
 const SatisfactionModal = ({ onClose, type }) => {
   const [rating, setRating] = useState(0);
