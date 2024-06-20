@@ -1,16 +1,30 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 
 const PersonalEdit = () => {
   const navigate = useNavigate();
-
   const accountDel = () => {
     navigate("/mypage/acctDelete");
   };
+  const dispatch = useDispatch();
+  const pageInfo = useMemo(
+    () => ({
+      menuKR: "마이 페이지",
+      menuEn: "My Page",
+      currentPage: { pageName: "회원정보 수정", path: "/mypage/profileEdit" },
+    }),
+    []
+  );
+  const currentPage = useSelector((state) => state.pageInfo.currentPage);
+
+  useEffect(() => {
+    dispatch(setPageInfo(pageInfo));
+  }, [dispatch, pageInfo]);
 
   const [formData, setFormData] = useState({
     password: "",
@@ -55,13 +69,10 @@ const PersonalEdit = () => {
   const nickName = user ? user.nickName : null;
 
   return (
-    <div className='contents'>
-      <h3>회원정보 수정</h3>
-      <div className='full'>
-        <form
-          className={` ${form.formStyle} ${mem.editForm}`}
-          onSubmit={editSubmit}
-        >
+    <div className="contents">
+      <h3>{currentPage.pageName}</h3>
+      <div className="full">
+        <form className={` ${form.formStyle} ${mem.editForm}`} onSubmit={editSubmit}>
           <div className={form.formContainer}>
             <div className={`${form.formGrup} `}>
               <span>이메일(아이디)</span>
@@ -74,58 +85,39 @@ const PersonalEdit = () => {
             <div className={`${form.formGrup} `}>
               <span>비밀번호</span>
               <div className={form.formCon}>
-                <input
-                  type='password'
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <input type="password" value={formData.password} onChange={handleChange} />
               </div>
             </div>
             <div className={`${form.formGrup} `}>
               <span>비밀번호 확인</span>
               <div className={form.formCon}>
-                <input
-                  type='password'
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+                <input type="password" value={formData.password} onChange={handleChange} />
               </div>
             </div>
             <div className={form.formGrup}>
               <span>닉네임</span>
-              <input
-                type='text'
-                value={formData.nickName}
-                onChange={handleChange}
-              ></input>
+              <input type="text" value={formData.nickName} onChange={handleChange}></input>
             </div>
             <div className={`${form.formGrup} ${mem.phoneGrup}`}>
               <span>연락처</span>
               <div className={mem.phoneInner}>
                 <div className={mem.phoneAuth}>
-                  <input type='text' value={formData.phone} maxLength='11' />
+                  <input type="text" value={formData.phone} maxLength="11" />
                   <p className={mem.time}></p>
-                  <button className={`btn primary green ${mem.greenBtn}`}>
-                    연락처 변경
-                  </button>
+                  <button className={`btn primary green ${mem.greenBtn}`}>연락처 변경</button>
                 </div>
               </div>
             </div>
             <div className={form.formGrup}>
               <span>계좌번호</span>
-              <input
-                type='text'
-                placeholder=' '
-                value={formData.account}
-                onChange={handleChange}
-              />
+              <input type="text" placeholder=" " value={formData.account} onChange={handleChange} />
             </div>
           </div>
           <div className={mem.accountDel} onClick={accountDel}>
             <span>회원탈퇴</span>
           </div>
           <div className={`${mem.btnWrap} btnWrap`}>
-            <button type='submit' className='btn primary yellow'>
+            <button type="submit" className="btn primary yellow">
               정보수정
             </button>
           </div>

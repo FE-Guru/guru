@@ -76,7 +76,6 @@ const UserSlide = ({ item }) => {
   const userProfile = (user) => {
     showPopup("userProfile", user);
   };
-  console.log(userList);
   return (
     <div className="userSlide">
       <Swiper
@@ -128,7 +127,7 @@ const UserSlide = ({ item }) => {
           {modal.content === "userProfile" && (
             <div>
               <h3 style={{ marginBottom: "1.4rem" }}>{modal.user.nickName}님 상세보기</h3>
-              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} itemId={item._id} />
+              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} item={item} />
             </div>
           )}
         </Modal>
