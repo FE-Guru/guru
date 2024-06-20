@@ -1,0 +1,81 @@
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation, A11y } from "swiper/modules";
+
+const MainSlide = () => {
+  const [swiperIndex, setSwiperIndex] = useState(0);
+  const [swiper, setSwiper] = useState(null);
+  const prevPage = () => {
+    swiper?.slidePrev();
+  };
+  const nextPage = () => {
+    swiper?.slideNext();
+  };
+  const goIndex = (index) => {
+    swiper?.slideTo(index);
+  };
+  const slideStop = () => {
+    swiper?.autoplay.stop();
+  };
+
+  const slidePlay = () => {
+    swiper?.autoplay.start();
+  };
+  return (
+    <section className="mainSwiper mw">
+      <Swiper
+        modules={[Navigation, Pagination, A11y, Autoplay]}
+        slidesPerView={1}
+        loop={true}
+        speed={500}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
+        onSwiper={(e) => {
+          setSwiper(e);
+        }}>
+        <SwiperSlide>
+          <div className="mainSlider1">
+            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+            원데이 집사를 찾아야 할때
+          </div>
+          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis1.jpg`} alt="Vis1" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className="mainSlider2">
+            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+            초단기 알바를 구할떄
+          </div>
+          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis2.jpg`} alt="Vis2" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <div className="mainSlider3">
+            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+            우리 댕댕이 산책이 필요할때
+          </div>
+          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis3.jpg`} alt="Vis3" />
+        </SwiperSlide>
+      </Swiper>
+      <div className="pagination">
+        <button onClick={prevPage}>
+          <img src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`} alt="stop" />
+        </button>
+        <div className="slidePager">
+          {swiper &&
+            swiper.slides &&
+            Array.from({ length: swiper.slides.length }).map((_, index) => <span key={index} className={`bullet ${swiperIndex === index ? "active" : ""}`} onClick={() => goIndex(index)}></span>)}
+        </div>
+        <button onClick={slideStop}>
+          <img src={`${process.env.PUBLIC_URL}/img/common/slide_stop.svg`} alt="stop" />
+        </button>
+        <button onClick={slidePlay}>
+          <img src={`${process.env.PUBLIC_URL}/img/common/slide_play.svg`} alt="stop" />
+        </button>
+        <button onClick={nextPage}>
+          <img src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`} alt="stop" />
+        </button>
+      </div>
+    </section>
+  );
+};
+
+export default MainSlide;

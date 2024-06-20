@@ -1,23 +1,26 @@
+.itemWrap {
+  border: 3px solid transparent;
+  transition: 0.3s;
+}
 .jobItem {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   padding: 3.4rem 4rem;
   background: var(--cr-w);
-  cursor: pointer;
   border-radius: 0.5rem;
   transition: 0.3s;
-}
-.jobItem:hover {
-  transform: translate(-0.4rem, -0.4rem);
+  box-shadow: 2px 3px 3px 0 rgba(0, 0, 0, 0.08);
+  cursor: pointer;
 }
 
-.jobInfo {
+.jobItem .jobInfo {
   display: flex;
   gap: 4.6rem;
-  flex: 1;
+  width: calc(100% - 25rem);
   align-items: center;
 }
-.thumb {
+.jobItem .jobInfo .thumb {
   width: 12.6rem;
   height: 12.6rem;
   border-radius: 50%;
@@ -25,7 +28,7 @@
   overflow: hidden;
   border: 3px solid var(--cr-bl1);
 }
-.thumb > img {
+.jobItem .jobInfo .thumb > img {
   position: absolute;
   top: 0;
   left: 0;
@@ -33,12 +36,17 @@
   height: 100%;
   object-fit: cover;
 }
-.jobDes {
+.jobItem .jobInfo .jobDes {
   display: flex;
   flex-wrap: wrap;
-  width: calc(100% - 20rem);
+  flex: 1;
+  width: 100%;
+  padding-right: 2.4rem;
 }
-.jobDes > span {
+.jobItem .jobInfo .jobDes .cateWrap {
+  padding-bottom: 1.1rem;
+}
+.jobItem .jobInfo .jobDes .cateWrap span {
   color: #787878;
   font-size: 1.4rem;
   height: 3rem;
@@ -48,29 +56,68 @@
   border-radius: 100rem;
   margin-right: 0.5rem;
 }
+.jobItem .jobInfo .jobDes > div {
+  display: flex;
+  align-items: flex-end;
+  font-weight: 800;
+  color: #8f8f8f;
+}
+.jobItem .jobInfo .jobDes > div strong {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+  color: var(--cr-bl1);
+  padding: 0 0.3rem 0 1rem;
+}
 
-.jobDes > h3 {
+.jobDes > h4 {
   width: 100%;
-  margin: 1.2rem 0 1.4rem 0;
+  padding: 0.5rem 0 1.7rem 0;
   text-overflow: ellipsis;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-
-.jobDes > div {
-  display: flex;
-  align-items: flex-end;
-  font-weight: 800;
-  color: #8f8f8f;
+.jobDes > h4 .jobCate {
+  font-size: 1.6rem;
+  padding: 0.8rem 2rem;
+  border-radius: 50rem;
+  position: relative;
+  top: -0.5rem;
+  margin-right: 1rem;
 }
-.jobDes > div strong {
-  font-size: 2.6rem;
-  font-weight: 900;
-  letter-spacing: -0.1rem;
+.offLine .jobDes > h4 .jobCate {
+  background: var(--cr-m-g);
+}
+
+.onLine .jobDes > h4 .jobCate {
+  background: var(--cr-m-y);
+}
+
+.jobDes .btnWrap {
+  padding-top: 4.8rem;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+.jobDes .btnWrap > button,
+.jobDes .btnWrap > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 15.8rem;
+  border: 0;
+  border-radius: 0.4rem;
   color: var(--cr-bl1);
-  padding: 0 0.3rem 0 1rem;
+  height: 4.5rem;
+  line-height: 0;
+  padding-top: 0.3rem;
+  border: 2px solid transparent;
+}
+.jobDes .btnWrap > button:hover,
+.jobDes .btnWrap > a:hover {
+  color: var(--cr-w);
 }
 
 .AppInfo {
@@ -79,6 +126,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 3.5rem;
 }
 .AppInfo > strong {
   text-align: right;
@@ -88,6 +136,17 @@
   letter-spacing: -0.05em;
   color: var(--cr-blue);
 }
+
+.AppInfo > strong.stat2 {
+  color: #f7af15;
+}
+.AppInfo > strong.stat3 {
+  color: var(--cr-m-bl1);
+}
+.AppInfo > strong.stat-1 {
+  color: var(--cr-red);
+}
+
 .AppInfo > div {
   width: 100%;
   padding-left: 5rem;
@@ -109,21 +168,148 @@
   letter-spacing: -0.025em;
   color: var(--cr-bl1);
 }
-@media (max-width: 1440px) {
-  .jobDes > h3 {
-    font-size: 2.4rem;
+.AppInfo .row p > span {
+  color: var(--cr-bl1);
+}
+@media (min-width: 1024px) {
+  .itemWrap:hover {
+    border: 3px solid var(--cr-bl1);
+    border-radius: 0.5rem;
   }
-  .jobInfo {
-    gap: 2.6rem;
+  .jobItem.onLine:hover {
+    background: var(--cr-m-y);
+  }
+  .jobItem.offLine:hover {
+    background: var(--cr-m-g);
   }
 
+  .jobItem:hover h4,
+  .jobItem:hover .AppInfo > strong,
+  .jobItem:hover .jobInfo .jobDes > div strong,
+  .jobItem:hover .AppInfo .row > p,
+  .jobItem:hover .AppInfo .row > p span {
+    color: var(--cr-w);
+  }
+
+  .jobItem:hover h4 > span {
+    color: var(--cr-bl1);
+  }
+  .jobItem:hover .AppInfo .row > span,
+  .jobItem:hover .jobInfo .jobDes > div {
+    color: rgba(255 255 255 / 0.7);
+  }
+  .jobItem:hover .jobDes > h4 .jobCate {
+    background: var(--cr-w);
+  }
+  .jobItem:hover .AppInfo {
+    border-color: rgba(255 255 255 / 0.4);
+  }
+  .jobItem.onLine:hover h4,
+  .jobItem.onLine:hover .AppInfo > strong,
+  .jobItem.onLine:hover .jobInfo .jobDes > div strong,
+  .jobItem.onLine:hover .AppInfo .row > p,
+  .jobItem.onLine:hover .AppInfo .row > p span {
+    color: var(--cr-bl1);
+  }
+  .jobItem.onLine:hover .AppInfo .row > span,
+  .jobItem.onLine:hover .jobInfo .jobDes > div {
+    color: rgba(0 0 0 / 0.6);
+  }
+  .jobItem:hover .jobDes .btnWrap > button {
+    background: rgba(255 255 255 / 0.7);
+  }
+  .jobItem:hover .jobDes .btnWrap > button:last-of-type {
+    background: var(--cr-w);
+  }
+  .jobItem:hover .jobDes .btnWrap > button:hover,
+  .jobItem:hover .jobDes .btnWrap > button:last-of-type:hover {
+    background: var(--cr-bl1);
+  }
+}
+@media (max-width: 1440px) {
+  .jobItem {
+    padding: 3rem;
+    position: relative;
+  }
+  .jobItem .jobInfo {
+    gap: 2rem;
+    width: calc(100% - 22rem);
+  }
+  .jobItem .jobInfo .jobDes {
+    padding-right: 2rem;
+  }
   .AppInfo {
     width: 22rem;
   }
   .AppInfo > div {
-    padding-left: 2.5rem;
+    padding-left: 2rem;
   }
-  .jobDes {
-    width: calc(100% - 17rem);
+
+  .jobDes .btnWrap {
+    padding-top: 4.8rem;
+    width: 100%;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .jobDes .btnWrap > button,
+  .jobDes .btnWrap > a {
+    min-width: auto;
+    width: 100%;
+    max-width: calc(33.3% - 0.3rem);
+  }
+}
+
+@media (max-width: 1240px) {
+  .jobItem {
+    padding: 2.8rem;
+  }
+
+  .jobItem .jobInfo {
+    gap: 2.8rem;
+    width: calc(100%);
+  }
+  .jobItem .jobInfo .thumb {
+    width: 9.6rem;
+    height: 9.6rem;
+  }
+  .jobItem .jobInfo .jobDes {
+    padding-right: 0;
+  }
+
+  .jobDes > h4 {
+    padding: 1rem 0;
+    width: calc(100% - 8rem);
+  }
+
+  .AppInfo {
+    width: 8rem;
+    border-left: 0;
+    position: absolute;
+    top: 4.2rem;
+    right: 2.8rem;
+  }
+
+  .AppInfo > strong {
+    font-size: 2.4rem;
+  }
+  .AppInfo > div {
+    display: none;
+  }
+  .jobDes .btnWrap > button,
+  .jobDes .btnWrap > a {
+    height: 4.1rem;
+    font-size: 1.5rem;
+    line-height: 0;
+    max-width: 14rem;
+    padding: 0;
+  }
+}
+@media (max-width: 660px) {
+  .jobDes .btnWrap {
+    padding-top: 2.8rem;
+  }
+  .jobDes .btnWrap > button,
+  .jobDes .btnWrap > a {
+    max-width: calc(33.3% - 0.3rem);
   }
 }

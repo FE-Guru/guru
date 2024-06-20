@@ -1,0 +1,90 @@
+.wrap {
+  position: absolute;
+  left: 0;
+  bottom: 4rem;
+  width: 28.8rem;
+  height: 13.2rem;
+  margin-left: -14.4rem;
+  text-align: left;
+  overflow: hidden;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+.wrap * {
+  padding: 0;
+  margin: 0;
+}
+.wrap .info {
+  width: 28.6rem;
+  height: 12rem;
+  border-radius: 0.5rem;
+  border-bottom: 0.2rem solid #ccc;
+  border-right: 0.1rem solid #ccc;
+  overflow: hidden;
+  background: #fff;
+}
+.wrap .info:nth-child(1) {
+  border: 0;
+  box-shadow: 0 0.1rem 0.2rem #888;
+}
+.info .title {
+  padding: 0.5rem 0 0 1rem;
+  height: 3rem;
+  background: #eee;
+  border-bottom: 0.1rem solid #ddd;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+.info .close {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  color: #888;
+  font-size: 2rem;
+}
+.info .close:hover {
+  cursor: pointer;
+}
+.info .body {
+  position: relative;
+  overflow: hidden;
+}
+.info .desc {
+  position: relative;
+  margin: 1.3rem 0 0 9rem;
+  height: 7.5rem;
+}
+.desc .ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desc .jibun {
+  font-size: 1.1rem;
+  color: #888;
+  margin-top: -0.2rem;
+}
+.info .img {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 6rem;
+  height: 6rem;
+  border: 0.1rem solid #ddd;
+  color: #888;
+  overflow: hidden;
+  border-radius: 100%;
+}
+.info:after {
+  content: '';
+  position: absolute;
+  margin-left: -1.2rem;
+  left: 50%;
+  bottom: 0;
+  width: 2.2rem;
+  height: 1.2rem;
+  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
+}
+.info .link {
+  color: #5085BB;
+}

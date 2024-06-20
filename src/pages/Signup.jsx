@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { userState } from "../store/userStore";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import style from "../css/Modal.module.css";
+import form from "../css/Form.module.css";
+import mem from "../css/Memb.module.css";
+import { useDispatch } from "react-redux";
 
 const Signup = () => {
   const [modal, setModal] = useState(null);
 
+  const [allAgree, setAllAgree] = useState(false);
   const [svcAgree, setSvcAgree] = useState(false);
   const [priAgree, setPriAgree] = useState(false);
   const [mktAgree, setMktAgree] = useState(false);
@@ -18,8 +23,35 @@ const Signup = () => {
   const [phone, setPhone] = useState("");
   const [account, setAccount] = useState("");
 
+  const [idMsg, setIdMsg] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwConMsg, setPwConMsg] = useState("");
+
+  const dispatch = useDispatch();
+
   const signup = async (e) => {
     e.preventDefault();
+
+    if (!/^[A-Za-z0-9]+@[A-Za-z0-9]+$/.test(emailID)) {
+      setIdMsg("영문, 숫자로 이루어진 이메일 형태로 만들어주세요.");
+      return;
+    } else {
+      setIdMsg("");
+    }
+
+    if (password.length < 4) {
+      setPwMsg("최소 4자 이상으로 만들어주세요.");
+      return;
+    } else {
+      setPwMsg("");
+    }
+
+    if (password !== pwConfirm) {
+      setPwConMsg("비밀번호가 일치하지 않습니다.");
+      return;
+    } else {
+      setPwConMsg("");
+    }
 
     const response = await fetch(`${url}/signup`, {
       method: "POST",
@@ -36,14 +68,72 @@ const Signup = () => {
         "Content-Type": "application/json",
       },
     });
-    console.log("response---", response);
 
     if (response.status === 200) {
-      window.location.href = "/login";
+      const signupData = await response.json();
+      dispatch(userState(signupData));
+      window.location.href = `/signupok?emailID=${signupData.emailID}
+      &userName=${signupData.userName}
+      &nickName=${signupData.nickName}
+      &phone=${signupData.phone}
+      &account=${signupData.account}`;
     } else {
-      alert("이미 존재하는 회원정보입니다");
+      setModal("userrequired");
     }
   };
+
+  const phoneChange = (e) => {
+    const input = e.target.value;
+    const phoneValue = input.replace(/[^0-9]/g, "");
+    setPhone(phoneValue);
+  };
+
+  //agreement func
+  const handleAllChange = () => {
+    if (allAgree === false) {
+      setAllAgree(true);
+      setSvcAgree(true);
+      setPriAgree(true);
+      setMktAgree(true);
+    } else {
+      setAllAgree(false);
+      setSvcAgree(false);
+      setPriAgree(false);
+      setMktAgree(false);
+    }
+  };
+
+  const handleSvcChange = () => {
+    if (svcAgree === false) {
+      setSvcAgree(true);
+    } else {
+      setSvcAgree(false);
+    }
+  };
+
+  const handlePriChange = () => {
+    if (priAgree === false) {
+      setPriAgree(true);
+    } else {
+      setPriAgree(false);
+    }
+  };
+
+  const handleMktChange = () => {
+    if (mktAgree === false) {
+      setMktAgree(true);
+    } else {
+      setMktAgree(false);
+    }
+  };
+
+  useEffect(() => {
+    if (svcAgree === true && priAgree === true && mktAgree === true) {
+      setAllAgree(true);
+    } else {
+      setAllAgree(false);
+    }
+  }, [svcAgree, priAgree, mktAgree]);
 
   const showPopup = (content) => {
     setModal(content);
@@ -57,64 +147,71 @@ const Signup = () => {
     window.location.href = "/";
   };
 
-  //false
   const chkRequired = () => {
     return svcAgree && priAgree;
   };
 
-  const handleSubmit = (e) => {
+  const chkSubmit = (e) => {
+    e.preventDefault();
     if (!chkRequired()) {
-      //true
-      e.preventDefault();
       setModal("required");
+    } else {
+      signup(e);
     }
   };
 
   return (
-    <main className='signup mw'>
+    <main className='signup fullLayout'>
       <h2>회원가입</h2>
-      <div className='agreeForm'>
-        <h3>약관동의</h3>
-        <label htmlFor='all'>
-          <input type='checkbox' id='all' />
-          모든 약관을 확인하고 전체동의에 체크합니다.
-        </label>
-        <label htmlFor='service'>
-          <input
-            type='checkbox'
-            id='service'
-            checked={svcAgree}
-            onChange={() => setSvcAgree(!svcAgree)}
-            required
-          />
-          서비스이용약관에 동의합니다.
-          <span>(필수)</span>
-          <span onClick={() => showPopup("content1")}>[전문보기]</span>
-        </label>
-        <label htmlFor='privacy'>
-          <input
-            type='checkbox'
-            id='privacy'
-            checked={priAgree}
-            onChange={() => setPriAgree(!priAgree)}
-            required
-          />
-          개인정보취급방침에 동의합니다.
-          <span>(필수)</span>
-          <span onClick={() => showPopup("content2")}>[전문보기]</span>
-        </label>
-        <label htmlFor='marketing'>
-          <input
-            type='checkbox'
-            id='marketing'
-            checked={mktAgree}
-            onChange={() => setMktAgree(!mktAgree)}
-          />
-          마케팅 활용에 동의합니다.
-          <span>(선택)</span>
-          <span onClick={() => showPopup("content3")}>[전문보기]</span>
-        </label>
-      </div>
+      <section className='boxCon'>
+        <div className={mem.agreeStyle}>
+          <h3>약관동의</h3>
+          <label htmlFor='all' className={form.formGrup}>
+            <input
+              type='checkbox'
+              id='all'
+              checked={allAgree}
+              onChange={handleAllChange}
+            />
+            모든 약관을 확인하고 전체 동의합니다.
+          </label>
+          <label htmlFor='service'>
+            <input
+              type='checkbox'
+              id='service'
+              checked={svcAgree}
+              onChange={handleSvcChange}
+              required
+            />
+            서비스이용약관에 동의합니다.
+            <span className={mem.required}>(필수)</span>
+            <span onClick={() => showPopup("content1")}>[전문보기]</span>
+          </label>
+          <label htmlFor='privacy'>
+            <input
+              type='checkbox'
+              id='privacy'
+              checked={priAgree}
+              onChange={handlePriChange}
+              required
+            />
+            개인정보취급방침에 동의합니다.
+            <span className={mem.required}>(필수)</span>
+            <span onClick={() => showPopup("content2")}>[전문보기]</span>
+          </label>
+          <label htmlFor='marketing'>
+            <input
+              type='checkbox'
+              id='marketing'
+              checked={mktAgree}
+              onChange={handleMktChange}
+            />
+            마케팅 활용에 동의합니다.
+            <span className={mem.optional}>(선택)</span>
+            <span onClick={() => showPopup("content3")}>[전문보기]</span>
+          </label>
+        </div>
+      </section>
       <Modal show={modal !== null} onClose={closePopup}>
         {modal === "content1" && (
           <div className={style.terms}>
@@ -210,10 +307,10 @@ const Signup = () => {
               있습니다.
               <br />
               8. 개인정보 보호책임자 <br />
-              • 이름: [이름] <br />
-              • 직위: [직위] <br />
-              • 연락처: [연락처] <br />
-              • 이메일: [이메일] <br />
+              • 이름: [김구루] <br />
+              • 직위: [CPO] <br />
+              • 연락처: [1577-0000] <br />
+              • 이메일: [privacy@guru.com] <br />
             </pre>
           </div>
         )}
@@ -259,105 +356,123 @@ const Signup = () => {
             <p>필수사항을 모두 선택해주세요!</p>
           </div>
         )}
+        {modal === "userrequired" && (
+          <div className={style.alert}>
+            <h3>GURU</h3>
+            <p>입력하신 정보를 확인해주세요!</p>
+          </div>
+        )}
       </Modal>
-      <form className='signupCon' onSubmit={signup}>
-        <div className='signupForm'>
-          <label>
-            이메일(아이디)
-            <input
-              type='email'
-              id='email'
-              value={emailID}
-              onChange={(e) => {
-                setEmailID(e.target.value);
-              }}
-            />
-          </label>
-          <p>이메일 양식에 맞춰 작성해주세요</p>
-          <label>
-            비밀번호
-            <input
-              type='password'
-              id='password'
-              value={password}
-              onChange={(e) => {
-                setPassWord(e.target.value);
-              }}
-            />
-          </label>
-          <p>영문,숫자,특수문자 조합 8자리 이상 작성해주세요.</p>
-          <label>
-            비밀번호 확인
-            <input
-              type='password'
-              id='pwConfirm'
-              value={pwConfirm}
-              onChange={(e) => {
-                setPwConfirm(e.target.value);
-              }}
-            />
-          </label>
-          <p>비밀번호와 입력한 값이 다릅니다.</p>
-          <label>
-            이름
+      <form className={` ${form.formStyle} signupForm`} onSubmit={chkSubmit}>
+        <div className={form.formContainer}>
+          <div className={`${form.formGrup} ${idMsg ? mem.errorForm : ""}`}>
+            <span className={idMsg ? mem.errorTitle : ""}>이메일(아이디)</span>
+            <div className={`${form.formCon} `}>
+              <input
+                type='email'
+                placeholder=' '
+                value={emailID}
+                onChange={(e) => {
+                  setEmailID(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{idMsg}</p>
+            </div>
+          </div>
+          <div className={`${form.formGrup} ${pwMsg ? mem.errorForm : ""}`}>
+            <span className={pwMsg ? mem.errorTitle : ""}>비밀번호</span>
+            <div className={form.formCon}>
+              <input
+                type='password'
+                placeholder=' '
+                value={password}
+                onChange={(e) => {
+                  setPassWord(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{pwMsg}</p>
+            </div>
+          </div>
+          <div className={`${form.formGrup} ${pwConMsg ? mem.errorForm : ""}`}>
+            <span className={pwConMsg ? mem.errorTitle : ""}>
+              비밀번호 확인
+            </span>
+            <div className={form.formCon}>
+              <input
+                type='password'
+                placeholder=' '
+                value={pwConfirm}
+                onChange={(e) => {
+                  setPwConfirm(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{pwConMsg}</p>
+            </div>
+          </div>
+          <div className={form.formGrup}>
+            <span>이름</span>
             <input
               type='text'
-              id='name'
+              placeholder=' '
               value={userName}
               onChange={(e) => {
                 setuserName(e.target.value);
               }}
             />
-          </label>
-          <label>
-            닉네임
+          </div>
+          <div className={form.formGrup}>
+            <span>닉네임</span>
             <input
               type='text'
-              id='nickname'
+              placeholder=' '
               value={nickName}
               onChange={(e) => {
                 setNickName(e.target.value);
               }}
             />
-          </label>
-          <label>
-            연락처
+          </div>
+          <div className={`${form.formGrup} ${mem.phoneGrup}`}>
+            <span>연락처</span>
+            <div className={mem.phoneInner}>
+              <div className={mem.phoneAuth}>
+                <input
+                  type='text'
+                  placeholder=' '
+                  value={phone}
+                  onChange={phoneChange}
+                  maxLength='11'
+                />
+                <p className={mem.time}></p>
+                <button className={`btn primary green ${mem.greenBtn}`}>
+                  인증하기
+                </button>
+              </div>
+              <div className={mem.phoneConfirm}>
+                <input type='text' placeholder='인증번호 입력' />
+                <p className={mem.time}>00:00</p>
+                <button className={`btn primary yellow ${mem.yellowBtn}`}>
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className={form.formGrup}>
+            <span>계좌번호</span>
             <input
               type='text'
-              id='phone'
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-              }}
-            />
-            <button className='certiBtn'>인증하기</button>
-          </label>
-          <label>
-            <input type='text' id='certiNum' />
-            <button className='confirmBtn'>확인</button>
-          </label>
-          <label>
-            계좌번호
-            <input
-              type='text'
-              id='account'
+              placeholder=' '
               value={account}
               onChange={(e) => {
                 setAccount(e.target.value);
               }}
             />
-          </label>
+          </div>
         </div>
-        <div className='submitBtn'>
-          <button type='button' className='cancelBtn' onClick={cancelBtn}>
+        <div className={`${mem.btnWrap} btnWrap`}>
+          <button type='button' className='btn tertiary' onClick={cancelBtn}>
             취소
           </button>
-          <button
-            type='submit'
-            className='signupBtn'
-            onClick={handleSubmit}
-            disabled={chkRequired()}
-          >
+          <button type='submit' className='btn primary yellow'>
             회원가입
           </button>
         </div>

@@ -1,0 +1,314 @@
+/*signup*/
+.agreeStyle h3 {
+  height: 40px;
+  font-size: 22px;
+  border-bottom: 1px solid #ccc;
+}
+
+.agreeStyle label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  padding: 20px 0;
+}
+
+.agreeStyle input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.agreeStyle label:nth-of-type(2),
+.agreeStyle label:nth-of-type(3) {
+  border-bottom: 1px dotted #ccc;
+}
+
+.agreeStyle span {
+  margin-left: 5px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.agreeStyle .required {
+  color: var(--cr-red);
+}
+
+.agreeStyle .optional {
+  color: var(--cr-g1);
+}
+
+.agreeStyle span:last-of-type {
+  color: var(--cr-blue);
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.error {
+  font-size: 13px;
+}
+
+.errorForm {
+  color: var(--cr-red);
+}
+
+.errorTitle {
+  color: var(--cr-red) !important;
+}
+
+.errorForm input {
+  border-color: var(--cr-red);
+}
+
+.errorForm p {
+  color: var(--cr-red);
+}
+
+.phoneGrup {
+  display: block;
+}
+
+.phoneInner {
+  display: flex;
+  flex-direction: column;
+}
+
+.phoneGrup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.phoneAuth {
+  justify-content: space-between;
+}
+
+.phoneAuth,
+.phoneConfirm {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.phoneAuth input {
+  width: calc(100% - 12rem);
+}
+
+.time {
+  color: var(--cr-red);
+  font-size: 1.48rem;
+}
+
+.greenBtn {
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none !important;
+  outline: none !important;
+  font-weight: 500 !important;
+  color: var(--cr-w) !important;
+}
+
+.yellowBtn {
+  width: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500 !important;
+  background: var(--cr-m-y);
+}
+
+/*login*/
+.btnWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.btnWrap > button {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boxCon {
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginCon {
+  width: 100%;
+  padding: 10px;
+}
+
+.emailLabel {
+  margin-bottom: 20px;
+}
+
+.emailLabel::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 1.6rem;
+  top: 1.6rem;
+  background-image: var(--email-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.pwLabel::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 1.6rem;
+  top: 1.6rem;
+  background-image: var(--pw-icon);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.loginLabel {
+  display: flex;
+  position: relative;
+}
+
+.loginLabel .memInput {
+  border: 0;
+  width: 100%;
+  height: 45px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.loginLabel .placeholder {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+  transition: 0.3s ease all;
+  font-size: 1.4rem;
+}
+
+.loginLabel input:focus + .placeholder,
+.loginLabel input:not(:placeholder-shown) + .placeholder,
+.formDiv input:focus + .placeholder,
+.formDiv input:not(:placeholder-shown) + .placeholder {
+  top: 0;
+  font-weight: 600;
+  color: var(--cr-g1);
+  bottom: 25px;
+}
+
+.memInput:focus,
+.loginLabel input:not(:placeholder-shown),
+.formDiv input:focus,
+.formDiv input:not(:placeholder-shown) {
+  border-bottom: 2px solid var(--cr-bl1);
+  background-color: rgba(255, 197, 72, 0.25);
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  color: var(--cr-g1);
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* personal edit*/
+.editSpan {
+  color: var(--cr-bl1);
+  font-weight: 700;
+  height: 4.2rem;
+  width: 13rem;
+  padding-top: 1.2rem;
+}
+
+.accountDel {
+  color: var(--cr-g1);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 1px;
+}
+
+/*acctDelete*/
+.delDesc {
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.78;
+  letter-spacing: -0.25px;
+  color: var(--cr-g1);
+}
+
+.delDesc p {
+  padding: 30px 0 0;
+}
+
+/* acctbye */
+.spanMsgCon span:first-of-type {
+  margin-top: 20px;
+}
+
+.spanMsgCon span:last-of-type {
+  margin-top: -20px;
+}
+
+.spanMsg {
+  font-size: 1.85rem !important;
+}
+
+/* findacct*/
+.findCon {
+  border: none !important;
+  position: relative;
+  text-align: center;
+}
+
+.tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  margin: 0 123px 30px;
+}
+
+.tab button {
+  display: flex;
+  align-items: center;
+  padding: 10px 40px;
+  opacity: 0.8;
+  color: var(--cr-g1);
+  border-bottom: solid 1px transparent;
+}
+
+.tab button.active {
+  color: var(--cr-bl1);
+  border-bottom: solid 1.5px var(--cr-bl1);
+}
+
+.findForm {
+  margin: 5rem 0;
+}
+
+.findLabel {
+  margin-bottom: 25px;
+}
+
+.findBtn {
+  width: 30%;
+  margin: 0 auto;
+  display: block;
+}

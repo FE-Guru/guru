@@ -1,26 +1,56 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setCateType } from "../store/findjob";
-import JobItem from "../components/JobItem";
-import Filter from "../components/Filter";
-import Map from "./Map";
-import "../css/Findjob.css";
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCateType } from '../store/findjob';
+import { url } from '../store/ref';
+import JobItem from '../components/JobItem';
+import Filter from '../components/Filter';
+import Map from './Map';
+import '../css/Findjob.css';
 
 const Findjob = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setCateType({ cateType: "onLine" }));
-  }, [dispatch]);
+  const [jobList, setJobList] = useState([]);
+  const [newJobList, setNewJobList] = useState([]);
   const cateType = useSelector((state) => state.findjob.cateType);
 
+  useEffect(() => {
+    dispatch(setCateType({ cateType: 'onLine' }));
+  }, [dispatch]);
+
   const callOnLine = () => {
-    dispatch(setCateType({ cateType: "onLine" }));
-  };
-  const callOffLine = () => {
-    dispatch(setCateType({ cateType: "offLine" }));
+    dispatch(setCateType({ cateType: 'onLine' }));
   };
 
-  const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
+  const callOffLine = () => {
+    dispatch(setCateType({ cateType: 'offLine' }));
+  };
+
+  const pageH3 = cateType === 'onLine' ? '온라인' : '오프라인';
+
+  // Map.jsx에서 가까운 순으로 받아올 리스트 보관함
+  const updateJobList = useCallback(
+    (newList) => {
+      if (cateType === 'offLine') {
+        setNewJobList(newList);
+      }
+    },
+    [cateType]
+  );
+
+  // jobList를 가져오는 useEffect
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch(`${url}/job/find${cateType}`);
+        const data = await response.json();
+        setJobList(data);
+      } catch (error) {
+        console.error('Error fetching job list:', error);
+      }
+    };
+
+    fetchJobs();
+  }, [cateType]);
 
   return (
     <main className={`${cateType} findjob`}>
@@ -31,10 +61,16 @@ const Findjob = () => {
             <span>Find Job</span>
           </h2>
           <div className="tab">
-            <button onClick={callOnLine} className={`${cateType === "onLine" ? "on" : ""}`}>
+            <button
+              onClick={callOnLine}
+              className={`${cateType === 'onLine' ? 'on' : ''}`}
+            >
               온라인
             </button>
-            <button onClick={callOffLine} className={`${cateType === "offLine" ? "on" : ""}`}>
+            <button
+              onClick={callOffLine}
+              className={`${cateType === 'offLine' ? 'on' : ''}`}
+            >
               오프라인
             </button>
           </div>
@@ -54,26 +90,23 @@ const Findjob = () => {
             <button>필터</button>
           </div>
           <ul className="JobList">
-            {cateType === "offLine" ? (
+            {cateType === 'offLine' ? (
               <li className="mapApiArea">
-                <Map/>
+                <Map jobList={jobList} updateJobList={updateJobList} />
               </li>
-            ) : null}
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
-            <li>
-              <JobItem />
-            </li>
+            ) : (
+              jobList.map((item) => (
+                <li key={item._id}>
+                  <JobItem item={item} findjob={true} />
+                </li>
+              ))
+            )}
+            {cateType === 'offLine' &&
+              newJobList.map((item) => (
+                <li key={item._id}>
+                  <JobItem item={item} findjob={true} />
+                </li>
+              ))}
           </ul>
         </div>
       </section>
