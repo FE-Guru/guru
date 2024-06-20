@@ -1,17 +1,30 @@
 import { useState } from 'react';
 import style from '../css/Modal.module.css';
-//주석 추가
 
 const SatisfactionModal = ({ onClose, type }) => {
   const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState('');
+  const [feedback, setFeedback] = useState([]);
+  const [isOtherSelected, setIsOtherSelected] = useState(false);
 
   const handleStarClick = (star) => {
     setRating(star);
   };
 
   const handleFeedbackClick = (item) => {
-    setFeedback(item);
+    setIsOtherSelected(item === '기타');
+    if (feedback.includes(item)) {
+      setFeedback(feedback.filter((feedbackItem) => feedbackItem !== item));
+    } else {
+      setFeedback([...feedback, item]);
+    }
+  };
+
+  const handleOtherFeedbackChange = (e) => {
+    const otherFeedback = e.target.value;
+    setFeedback((prevFeedback) => {
+      const filteredFeedback = prevFeedback.filter((item) => item !== '기타');
+      return [...filteredFeedback, otherFeedback];
+    });
   };
 
   const handleSubmit = () => {
@@ -35,7 +48,7 @@ const SatisfactionModal = ({ onClose, type }) => {
               } fa-star`}
               onClick={() => handleStarClick(star)}
               style={{
-                color: rating >= star ? `var(--cr-blue)` : 'var(--cr-g3)',
+                color: rating >= star ? `var(--cr-m-y)` : 'var(--cr-g3)',
                 cursor: 'pointer',
               }}
               role="button"
@@ -48,8 +61,8 @@ const SatisfactionModal = ({ onClose, type }) => {
           {['친절함', '시간 엄수', '서비스 품질', '기타'].map((item) => (
             <button
               key={item}
-              className={` btn primary ${style.fbBtn}  ${
-                feedback.includes(item) ? style.blueBtn : ''
+              className={`btn primary ${style.fbBtn} ${
+                feedback.includes(item) ? style.selected : ''
               }`}
               onClick={() => handleFeedbackClick(item)}
             >
@@ -57,7 +70,13 @@ const SatisfactionModal = ({ onClose, type }) => {
             </button>
           ))}
         </div>
-
+        {isOtherSelected && (
+          <textarea
+            className={style.satisfacion_textarea}
+            placeholder="기타 의견을 작성해 주세요"
+            onChange={handleOtherFeedbackChange}
+          />
+        )}
         <div className={style.modalBtn}>
           <button
             className={`btn primary yellow ${style.submitBtn}`}
