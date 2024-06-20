@@ -49,6 +49,32 @@
   left: 0;
   object-fit: cover;
 }
+.formProfile .formThumb i {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  justify-content: center;
+  background-color: rgba(10, 10, 10, 0.5);
+  color: var(--cr-w);
+  font-size: 1.3rem;
+}
+/* 닉네임 */
+.formProfile .formContainer:first-of-type span {
+  color: var(--cr-bl1);
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+.formProfile .formContainer:first-of-type span > span {
+  color: var(--cr-g1);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.formProfile .formContainer progress {
+  width: 14.6rem;
+}
 
 .formProfile input[type="file"] {
   position: absolute;
@@ -311,6 +337,7 @@ span.bur {
 }
 
 @media (max-width: 660px) {
+  
   .formStyle > div.formContainer {
     padding: 3rem;
     border-radius: 0.4rem;
