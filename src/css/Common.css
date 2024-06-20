@@ -16,10 +16,8 @@
   --sm-gap: 1.8rem;
   --email-icon: url("../assets/images/email.png");
   --pw-icon: url("../assets/images/pw.svg");
-  font-family: "Pretendard Variable", Pretendard, -apple-system,
-    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 .btn {
@@ -106,9 +104,11 @@ progress::-webkit-progress-value {
 .subPage {
   width: 100%;
   padding: 6.8rem 0 8rem 0;
+  min-height: calc(100vh - 9.7rem - 21rem);
 }
 .subPage > section {
   display: flex;
+  align-items: flex-start;
   gap: 4.6rem;
 }
 .subPage .contents {

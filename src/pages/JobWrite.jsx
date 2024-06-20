@@ -27,8 +27,6 @@ const JobWrit = () => {
   const [address, setAddress] = useState("");
   const [mapX, setMapX] = useState(null);
   const [mapY, setMapY] = useState(null);
-  console.log(workStartTime);
-  console.log(workEndTime);
   const {
     register,
     handleSubmit,

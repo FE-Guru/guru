@@ -11,7 +11,6 @@ const updateItemStatusSlice = createSlice({
       if (state.ItemStatus[id]) {
         state.ItemStatus[id].status = status;
         state.ItemStatus[id].applicants = applicants;
-        console.log(`${id}, ${status}, ${JSON.stringify(applicants)}`);
       } else {
         state.ItemStatus[id] = { status, applicants };
       }

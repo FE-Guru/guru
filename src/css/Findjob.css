@@ -1,3 +1,6 @@
+.findjob {
+  min-height: calc(100vh - 9.7rem - 21rem);
+}
 /*topCon*/
 .topSection {
   width: 100%;
