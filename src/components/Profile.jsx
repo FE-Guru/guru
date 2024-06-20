@@ -1,12 +1,15 @@
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import style from "../css/Form.module.css";
 import { useState } from "react";
 import { url } from "../store/ref";
 
-const Profile = ({ show, onclose }) => {
+const Profile = ({ show, onclose  }) => {
   const { register, handleSubmit, setValue } = useForm();
   const [files, setFiles] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const user = useSelector((state) => state.user.user);
+  const nickName = user ? user?.nickName : null;
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -15,15 +18,9 @@ const Profile = ({ show, onclose }) => {
       setImagePreview(URL.createObjectURL(file));
     }
   };
-
   //프로필 등록 함수
   const profileWrite = async (val) => {
     const { career, certi, skill, time, introduce } = val;
-
-    if (!files || files.length === 0) {
-      console.error("No files selected");
-      return;
-    }
 
     const data = new FormData();
     data.append("files", files[0]);
@@ -73,7 +70,7 @@ const Profile = ({ show, onclose }) => {
               <p>이미지 등록</p>
             </i>
           </div>
-          <span>님</span>
+          <span>{nickName}<span> 님</span></span>
           <progress id="trust" max="100" value="25"></progress>
         </div>
         <div className={`${style.formContainer}`}>
