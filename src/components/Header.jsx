@@ -16,8 +16,7 @@ const Header = () => {
   const emailID = user ? user?.emailID : null;
   const nickName = user ? user?.nickName : null;
   const certified = user ? user?.certified : null;
-  // console.log("user---", user);
-  console.log(certified);
+
   const showPpup = (content) => {
     setModal(content);
   };
