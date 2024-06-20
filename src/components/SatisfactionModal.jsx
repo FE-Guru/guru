@@ -1,18 +1,22 @@
-import { useState } from "react";
-import style from "../css/Modal.module.css";
+import { useState } from 'react';
+import style from '../css/Modal.module.css';
 
 const SatisfactionModal = ({ onClose, type }) => {
   const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState('');
 
   const handleStarClick = (star) => {
     setRating(star);
   };
 
+  const handleFeedbackClick = (item) => {
+    setFeedback(item);
+  };
+
   const handleSubmit = () => {
     // 제출 시 로컬 상태로 데이터 처리
-    console.log("Rating:", rating);
-    console.log("Feedback:", feedback);
+    console.log('Rating:', rating);
+    console.log('Feedback:', feedback);
     onClose();
   };
 
@@ -25,11 +29,13 @@ const SatisfactionModal = ({ onClose, type }) => {
           {[1, 2, 3, 4, 5].map((star) => (
             <i
               key={star}
-              className={`fa-star ${rating >= star ? "fa-solid" : "fa-regular"} fa-star`}
+              className={`fa-star ${
+                rating >= star ? 'fa-solid' : 'fa-regular'
+              } fa-star`}
               onClick={() => handleStarClick(star)}
               style={{
-                color: rating >= star ? `var(--cr-blue)` : "var(--cr-g3)",
-                cursor: "pointer",
+                color: rating >= star ? `var(--cr-blue)` : 'var(--cr-g3)',
+                cursor: 'pointer',
               }}
               role="button"
               aria-label={`${star} stars`}
@@ -38,15 +44,24 @@ const SatisfactionModal = ({ onClose, type }) => {
         </div>
         <p>어떤 점이 마음에 드셨나요?</p>
         <div className={style.satisfacion_btnCon}>
-          {["친절함", "시간 엄수", "서비스 품질", "기타"].map((item) => (
-            <button key={item} className={style.grayBtn}>
+          {['친절함', '시간 엄수', '서비스 품질', '기타'].map((item) => (
+            <button
+              key={item}
+              className={` btn primary ${style.fbBtn}  ${
+                feedback.includes(item) ? style.blueBtn : ''
+              }`}
+              onClick={() => handleFeedbackClick(item)}
+            >
               {item}
             </button>
           ))}
         </div>
 
         <div className={style.modalBtn}>
-          <button className={`btn primary yellow ${style.modalInnerBtn}`} onClick={handleSubmit}>
+          <button
+            className={`btn primary yellow ${style.submitBtn}`}
+            onClick={handleSubmit}
+          >
             제출하기
           </button>
         </div>
