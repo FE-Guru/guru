@@ -39,20 +39,20 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: space-between;
+  justify-content: center;
   padding: 2rem 0;
 }
-.grayBtn {
-  border: 2px solid var(--cr-g3);
-  color: var(--cr-g3);
-  height: 4rem;
+.fbBtn {
   width: 48%;
-  display: flex;
   justify-content: center;
-  align-items: center;
 
-  border-radius: 6px;
 }
+.submitBtn{
+  width: 100%;
+}
+
+
+
 
 .profile .modalContent {
   max-width: 100rem;
@@ -143,5 +143,11 @@
   .modalBtn > .modalInnerBtn {
     width: auto;
     flex: 1;
+  }
+}
+
+@media (max-width: 601px) {
+  .fbBtn {
+    width: 100%;
   }
 }
