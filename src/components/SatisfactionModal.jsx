@@ -8,6 +8,11 @@ const SatisfactionModal = ({ onClose, type }) => {
 
   const handleStarClick = (star) => {
     setRating(star);
+    if (star >= 3 && feedback.includes('불친절함', '시간 미준수', '미흡한 서비스')) {
+      setFeedback(feedback.filter(item => !['불친절함', '시간 미준수', '미흡한 서비스'].includes(item)));
+    } else if (star < 3 && feedback.includes('친절함', '시간 준수', '우수한 서비스')) {
+      setFeedback(feedback.filter(item => !['친절함', '시간 준수', '우수한 서비스'].includes(item)));
+    }
   };
 
   const handleFeedbackClick = (item) => {
@@ -34,6 +39,9 @@ const SatisfactionModal = ({ onClose, type }) => {
     onClose();
   };
 
+  const positiveFeedbackOptions = ['친절함', '시간 준수', '우수한 서비스', '기타'];
+  const negativeFeedbackOptions = ['불친절함', '시간 미준수', '미흡한 서비스', '기타'];
+
   return (
     <div className={style.modalOverlay}>
       <div className={style.modalContent}>
@@ -58,7 +66,7 @@ const SatisfactionModal = ({ onClose, type }) => {
         </div>
         <p>어떤 점이 마음에 드셨나요?</p>
         <div className={style.satisfacion_btnCon}>
-          {['친절함', '시간 엄수', '서비스 품질', '기타'].map((item) => (
+          {(rating >= 3 ? positiveFeedbackOptions : negativeFeedbackOptions).map((item) => (
             <button
               key={item}
               className={`btn primary ${style.fbBtn} ${

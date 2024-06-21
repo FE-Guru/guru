@@ -47,9 +47,7 @@
   width: 48%;
   justify-content: center;
 }
-.submitBtn {
-  width: 100%;
-}
+
 .selected {
   background: var(--cr-bl1);
   color: var(--cr-w) !important;
@@ -63,6 +61,9 @@
   border: 3px solid var(--cr-bl1);
   border-radius: 4px;
   font-size: 14px;
+}
+.submitBtn {
+  width: 100%;
 }
 
 /* 만족도 조사 부분 End*/
