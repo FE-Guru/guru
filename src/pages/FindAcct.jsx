@@ -1,20 +1,22 @@
 import { useState } from "react";
 import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
+
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 
 const FindAcct = () => {
-  const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
   const [tab, setTab] = useState("findId");
 
-  const closePopup = () => {
-    setModal(null);
+  const closeAlert = () => {
+    setModalAlert(null);
   };
 
   const switchTab = (tab) => {
     setTab(tab);
   };
-
+  //추후 setmodalalert 설정하기
   return (
     <main className={`login fullLayout`}>
       <section className={`boxCon ${mem.boxCon} ${mem.findCon}`}>
@@ -93,14 +95,18 @@ const FindAcct = () => {
           )}
         </div>
       </section>
-      <Modal show={modal !== null} onClose={closePopup}>
-        {modal === "idfindfail" && (
-          <div className='alert'>
-            <h3>GURU</h3>
-            <p>아이디나 비밀번호를 다시 확인해주세요.</p>
-          </div>
-        )}
-      </Modal>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+          {modalAlert === "idfindfail" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"아이디나 비밀번호를 다시 확인해주세요."}
+              error={true}
+              confirm={false}
+            />
+          )}
+        </Modal>
+      )}
     </main>
   );
 };

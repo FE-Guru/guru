@@ -4,15 +4,16 @@ import { useState } from "react";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 
 const Login = () => {
   const [emailID, setEmailID] = useState("");
   const [password, setPassWord] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
 
-  const closePopup = () => {
-    setModal(null);
+  const closeAlert = () => {
+    setModalAlert(null);
   };
 
   const login = async (e) => {
@@ -32,7 +33,7 @@ const Login = () => {
         if (data.emailID) {
           setRedirect(true);
         } else {
-          setModal("loginfailed");
+          setModalAlert("loginfailed");
         }
       } else {
         console.error("로그인 실패", response.statusText);
@@ -97,14 +98,18 @@ const Login = () => {
           </p>
         </div>
       </section>
-      <Modal show={modal !== null} onClose={closePopup}>
-        {modal === "loginfailed" && (
-          <div className='alert'>
-            <h3>GURU</h3>
-            <p>아이디나 비밀번호를 다시 확인해주세요.</p>
-          </div>
-        )}
-      </Modal>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+          {modalAlert === "loginfailed" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"아이디나 비밀번호를 다시 확인해주세요."}
+              error={true}
+              confirm={false}
+            />
+          )}
+        </Modal>
+      )}
     </main>
   );
 };
