@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import style from "../css/Lnb.module.css";
 
 const Filter = () => {
-  const [c, useFllterState] = useState(true);
   const cateType = useSelector((state) => state.findjob.cateType);
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
+  console.log(cateType);
   return (
     <div className="filter">
-      <div className={`${style.nonefilter} `}>
+      <div className={`${style.filter} `}>
         <strong>시간별</strong>
         <div>
           <input type="range"></input>

@@ -30,7 +30,7 @@
   border-radius: 0.4rem;
   transition: 0.4s;
 }
-.btn.primary {
+.primary {
   border: 3px solid var(--cr-bl1);
   color: var(--cr-bl1);
 }
@@ -154,6 +154,17 @@ progress::-webkit-progress-value {
 .jobOffer .contents > .boxContainer li {
   width: 100%;
 }
+main .lnbCompo {
+  width: 24.5rem;
+}
+.lnbCompo h2 > span {
+  display: block;
+  font-size: 2.8rem;
+  opacity: 0.4;
+  line-height: 128%;
+  padding: 0 0 35px;
+}
+
 .subPage .contents > .boxContainer {
   border: 3px solid var(--cr-bl1);
   padding: 3.4rem 3.6rem;
@@ -328,19 +339,26 @@ progress::-webkit-progress-value {
     max-width: 100%;
     width: calc(100% - var(--lg-gap) * 2);
   }
+  main .lnbCompo {
+    width: 22rem;
+  }
 }
+
 @media (max-width: 1240px) {
   .mw {
     width: calc(100% - var(--md-gap) * 2);
+    flex-wrap: wrap;
   }
   .subPage > section {
     gap: 2.8rem;
   }
 }
 @media (max-width: 990px) {
+  .App {
+    padding-top: 6.2rem;
+  }
   .mw {
     width: calc(100% - var(--sm-gap) * 2);
-    flex-wrap: wrap;
   }
   .btnWrap {
     width: calc(100% - var(--sm-gap) * 2);
@@ -374,13 +392,13 @@ progress::-webkit-progress-value {
     padding-top: 0.5rem;
   }
   .LobHandler::before {
-    content: "\f002";
+    content: "\f0dc";
     font: var(--fa-font-solid);
     font-size: 1.6rem;
     padding-right: 0.7rem;
   }
   .LobHandler::after {
-    content: "상세검색";
+    content: "필터";
     font-size: 1.8rem;
   }
 
@@ -401,7 +419,138 @@ progress::-webkit-progress-value {
     border-radius: 0.4rem;
   }
 }
-@media (max-width: 370px) {
+
+@media (min-width: 1121px) {
+  main .lnbCompo {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    transition: opacity 1.2s, transform 0.4s, visibility 1.2s, width 0.3s;
+  }
+
+  main.has.subPage > section {
+    gap: 0;
+  }
+  main.has .lnbCompo {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-24.5rem);
+    width: 0;
+    transition: opacity 0s, transform 0.4s, visibility 0.8s, width 0.3s;
+  }
+  main .lnbCompo .filterBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 1120px) {
+  main .lnbCompo {
+    width: 100%;
+  }
+  main .lnbCompo h2 {
+    text-align: center;
+  }
+  main .lnbCompo .filterWrap {
+    display: none;
+  }
+  main .lnbCompo .filterBtn {
+    width: 20rem;
+    height: 4.6rem;
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 1.6rem;
+  }
+  main.has .lnbCompo .filterWrap {
+    display: block;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+  }
+}
+main.has .lnbCompo .filterWrap > div {
+  position: relative;
+  background: #fff;
+  width: 95vw;
+  margin: 5rem auto 0;
+  border: 3px solid var(--cr-bl1);
+  padding: 2rem;
+  border-radius: 1rem;
+}
+@media (max-width: 660px) {
+  h2 {
+    font-size: 2.8rem;
+  }
+  h2 > span,
+  .lnbCompo h2 > span {
+    font-size: 1.6rem;
+    padding-bottom: 1rem;
+  }
+  h3 {
+    font-size: 2rem;
+    letter-spacing: -0.05em;
+    font-weight: 800;
+  }
+  .subPage .contents {
+    gap: 1rem;
+  }
+  .subPage .contents > .conTitle {
+    align-items: center;
+  }
+  .LobHandler::after {
+    font-size: 1.4rem;
+  }
+  .LobHandler::before {
+    font-size: 1.2rem;
+  }
+  .subPage {
+    padding-top: 3.8rem;
+    padding-bottom: 0;
+  }
+  .subPage .contents > .boxContainer {
+    padding: 1rem;
+    border-radius: 0.4rem;
+    border-width: 2px;
+    gap: 0;
+  }
+  .btn,
+  main.has .lnbCompo .filterWrap > div {
+    border-width: 2px;
+  }
+  main .lnbCompo .filterBtn {
+    width: 100%;
+    height: 4.8rem;
+  }
+}
+@media (max-width: 380px) {
+  h2 {
+    font-size: 2.4rem;
+  }
+  h2 > span {
+    font-size: 1.4rem;
+    padding-bottom: 0rem;
+  }
+  h3 {
+    font-size: 1.6rem;
+  }
+  .subPage .contents {
+    gap: 0.8rem;
+  }
+  .LobHandler::after {
+    font-size: 1.3rem;
+  }
+  .LobHandler::before {
+    font-size: 1rem;
+    padding-right: 0.5rem;
+  }
+  .subPage .contents > .boxContainer {
+    padding: 0.7rem;
+  }
   .btnWrap .btn,
   .btn {
     border-width: 2px;
