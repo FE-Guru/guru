@@ -45,7 +45,6 @@ const findjobSlice = createSlice({
         endDate: formatDate(new Date(endDate)),
         dFormat: calculateDFormat(new Date(endDate)),
       };
-      console.log("업데이트 상태:", state);
     },
   },
 });
