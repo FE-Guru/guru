@@ -89,8 +89,9 @@
   margin-top: 10px;
 }
 
-.phoneAuth input {
-  width: calc(100% - 12rem);
+.phoneAuth input,
+.phoneConfirm input {
+  width: calc(100% - 5.5rem);
 }
 
 .time {

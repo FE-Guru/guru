@@ -3,12 +3,13 @@ import { url } from "../store/ref";
 import form from "../css/Form.module.css";
 import mem from "../css/Memb.module.css";
 import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 
 const AcctDelete = () => {
-  const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
 
-  const closePopup = () => {
-    setModal(null);
+  const closeAlert = () => {
+    setModalAlert(null);
   };
 
   const cancelBtn = () => {
@@ -34,7 +35,7 @@ const AcctDelete = () => {
         window.location.href = "/acctbye";
       }
     } else {
-      setModal("notoken");
+      setModalAlert("notoken");
     }
   };
 
@@ -74,14 +75,18 @@ const AcctDelete = () => {
           회원탈퇴
         </button>
       </div>
-      <Modal show={modal !== null} onClose={closePopup}>
-        {modal === "notoken" && (
-          <div className='alert'>
-            <h3>GURU</h3>
-            <p>로그인이 필요합니다.</p>
-          </div>
-        )}
-      </Modal>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+          {modalAlert === "notoken" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"로그인이 필요합니다."}
+              error={true}
+              confirm={false}
+            />
+          )}
+        </Modal>
+      )}
     </div>
   );
 };
