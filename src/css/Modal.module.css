@@ -27,6 +27,7 @@
   max-height: 90vh;
 }
 
+/* 만족도 조사 부분 Start */
 .satisfacion_rating {
   display: flex;
   justify-content: center;
@@ -39,20 +40,33 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
-  justify-content: center;
-  padding: 2rem 0;
+  justify-content: space-between;
+  padding: 2rem 0 ;
 }
 .fbBtn {
   width: 48%;
   justify-content: center;
-
 }
-.submitBtn{
+
+.selected {
+  background: var(--cr-bl1);
+  color: var(--cr-w) !important;
+  border-color: var(--cr-bl1);
+}
+.satisfacion_textarea  {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 2rem;
+  padding: 10px;
+  border: 3px solid var(--cr-bl1);
+  border-radius: 4px;
+  font-size: 14px;
+}
+.submitBtn {
   width: 100%;
 }
 
-
-
+/* 만족도 조사 부분 End*/
 
 .profile .modalContent {
   max-width: 100rem;
