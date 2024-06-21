@@ -158,9 +158,10 @@ const Header = () => {
       {/* <button>
         <i className='fa-regular fa-bell'></i>
       </button>
-      <button onClick={mypageClick}>
+       */}
+      <button className={style.ham} onClick={mypageClick}>
         <i className={isIconChanged ? "fa-solid fa-x" : "fa-solid fa-bars"}></i>
-      </button> */}
+      </button>
       {modal && (
         <Modal show={modal !== null} onclose={closePopup} type={"profile"}>
           {modal === "profile" && <Profile show={modal !== null} onclose={closePopup} />}

@@ -15,6 +15,7 @@ import style from "../css/Form.module.css";
 
 const JobWrit = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
   const [modal, setModal] = useState(null);
   const [modalAlert, setModalAlert] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
@@ -37,6 +38,13 @@ const JobWrit = () => {
     formState: { errors },
   } = useForm({});
   const endDate = watch("endDate");
+
+  /*권한 설정 */
+  useEffect(() => {
+    if (!user) {
+      setModalAlert("notAuthorized");
+    }
+  }, [user]);
 
   const setWorkDateFn = useCallback(
     (date) => {
@@ -475,6 +483,7 @@ const JobWrit = () => {
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "WriteOk" && <ModalAlert close={closeAlert} title={"구인글 작성 메시지"} desc={"구인글이 정상적으로 등록되었습니다."} error={false} confirm={false} goPage={"/job-offer"} />}
           {modalAlert === "Error" && <ModalAlert close={closeAlert} title={"구인글 작성  메시지"} desc={"구인글 등록 중 오류가 발생했습니다."} error={true} confirm={false} />}
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} title={"권한 메시지"} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
         </Modal>
       )}
     </main>

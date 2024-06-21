@@ -2,11 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
+import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 import Lnb from "../components/Lnb";
 import JobItem from "../components/JobItem";
 
 const JobOffer = () => {
   const dispatch = useDispatch();
+  const currentPage = useSelector((state) => state.pageInfo.currentPage);
   const [jobList, setJobList] = useState([]);
   const [filteredJobList, setFilteredJobList] = useState([]);
   const [onOFffilter, setOnOffFilter] = useState("all");
@@ -14,7 +17,8 @@ const JobOffer = () => {
   const [loadPage, setLoadPage] = useState(1);
   const [totalJobs, setTotalJobs] = useState(0);
   const [loading, setLoading] = useState(false);
-  const currentPage = useSelector((state) => state.pageInfo.currentPage);
+  const [modalAlert, setModalAlert] = useState(null);
+  const [lnbHas, setLnbHas] = useState(false);
 
   /*스크롤 이벤트 중복 방지*/
   const throttle = (func, delay) => {
@@ -70,7 +74,7 @@ const JobOffer = () => {
         const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
         setTotalJobs(totalCount);
       } else {
-        alert("네트워크 오류");
+        setModalAlert("notAuthorized");
       }
     } catch (error) {
       console.error(error.message);
@@ -120,14 +124,25 @@ const JobOffer = () => {
     setStatusFilter(filter);
   }, []);
 
+  /* 모달 */
+  const showAlert = useCallback((content) => {
+    setModalAlert(content);
+  }, []);
+  const closeAlert = useCallback(() => {
+    setModalAlert(null);
+  }, []);
+  const lnbHandler = () => {
+    setLnbHas(!lnbHas);
+  };
+
   return (
-    <main className="subPage jobOffer">
+    <main className={`subPage jobOffer ${lnbHas ? "has" : ""}`}>
       <section className="mw">
-        <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} />
+        <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
         <div className="contents">
           <div className="conTitle">
             <h3> {currentPage.pageName}</h3>
-            <button className="LobHandler"></button>
+            <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="boxContainer">
             {filteredJobList.length === 0 ? (
@@ -142,6 +157,11 @@ const JobOffer = () => {
           </ul>
         </div>
       </section>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} title={"권한 메시지"} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
+        </Modal>
+      )}
     </main>
   );
 };
