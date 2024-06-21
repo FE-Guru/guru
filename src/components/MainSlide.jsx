@@ -22,7 +22,7 @@ const MainSlide = () => {
     swiper?.autoplay.start();
   };
   return (
-    <section className="mainSwiper mw">
+    <section className='mainSwiper mw'>
       <Swiper
         modules={[Navigation, Pagination, A11y, Autoplay]}
         slidesPerView={1}
@@ -32,46 +32,83 @@ const MainSlide = () => {
         onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
         onSwiper={(e) => {
           setSwiper(e);
-        }}>
+        }}
+      >
         <SwiperSlide>
-          <div className="mainSlider1">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+          <div className='mainSlider1'>
+            <img
+              src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`}
+              alt='VisLogo'
+            />
             원데이 집사를 찾아야 할때
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis1.jpg`} alt="Vis1" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/Main_Vis1.jpg`}
+            alt='Vis1'
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="mainSlider2">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-            초단기 알바를 구할떄
+          <div className='mainSlider2'>
+            <img
+              src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`}
+              alt='VisLogo'
+            />
+            초단기 알바를 구할때
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis2.jpg`} alt="Vis2" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/Main_Vis2.jpg`}
+            alt='Vis2'
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="mainSlider3">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+          <div className='mainSlider3'>
+            <img
+              src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`}
+              alt='VisLogo'
+            />
             우리 댕댕이 산책이 필요할때
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis3.jpg`} alt="Vis3" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/Main_Vis3.jpg`}
+            alt='Vis3'
+          />
         </SwiperSlide>
       </Swiper>
-      <div className="pagination">
+      <div className='pagination'>
         <button onClick={prevPage}>
-          <img src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`} alt="stop" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`}
+            alt='stop'
+          />
         </button>
-        <div className="slidePager">
+        <div className='slidePager'>
           {swiper &&
             swiper.slides &&
-            Array.from({ length: swiper.slides.length }).map((_, index) => <span key={index} className={`bullet ${swiperIndex === index ? "active" : ""}`} onClick={() => goIndex(index)}></span>)}
+            Array.from({ length: swiper.slides.length }).map((_, index) => (
+              <span
+                key={index}
+                className={`bullet ${swiperIndex === index ? "active" : ""}`}
+                onClick={() => goIndex(index)}
+              ></span>
+            ))}
         </div>
         <button onClick={slideStop}>
-          <img src={`${process.env.PUBLIC_URL}/img/common/slide_stop.svg`} alt="stop" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/slide_stop.svg`}
+            alt='stop'
+          />
         </button>
         <button onClick={slidePlay}>
-          <img src={`${process.env.PUBLIC_URL}/img/common/slide_play.svg`} alt="stop" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/slide_play.svg`}
+            alt='stop'
+          />
         </button>
         <button onClick={nextPage}>
-          <img src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`} alt="stop" />
+          <img
+            src={`${process.env.PUBLIC_URL}/img/common/slide_arrow.svg`}
+            alt='stop'
+          />
         </button>
       </div>
     </section>
