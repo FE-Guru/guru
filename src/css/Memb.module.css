@@ -231,7 +231,7 @@
   color: var(--cr-bl1);
   font-weight: 700;
   height: 4.2rem;
-  width: 13rem;
+  width: 30rem;
   padding-top: 1.2rem;
 }
 
@@ -258,16 +258,8 @@
 }
 
 /* acctbye */
-.spanMsgCon span:first-of-type {
-  margin-top: 20px;
-}
-
-.spanMsgCon span:last-of-type {
-  margin-top: -20px;
-}
-
 .spanMsg {
-  font-size: 1.85rem !important;
+  font-size: 1.85rem;
 }
 
 /* findacct*/
