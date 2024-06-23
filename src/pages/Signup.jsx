@@ -38,7 +38,7 @@ const Signup = () => {
   const signup = async (e) => {
     e.preventDefault();
 
-    if (!/^[A-Za-z0-9]+@[A-Za-z0-9]+$/.test(emailID)) {
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*$/.test(emailID)) {
       setIdMsg("영문, 숫자로 이루어진 이메일 형태로 만들어주세요.");
       return;
     } else {
