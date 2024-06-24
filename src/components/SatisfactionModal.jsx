@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import style from '../css/Modal.module.css';
 
-const SatisfactionModal = ({ onClose, userEmail }) => {
+const SatisfactionModal = ({ onClose, userEmail, item }) => {
   const [starRating, setStarRating] = useState(0);
   const [feedback, setFeedback] = useState([]);
   const [isOtherSelected, setIsOtherSelected] = useState(false);
@@ -13,6 +13,26 @@ const SatisfactionModal = ({ onClose, userEmail }) => {
     positive: ['친절함', '시간 준수', '우수한 서비스', '기타'],
     negative: ['불친절함', '시간 미준수', '미흡한 서비스', '기타'],
   };
+
+  //item 출력
+  useEffect(() => {
+    if (item) {
+      // item에 대한 초기화 작업 또는 상태 업데이트
+      console.log(item);
+      console.log('Item 글쓴이 이메일:', item.emailID);
+
+      // 매칭된 사람 찾기
+      const matchedApplicant = item.applicants.find(
+        (applicant) => applicant.status === 2 && applicant.matched === true
+      );
+
+      if (matchedApplicant) {
+        console.log('Item 매칭된 사람 이메일:', matchedApplicant.emailID);
+      } else {
+        console.log('매칭된 사람이 없습니다.');
+      }
+    }
+  }, [item]);
 
   const handleStarClick = (star) => {
     setStarRating(star);

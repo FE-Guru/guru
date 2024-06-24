@@ -198,7 +198,7 @@ const Detail = ({ _id, closeDetail }) => {
         </div>
       </section>
 
-      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" />}
+      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} />}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "deleteJob" && <ModalAlert close={closeAlert} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
