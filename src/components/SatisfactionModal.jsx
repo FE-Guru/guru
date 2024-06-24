@@ -4,90 +4,89 @@ import style from '../css/Modal.module.css';
 
 const SatisfactionModal = ({ onClose, userEmail, item }) => {
   const [starRating, setStarRating] = useState(0);
-  const [feedback, setFeedback] = useState([]);
-  const [isOtherSelected, setIsOtherSelected] = useState(false);
-  const [otherFeedbackText, setOtherFeedbackText] = useState(''); // 기타 의견 텍스트 상태 추가
-  const emailID = userEmail;
+  const [feedback, setFeedback] = useState({
+    kind: false,
+    onTime: false,
+    highQuality: false,
+    unkind: false,
+    notOnTime: false,
+    lowQuality: false,
+    etc: false,
+  });
+  const [otherFeedbackText, setOtherFeedbackText] = useState('');
+  const [writerID, setWriterID] = useState('');
+  const [emailID, setEmailID] = useState('');
 
   const feedbackOptions = {
-    positive: ['친절함', '시간 준수', '우수한 서비스', '기타'],
-    negative: ['불친절함', '시간 미준수', '미흡한 서비스', '기타'],
+    positive: ['kind', 'onTime', 'highQuality', 'etc'],
+    negative: ['unkind', 'notOnTime', 'lowQuality', 'etc'],
   };
 
-  //item 출력
   useEffect(() => {
     if (item) {
-      // item에 대한 초기화 작업 또는 상태 업데이트
-      console.log(item);
-      console.log('Item 글쓴이 이메일:', item.emailID);
-
-      // 매칭된 사람 찾기
       const matchedApplicant = item.applicants.find(
         (applicant) => applicant.status === 2 && applicant.matched === true
       );
 
       if (matchedApplicant) {
-        console.log('Item 매칭된 사람 이메일:', matchedApplicant.emailID);
+        setWriterID(item.emailID);
+        setEmailID(matchedApplicant.emailID);
       } else {
-        console.log('매칭된 사람이 없습니다.');
+        setWriterID(item.emailID);
+        setEmailID(userEmail);
       }
     }
-  }, [item]);
+  }, [item, userEmail]);
 
   const handleStarClick = (star) => {
     setStarRating(star);
-    const toRemove =
+    const toReset =
       star >= 3 ? feedbackOptions.negative : feedbackOptions.positive;
-    setFeedback((prevFeedback) =>
-      prevFeedback.filter((item) => !toRemove.includes(item))
-    );
-    if (isOtherSelected) {
-      setIsOtherSelected(false);
-      setFeedback((prevFeedback) =>
-        prevFeedback.filter((item) => item !== '기타')
-      );
+    setFeedback((prevFeedback) => {
+      const newFeedback = { ...prevFeedback };
+      toReset.forEach((item) => (newFeedback[item] = false));
+      return newFeedback;
+    });
+    if (feedback.etc) {
+      setFeedback((prevFeedback) => ({ ...prevFeedback, etc: false }));
+      setOtherFeedbackText('');
     }
   };
 
   const handleFeedbackClick = (item) => {
-    if (item === '기타') {
-      setIsOtherSelected(!isOtherSelected);
-      if (!isOtherSelected) {
-        setFeedback([...feedback, item]);
-      } else {
-        setFeedback(feedback.filter((feedbackItem) => feedbackItem !== item));
-        setOtherFeedbackText(''); // 기타 선택 해제 시 텍스트 초기화
+    if (item === 'etc') {
+      setFeedback((prevFeedback) => ({
+        ...prevFeedback,
+        etc: !prevFeedback.etc,
+      }));
+      if (!feedback.etc) {
+        setOtherFeedbackText('');
       }
     } else {
-      setFeedback((prevFeedback) =>
-        prevFeedback.includes(item)
-          ? prevFeedback.filter((feedbackItem) => feedbackItem !== item)
-          : [...prevFeedback, item]
-      );
+      setFeedback((prevFeedback) => ({
+        ...prevFeedback,
+        [item]: !prevFeedback[item],
+      }));
     }
   };
 
   const handleOtherFeedbackChange = (e) => {
-    const otherFeedback = e.target.value;
-    setOtherFeedbackText(otherFeedback); // 기타 의견 텍스트 업데이트
-    setFeedback((prevFeedback) => {
-      const filteredFeedback = prevFeedback.filter((item) => item !== '기타');
-      return [...filteredFeedback, otherFeedback];
-    });
+    setOtherFeedbackText(e.target.value);
   };
 
   const handleSubmit = async () => {
     const satisfiedData = {
       emailID,
-      kind: feedback.includes('친절함') ? 1 : 0,
-      timeness: feedback.includes('시간 준수') ? 1 : 0,
-      quality: feedback.includes('우수한 서비스') ? 1 : 0,
-      unkind: feedback.includes('불친절함') ? 1 : 0,
-      untimeness: feedback.includes('시간 미준수') ? 1 : 0,
-      lowquality: feedback.includes('미흡한 서비스') ? 1 : 0,
-      etc: isOtherSelected ? 1 : 0,
+      writerID,
       starRating,
-      etcDescription: isOtherSelected ? otherFeedbackText : '',
+      kind: feedback.kind,
+      onTime: feedback.onTime,
+      highQuality: feedback.highQuality,
+      unkind: feedback.unkind,
+      notOnTime: feedback.notOnTime,
+      lowQuality: feedback.lowQuality,
+      etc: feedback.etc,
+      etcDescription: feedback.etc ? otherFeedbackText : '',
     };
 
     try {
@@ -129,20 +128,26 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
             <button
               key={item}
               className={`btn primary ${style.fbBtn} ${
-                feedback.includes(item) ? style.selected : ''
+                feedback[item] ? style.selected : ''
               }`}
               onClick={() => handleFeedbackClick(item)}
             >
-              {item}
+              {item === 'kind' && '친절함'}
+              {item === 'onTime' && '시간 준수'}
+              {item === 'highQuality' && '우수한 서비스'}
+              {item === 'unkind' && '불친절함'}
+              {item === 'notOnTime' && '시간 미준수'}
+              {item === 'lowQuality' && '미흡한 서비스'}
+              {item === 'etc' && '기타'}
             </button>
           ))}
         </div>
-        {isOtherSelected && (
+        {feedback.etc && (
           <textarea
             className={style.satisfaction_textarea}
             placeholder="기타 의견을 작성해 주세요"
             onChange={handleOtherFeedbackChange}
-            value={otherFeedbackText} // textarea의 value 설정
+            value={otherFeedbackText}
           />
         )}
         <div className={style.modalBtn}>
