@@ -64,26 +64,38 @@ const Findjob = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const { lat, lon } = location;
-      const queryType = cateType === "offLine" ? `&lat=${lat}&lon=${lon}` : "";
-      const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
-      const response = await fetch(`${url}/job/${endpoint}?page=${loadPage}${queryType}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setJobList((prevJobList) => {
-          const newJobList = [...prevJobList, ...data];
-          const uniqueJobList = newJobList.filter((job, index, self) => index === self.findIndex((j) => j._id === job._id));
-          return uniqueJobList;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lon: longitude });
+
+          const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
+          const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
+          const response = await fetch(`${url}/job/${endpoint}?page=${loadPage}${queryType}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await response.json();
+          if (response.ok) {
+            setJobList((prevJobList) => {
+              const newJobList = [...prevJobList, ...data];
+              const uniqueJobList = newJobList.filter((job, index, self) => index === self.findIndex((j) => j._id === job._id));
+              return uniqueJobList;
+            });
+            const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
+            setTotalJobs(totalCount);
+          } else {
+            setModalAlert("notAuthorized");
+          }
+        }, (error) => {
+          console.error("Error getting geolocation:", error);
+          setLoading(false);
         });
-        const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
-        setTotalJobs(totalCount);
       } else {
-        setModalAlert("notAuthorized");
+        console.error('Geolocation is not supported by this browser.');
+        setLoading(false);
       }
     } catch (error) {
       console.error(error.message);
@@ -184,7 +196,7 @@ const Findjob = () => {
             <button>필터</button>
           </div>
           <ul className="JobList">
-            {cateType === "offLine" && (
+            {cateType === "offLine" && ( 
               <li className="mapApiArea">
                 <Map jobList={jobList} location={location} setLocation={setLocation} />
               </li>
