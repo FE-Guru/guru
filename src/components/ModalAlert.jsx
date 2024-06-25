@@ -1,7 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import style from "../css/Modal.module.css";
 
-const ModalAlert = ({ close, title, desc, error, confirm, goPage, throwFn }) => {
+const ModalAlert = ({
+  close,
+  title,
+  desc,
+  error,
+  confirm,
+  goPage,
+  throwFn,
+}) => {
   const navigate = useNavigate();
   const okSubmit = () => {
     if (goPage) {
@@ -14,7 +22,7 @@ const ModalAlert = ({ close, title, desc, error, confirm, goPage, throwFn }) => 
   };
   return (
     <div className={`${style.terms} ${error ? style["error"] : ""} `}>
-      <h3 className={style.termsTitle}>{title}</h3>
+      <h3 className={style.termsTitle}>GURU</h3>
       <p>{desc}</p>
       {error ? (
         <div className={style.modalBtn}>
@@ -23,12 +31,18 @@ const ModalAlert = ({ close, title, desc, error, confirm, goPage, throwFn }) => 
               <button className={style.alertBtn} onClick={close}>
                 취소
               </button>
-              <button className={`${style.alertBtn} ${style.primary}`} onClick={okSubmit}>
+              <button
+                className={`${style.alertBtn} ${style.primary}`}
+                onClick={okSubmit}
+              >
                 확인
               </button>
             </>
           ) : (
-            <button className={`${style.alertBtn} ${style.primary}`} onClick={okSubmit}>
+            <button
+              className={`${style.alertBtn} ${style.primary}`}
+              onClick={okSubmit}
+            >
               확인
             </button>
           )}
@@ -40,12 +54,18 @@ const ModalAlert = ({ close, title, desc, error, confirm, goPage, throwFn }) => 
               <button className={style.alertBtn} onClick={close}>
                 취소
               </button>
-              <button className={`${style.alertBtn} ${style.primary}`} onClick={okSubmit}>
+              <button
+                className={`${style.alertBtn} ${style.primary}`}
+                onClick={okSubmit}
+              >
                 확인
               </button>
             </>
           ) : (
-            <button className={`${style.alertBtn} ${style.primary}`} onClick={okSubmit}>
+            <button
+              className={`${style.alertBtn} ${style.primary}`}
+              onClick={okSubmit}
+            >
               확인
             </button>
           )}

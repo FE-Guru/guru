@@ -31,6 +31,7 @@ const Signup = () => {
   const [idMsg, setIdMsg] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwConMsg, setPwConMsg] = useState("");
+  const [authNum, setAuthNum] = useState(null);
   const [veriCode, setVeriCode] = useState("");
 
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ const Signup = () => {
       },
     });
 
+    //signupok 페이지 데이터 url 로 보내기
     if (response.status === 200) {
       const signupData = await response.json();
       dispatch(userState(signupData));
@@ -94,52 +96,38 @@ const Signup = () => {
     setPhone(phoneValue);
   };
 
-  //sms
-  const sendSms = async () => {
-    try {
-      const response = await fetch(`${url}/authsms`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phoneNum: phone,
-        }),
+  const sendSms = () => {
+    fetch("/sendsms", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("sendsms not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setAuthNum(data.auth);
+          setModalAlert("authsend");
+        } else {
+          setModalAlert("authsendfailed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setModalAlert("authfailed");
       });
-
-      if (response.ok) {
-        setModalAlert("authsuccess");
-      } else {
-        throw new Error("인증문자 전송 실패");
-      }
-    } catch (error) {
-      console.error(error);
-      setModalAlert("authsend");
-    }
   };
 
-  const verifyCode = async () => {
-    try {
-      const response = await fetch(`${url}/veriCode`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phoneNum: phone,
-          veriCode: veriCode,
-        }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        alert(result.message);
-      } else {
-        setModalAlert("authfailed");
-        throw new Error("인증 실패");
-      }
-    } catch (error) {
-      console.error(error);
+  const verifyCode = () => {
+    if (parseInt(veriCode) === authNum) {
+      setModalAlert("authsuccess");
+    } else {
       setModalAlert("authfailed");
     }
   };
@@ -348,8 +336,11 @@ const Signup = () => {
                   type='text'
                   placeholder='하이픈(-) 제외 숫자만 입력'
                   value={phone}
-                  onChange={phoneChange}
-                  maxLength='11'
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
+                  // onChange={phoneChange}
+                  // maxLength='11'
                 />
                 <button
                   type='button'
@@ -440,6 +431,14 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증번호 전송이 완료되었습니다."}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert === "authsendfailed" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"입력하신 번호를 확인해주세요"}
               error={true}
               confirm={false}
             />

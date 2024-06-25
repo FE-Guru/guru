@@ -68,8 +68,6 @@ const FindAcct = () => {
         body: JSON.stringify({ emailID: formData.emailID }),
       });
       if (response.ok) {
-        const data = await response.json();
-
         setModalAlert("pwfindsuccess");
       } else {
         setModalAlert("findfailed");
