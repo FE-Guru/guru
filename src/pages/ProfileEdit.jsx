@@ -1,18 +1,31 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageInfo } from "../store/pageInfo";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import style from "../css/Form.module.css";
 import { url } from "../store/ref";
+import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 
 const ProfileEdit = () => {
   const dispatch = useDispatch();
-  const [files, setFiles] = useState("");
-  // const [profileImage, setProfileImage] = useState(user.profile_image);
-  // const profileImgFileInput = useRef(null);
-  const [imagePreview, setImagePreview] = useState(null);
   const user = useSelector((state) => state.user.user);
-  const nickName = user ? user?.nickName : null;
+  const nickName = user ? user.nickName : null;
+  const [files, setFiles] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
+  const [modal, setModal] = useState(null);
+
+  const { register, handleSubmit, setValue } = useForm();
+
+  const closeAlert = () => {
+    setModalAlert(null);
+  };
+
+  const showPopup = (content) => {
+    setModal(content);
+  };
+
   const pageInfo = useMemo(
     () => ({
       menuKR: "마이 페이지",
@@ -20,33 +33,38 @@ const ProfileEdit = () => {
       currentPage: { pageName: "프로필 수정", path: "/mypage/profileEdit" },
     }),
     []
-  ); 
-  // 이미지 미리보기
+  );
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFiles(e.target.files);
-      setImagePreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFiles(file);
     }
   };
 
-  const currentPage = useSelector((state) => state.pageInfo.currentPage);;
+  const currentPage = useSelector((state) => state.pageInfo.currentPage);
+
   useEffect(() => {
     dispatch(setPageInfo(pageInfo));
+    loadFormDataFromLocalStorage(); // Load data from local storage
   }, [dispatch, pageInfo]);
 
   const profileWrite = async (val) => {
     const { career, certi, skill, time, introduce } = val;
 
     const data = new FormData();
-    data.append("files", files[0]);
+    data.append("files", files);
     data.append("career", career);
     data.append("certi", certi);
     data.append("skill", skill);
     data.append("time", time);
     data.append("introduce", introduce);
 
-    // FormData 내용 출력
     data.forEach((value, key) => {
       console.log(key, value);
     });
@@ -60,9 +78,8 @@ const ProfileEdit = () => {
 
       if (res.ok) {
         const result = await res.json();
-        console.log(result);
-        alert("수정완료");
-        onclose();
+        setModalAlert("content");
+        console.log("수정댓다");
       } else {
         console.error("Failed to submit profileEdit:", res.statusText);
       }
@@ -71,24 +88,66 @@ const ProfileEdit = () => {
     }
   };
 
+  const loadFormDataFromLocalStorage = () => {
+    const savedData = localStorage.getItem("profileData");
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setValue("career", data.career);
+      setValue("certi", data.certi);
+      setValue("skill", data.skill);
+      setValue("time", data.time);
+      setValue("introduce", data.introduce);
+    }
+    const savedImageSrc = localStorage.getItem("profileImageSrc");
+    if (savedImageSrc) {
+      setImageSrc(savedImageSrc);
+    }
+  };
 
+  const saveFormDataToLocalStorage = (data) => {
+    localStorage.setItem("profileData", JSON.stringify(data));
+    if (imageSrc) {
+      localStorage.setItem("profileImageSrc", imageSrc);
+    }
+  };
 
-  /*form*/
-  const { register, handleSubmit, setValue } = useForm();
+  const onSubmit = (data) => {
+    profileWrite(data);
+    saveFormDataToLocalStorage(data);
+  };
+
   return (
     <div className="contents">
       <h3>{currentPage.pageName}</h3>
       <div className="full">
-        <form className={`${style.formStyle} ${style.formProfile}`} onSubmit={handleSubmit(profileWrite)}>
+        <form
+          className={`${style.formStyle} ${style.formProfile}`}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className={style.formContainer}>
             <div className={style.formThumb}>
-              {imagePreview ? <img src={imagePreview} alt="Profile Preview" /> : <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="logo" />}
-            <input type="file" name="files" id="files" onChange={handleFileChange} />
-            <i className="fa-solid fa-camera-retro">
-              <p>이미지 변경</p>
-            </i>
+              {imageSrc ? (
+                <img src={imageSrc} alt="Profile Preview" />
+              ) : (
+                <img
+                  src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
+                  alt="logo"
+                />
+              )}
+              <input
+                type="file"
+                name="files"
+                id="files"
+                onChange={handleFileChange}
+              />
+              <i className="fa-solid fa-camera-retro">
+                <p>이미지 변경</p>
+              </i>
             </div>
-            <span>{nickName}<span> 님</span></span>
+            <span>
+              {nickName}
+              <span> 님</span>
+            </span>
             <progress id="trust" max="100" value="25"></progress>
           </div>
           <div className={`${style.formContainer}`}>
@@ -150,13 +209,30 @@ const ProfileEdit = () => {
             </div>
           </div>
           <div className="btnWrap">
-            <button type="submit" className="btn primary yellow">
+            <button
+              type="submit"
+              className="btn primary yellow"
+              onClick={() => showPopup("content")}
+            >
               프로필 수정
             </button>
           </div>
         </form>
+        {modalAlert && (
+          <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+            {modalAlert === "content" && (
+              <ModalAlert
+                close={closeAlert}
+                title={"GURU"}
+                desc={"수정 완료"}
+                confirm={false}
+              />
+            )}
+          </Modal>
+        )}
       </div>
     </div>
   );
 };
+
 export default ProfileEdit;
