@@ -4,10 +4,10 @@ import { updateItemStatus } from "../store/updateItemStatus";
 import { url } from "../store/ref";
 import Modal from "./Modal";
 import ModalAlert from "./ModalAlert";
+import style from "../css/UserProfile.module.css";
 
 const UserProfile = ({ show, onClose, user, item }) => {
   const dispatch = useDispatch();
-
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
 
@@ -68,12 +68,83 @@ const UserProfile = ({ show, onClose, user, item }) => {
   };
   console.log("아이템", item);
   console.log("유저", user);
+
   return (
-    <div>
-      <p>아이디 : {user.emailID}</p>
-      <p>닉네임 : {user.nickName}</p>
-      <p>연락처 : {user.phone}</p>
-      <p>계좌 : {user.account}</p>
+    <div className={style.userProfile}>
+      <div className={style.userCard}>
+        <div className={style.thumb}>
+          {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
+        </div>
+        <div className={style.userInfo}>
+          <div>
+            <strong>
+              {user?.nickName}
+              <span>님</span>
+            </strong>
+            <label htmlFor="trust">신뢰도</label>
+            <progress id="trust" max="100" value="20"></progress>
+          </div>
+          <div className={style.satisfieds}>
+            <strong>만족도</strong>
+            <div>
+              <span>
+                친절함 <b>3</b>
+              </span>
+              <span>
+                시간엄수 <b>3</b>
+              </span>
+              <span>
+                보수 <b>3</b>
+              </span>
+              <span>
+                기타 <b>3</b>
+              </span>
+            </div>
+            <strong>불만족도</strong>
+            <div>
+              <span>
+                약속 미이행 <b>3</b>
+              </span>
+              <span>
+                불친절 <b>3</b>
+              </span>
+              <span>
+                보수 <b>3</b>
+              </span>
+              <span>
+                기타 <b>3</b>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={style.profileInfo}>
+        <strong>경력</strong>
+        <span>{user?.career ? user.career : "-"}</span>
+        <strong>면허/자격증</strong>
+        <span>{user?.certi ? user.certi : "-"}</span>
+        <strong>재능/스킬</strong>
+        <span>{user?.skill ? user.skill : "-"}</span>
+        <strong>선호 요일/시간</strong>
+        <span>{user?.time ? user.time : "-"}</span>
+        <strong>자기소개</strong>
+        <span>{user?.introduce ? user.introduce : "-"}</span>
+      </div>
+      <div className={style.otherReviews}>
+        <strong>최근 리뷰 3건</strong>
+        <div>
+          <strong>000님이 남긴 리뷰입니다.</strong>
+          <pre>성실하게 근무해주셔서 감사합니다 :)</pre>
+        </div>
+        <div>
+          <strong>000님이 남긴 리뷰입니다.</strong>
+          <pre>성실하게 근무해주셔서 감사합니다 :)</pre>
+        </div>
+        <div>
+          <strong>000님이 남긴 리뷰입니다.</strong>
+          <pre>성실하게 근무해주셔서 감사합니다 :)</pre>
+        </div>
+      </div>
       <div className="btnWrap">
         {btnWrapStatus === 1 ? (
           <>
