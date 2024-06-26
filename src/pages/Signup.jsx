@@ -97,7 +97,7 @@ const Signup = () => {
   };
 
   const sendSms = () => {
-    fetch("/sendsms", {
+    fetch(`${url}/sendsms`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

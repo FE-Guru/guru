@@ -68,7 +68,10 @@ const JobOffer = () => {
         setJobList((prevJobList) => {
           // 기존 데이터를 새로운 데이터와 병합하여 설정
           const newJobList = [...prevJobList, ...data];
-          const uniqueJobList = newJobList.filter((job, index, self) => index === self.findIndex((j) => j._id === job._id));
+          const uniqueJobList = newJobList.filter(
+            (job, index, self) =>
+              index === self.findIndex((j) => j._id === job._id)
+          );
           return uniqueJobList;
         });
         const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
@@ -87,7 +90,9 @@ const JobOffer = () => {
   const filterJobs = () => {
     let filteredList = jobList;
     if (onOFffilter !== "all") {
-      filteredList = filteredList.filter((job) => job.category.jobType === onOFffilter);
+      filteredList = filteredList.filter(
+        (job) => job.category.jobType === onOFffilter
+      );
     }
     console.log(statusFilter);
     if (statusFilter !== "all") {
@@ -137,14 +142,21 @@ const JobOffer = () => {
 
   return (
     <main className={`subPage jobOffer ${lnbHas ? "has" : ""}`}>
-      <section className="mw">
-        <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
-        <div className="contents">
-          <div className="conTitle">
+      <section className='mw'>
+        <Lnb
+          onOFfFilter={onOFffilter}
+          statusFilter={statusFilter}
+          onOffChange={onOffChange}
+          statusChange={statusChange}
+          lnbHas={lnbHas}
+          lnbHandler={lnbHandler}
+        />
+        <div className='contents'>
+          <div className='conTitle'>
             <h3> {currentPage.pageName}</h3>
-            <button className="LobHandler" onClick={lnbHandler}></button>
+            <button className='LobHandler' onClick={lnbHandler}></button>
           </div>
-          <ul className="boxContainer">
+          <ul className='boxContainer'>
             {filteredJobList.length === 0 ? (
               <li>등록된 구인글이 없습니다.</li>
             ) : (
@@ -158,8 +170,16 @@ const JobOffer = () => {
         </div>
       </section>
       {modalAlert && (
-        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} title={"권한 메시지"} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
+        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+          {modalAlert === "notAuthorized" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"로그인이 필요한 페이지입니다."}
+              error={true}
+              confirm={false}
+              goPage={"/login"}
+            />
+          )}
         </Modal>
       )}
     </main>

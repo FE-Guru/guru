@@ -11,20 +11,24 @@ import ModalAlert from "../components/ModalAlert";
 const PersonalEdit = () => {
   const [modalAlert, setModalAlert] = useState(null);
 
+  const user = useSelector((state) => state.user.user);
+  const emailID = user ? user.emailID : null;
+  const nickName = user ? user.nickName : null;
+
   const closeAlert = () => {
     setModalAlert(null);
   };
 
   const navigate = useNavigate();
   const accountDel = () => {
-    navigate("/mypage/acctDelete");
+    navigate("/mypage/acctdelete");
   };
   const dispatch = useDispatch();
   const pageInfo = useMemo(
     () => ({
       menuKR: "마이 페이지",
       menuEn: "My Page",
-      currentPage: { pageName: "회원정보 수정", path: "/mypage/profileEdit" },
+      currentPage: { pageName: "회원정보 수정", path: "/mypage/profileedit" },
     }),
     []
   );
@@ -49,11 +53,23 @@ const PersonalEdit = () => {
     });
   };
 
+  //로그인 안하면 접근 못하게
+  useEffect(() => {
+    if (!user) {
+      setModalAlert("notAuthorized");
+    }
+  }, [user]);
+
   const editSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.password !== formData.confirmPassword) {
+      setModalAlert("pwnotmatch");
+      return;
+    }
+
     try {
-      const response = await fetch(`${url}/mypage/personalEdit`, {
+      const response = await fetch(`${url}/mypage/personaledit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,12 +84,9 @@ const PersonalEdit = () => {
       }
     } catch (error) {
       console.error("Error:", error);
+      setModalAlert("editfailed");
     }
   };
-
-  const user = useSelector((state) => state.user.user);
-  const emailID = user ? user.emailID : null;
-  const nickName = user ? user.nickName : null;
 
   return (
     <div className='contents'>
@@ -97,6 +110,7 @@ const PersonalEdit = () => {
               <div className={form.formCon}>
                 <input
                   type='password'
+                  name='password'
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -107,7 +121,8 @@ const PersonalEdit = () => {
               <div className={form.formCon}>
                 <input
                   type='password'
-                  value={formData.password}
+                  name='confirmPassword'
+                  value={formData.confirmPassword}
                   onChange={handleChange}
                 />
               </div>
@@ -116,17 +131,27 @@ const PersonalEdit = () => {
               <span>닉네임</span>
               <input
                 type='text'
+                name='nickName'
                 value={formData.nickName}
                 onChange={handleChange}
-              ></input>
+              />
             </div>
             <div className={`${form.formGrup} ${mem.phoneGrup}`}>
               <span>연락처</span>
               <div className={mem.phoneInner}>
                 <div className={mem.phoneAuth}>
-                  <input type='text' value={formData.phone} maxLength='11' />
+                  <input
+                    type='text'
+                    name='phone'
+                    value={formData.phone}
+                    maxLength='11'
+                    onChange={handleChange}
+                  />
                   <p className={mem.time}></p>
-                  <button className={`btn primary green ${mem.greenBtn}`}>
+                  <button
+                    type='button'
+                    className={`btn primary green ${mem.greenBtn}`}
+                  >
                     연락처 변경
                   </button>
                 </div>
@@ -136,6 +161,7 @@ const PersonalEdit = () => {
               <span>계좌번호</span>
               <input
                 type='text'
+                name='account'
                 placeholder=' '
                 value={formData.account}
                 onChange={handleChange}
@@ -169,6 +195,27 @@ const PersonalEdit = () => {
               error={true}
               confirm={false}
             />
+          )}
+          {modalAlert === "pwnotmatch" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"비밀번호가 일치하지 않습니다."}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert && (
+            <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+              {modalAlert === "notAuthorized" && (
+                <ModalAlert
+                  close={closeAlert}
+                  desc={"로그인이 필요한 페이지입니다."}
+                  error={true}
+                  confirm={false}
+                  goPage={"/login"}
+                />
+              )}
+            </Modal>
           )}
         </Modal>
       )}
