@@ -63,7 +63,7 @@ const Findjob = () => {
 
   useEffect(() => {
     filterJobs();
-  }, [cateTalent, cateField, jobList, cateType]);
+  }, [cateTalent, cateField, jobList, cateType, cateTime]);
 
   const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
 
@@ -291,11 +291,11 @@ const Findjob = () => {
           <ul className="JobList">
             {cateType === "offLine" && (
               <li className="mapApiArea">
-                <Map jobList={jobList} location={location} setLocation={setLocation} />
+                <Map jobList={jobList} location={location} setLocation={setLocation} setJobList={setJobList}/>
               </li>
             )}
             {filteredJobList.length === 0 ? (
-              <li className="noneList">조건에 맞는 일자리가 없습니다.</li>
+              <li className="noneList">필터를 선택해 주세요. 조건에 맞는 일자리가 없습니다.</li>
             ) : (
               filteredJobList.map((item) => (
                 <li key={item._id}>

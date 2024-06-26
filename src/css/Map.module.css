@@ -59,10 +59,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.desc .jibun {
+.desc .date {
   font-size: 1.1rem;
   color: #888;
-  margin-top: -0.2rem;
+  line-height: 2rem;
 }
 .info .img {
   position: absolute;
@@ -86,5 +86,5 @@
   background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png');
 }
 .info .link {
-  color: #5085BB;
+  color: #5085bb;
 }

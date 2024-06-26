@@ -1,7 +1,9 @@
 /* global kakao */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import styles from '../css/Map.module.css';
+import { url } from "../store/ref";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
@@ -30,6 +32,7 @@ const formatDate = (dateString) => {
 const Map = ({ jobList, setJobList, location, setLocation }) => {
   const [loading, setLoading] = useState(true);
   const [map, setMap] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Geolocation API를 사용하여 현재 위치 가져오기
@@ -41,7 +44,7 @@ const Map = ({ jobList, setJobList, location, setLocation }) => {
 
           try {
             // 서버에 현재 위치 전송하여 가까운 순서로 일자리 리스트 요청
-            const response = await axios.get('/findoffLine', {
+            const response = await axios.get(`${url}/job/findoffLine`, {
               params: {
                 lat: latitude,
                 lon: longitude,
@@ -118,8 +121,8 @@ const Map = ({ jobList, setJobList, location, setLocation }) => {
                 </div>
                 <div class="${styles.desc}">
                   <div class="${styles.ellipsis}">${job.location.address}</div>
-                  <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
-                  <div><a href="${job.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
+                  <div class="${styles.date}">${workStartDate} ~ ${workEndDate}</div>
+                  <div class="${styles.link}" data-id="${job._id}">리스트로 이동 ></div>
                 </div>
               </div>
             </div>
@@ -144,13 +147,19 @@ const Map = ({ jobList, setJobList, location, setLocation }) => {
         const closeBtn = content.querySelector(`.${styles.close}`);
         closeBtn.addEventListener('click', closeOverlay);
 
+        // 링크 클릭 이벤트 리스너 추가
+        const link = content.querySelector(`.${styles.link}`);
+        link.addEventListener('click', () => {
+          navigate("/job-detail", { state: { _id: job._id } });
+        });
+
         return marker;
       });
 
       // 클러스터러에 마커들을 추가합니다
       clusterer.addMarkers(markers);
     }
-  }, [map, jobList]);
+  }, [map, jobList, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
