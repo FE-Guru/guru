@@ -18,6 +18,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
   const memoizedData = useMemo(() => data[item?._id] || {}, [data, item?._id]);
   const address = item?.location?.address?.split(" ");
   const newAddress = address?.slice(0, 2).join(" ");
+  const [author, setAuthor] = useState(null);
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(null);
   const [modalUser, setModalUser] = useState(null);
@@ -63,6 +64,22 @@ const JobItem = ({ item, jobOffer, findjob }) => {
       );
     }
   }, [item, dispatch]);
+
+  /* 작성자 확인 */
+  useEffect(() => {
+    if (item?.emailID) {
+      const fetchUser = async () => {
+        try {
+          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const result = await res.json();
+          setAuthor(result);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchUser();
+    }
+  }, [item]);
 
   /*지원자 확인 클릭이벤트*/
   const aapliHandler = () => {
@@ -143,7 +160,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
         <div className={style.jobInfo}>
           {!jobOffer ? (
             <div className={style.thumb}>
-              <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" />
+              {!author?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${author?.image}`} alt="프로필 이미지" />}
             </div>
           ) : null}
           <div className={style.jobDes}>
