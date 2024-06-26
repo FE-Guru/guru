@@ -53,13 +53,6 @@ const PersonalEdit = () => {
     });
   };
 
-  //로그인 안하면 접근 못하게
-  useEffect(() => {
-    if (!user) {
-      setModalAlert("notAuthorized");
-    }
-  }, [user]);
-
   const editSubmit = async (e) => {
     e.preventDefault();
 
