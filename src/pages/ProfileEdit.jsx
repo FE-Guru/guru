@@ -26,11 +26,18 @@ const ProfileEdit = () => {
     setModal(content);
   };
 
+  //로그인 안하면 접근 못하게
+  useEffect(() => {
+    if (!user) {
+      setModalAlert("notAuthorized");
+    }
+  }, [user]);
+
   const pageInfo = useMemo(
     () => ({
       menuKR: "마이 페이지",
       menuEn: "My Page",
-      currentPage: { pageName: "프로필 수정", path: "/mypage/profileEdit" },
+      currentPage: { pageName: "프로필 수정", path: "/mypage/profileedit" },
     }),
     []
   );
@@ -51,7 +58,7 @@ const ProfileEdit = () => {
 
   useEffect(() => {
     dispatch(setPageInfo(pageInfo));
-    loadFormDataFromLocalStorage(); // Load data from local storage
+    loadFormDataFromLocalStorage();
   }, [dispatch, pageInfo]);
 
   const profileWrite = async (val) => {
@@ -79,7 +86,7 @@ const ProfileEdit = () => {
       if (res.ok) {
         const result = await res.json();
         setModalAlert("content");
-        console.log("수정댓다");
+        window.location.href = "/";
       } else {
         console.error("Failed to submit profileEdit:", res.statusText);
       }
@@ -117,9 +124,9 @@ const ProfileEdit = () => {
   };
 
   return (
-    <div className="contents">
+    <div className='contents'>
       <h3>{currentPage.pageName}</h3>
-      <div className="full">
+      <div className='full'>
         <form
           className={`${style.formStyle} ${style.formProfile}`}
           onSubmit={handleSubmit(onSubmit)}
@@ -127,20 +134,20 @@ const ProfileEdit = () => {
           <div className={style.formContainer}>
             <div className={style.formThumb}>
               {imageSrc ? (
-                <img src={imageSrc} alt="Profile Preview" />
+                <img src={imageSrc} alt='Profile Preview' />
               ) : (
                 <img
                   src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
-                  alt="logo"
+                  alt='logo'
                 />
               )}
               <input
-                type="file"
-                name="files"
-                id="files"
+                type='file'
+                name='files'
+                id='files'
                 onChange={handleFileChange}
               />
-              <i className="fa-solid fa-camera-retro">
+              <i className='fa-solid fa-camera-retro'>
                 <p>이미지 변경</p>
               </i>
             </div>
@@ -148,7 +155,7 @@ const ProfileEdit = () => {
               {nickName}
               <span> 님</span>
             </span>
-            <progress id="trust" max="100" value="25"></progress>
+            <progress id='trust' max='100' value='25'></progress>
           </div>
           <div className={`${style.formContainer}`}>
             <div className={style.formGrup}>
@@ -156,11 +163,11 @@ const ProfileEdit = () => {
               <div className={`${style.formCon} ${style.addItem}`}>
                 <input
                   {...register("career")}
-                  id="career"
-                  placeholder="경력을 입력해주세요."
+                  id='career'
+                  placeholder='경력을 입력해주세요.'
                 />
-                <button type="button" className={style.addBtn}>
-                  <i className="fa-solid fa-plus"></i>
+                <button type='button' className={style.addBtn}>
+                  <i className='fa-solid fa-plus'></i>
                 </button>
               </div>
             </div>
@@ -169,10 +176,10 @@ const ProfileEdit = () => {
               <div className={`${style.formCon} ${style.addItem}`}>
                 <input
                   {...register("certi")}
-                  placeholder="면허 / 자격증을 입력해주세요."
+                  placeholder='면허 / 자격증을 입력해주세요.'
                 />
-                <button type="button" className={style.addBtn}>
-                  <i className="fa-solid fa-plus"></i>
+                <button type='button' className={style.addBtn}>
+                  <i className='fa-solid fa-plus'></i>
                 </button>
               </div>
             </div>
@@ -181,10 +188,10 @@ const ProfileEdit = () => {
               <div className={`${style.formCon} ${style.addItem}`}>
                 <input
                   {...register("skill")}
-                  placeholder="재능 / 스킬을 입력해주세요."
+                  placeholder='재능 / 스킬을 입력해주세요.'
                 />
-                <button type="button" className={style.addBtn}>
-                  <i className="fa-solid fa-plus"></i>
+                <button type='button' className={style.addBtn}>
+                  <i className='fa-solid fa-plus'></i>
                 </button>
               </div>
             </div>
@@ -193,7 +200,7 @@ const ProfileEdit = () => {
               <div className={`${style.formCon} ${style.addItem}`}>
                 <input
                   {...register("time")}
-                  placeholder="요일 / 시간을 입력해주세요."
+                  placeholder='요일 / 시간을 입력해주세요.'
                 />
               </div>
             </div>
@@ -201,17 +208,17 @@ const ProfileEdit = () => {
               <span>자기소개</span>
               <div className={`${style.formCon} ${style.addItem}`}>
                 <textarea
-                  id="introduce"
+                  id='introduce'
                   {...register("introduce")}
-                  placeholder="자기소개를 입력해주세요."
+                  placeholder='자기소개를 입력해주세요.'
                 />
               </div>
             </div>
           </div>
-          <div className="btnWrap">
+          <div className='btnWrap'>
             <button
-              type="submit"
-              className="btn primary yellow"
+              type='submit'
+              className='btn primary yellow'
               onClick={() => showPopup("content")}
             >
               프로필 수정
@@ -219,13 +226,21 @@ const ProfileEdit = () => {
           </div>
         </form>
         {modalAlert && (
-          <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
             {modalAlert === "content" && (
               <ModalAlert
                 close={closeAlert}
-                title={"GURU"}
-                desc={"수정 완료"}
+                desc={"프로필 수정이 완료되었습니다"}
                 confirm={false}
+              />
+            )}
+            {modalAlert === "notAuthorized" && (
+              <ModalAlert
+                close={closeAlert}
+                desc={"로그인이 필요한 페이지입니다."}
+                error={true}
+                confirm={false}
+                goPage={"/login"}
               />
             )}
           </Modal>

@@ -9,29 +9,32 @@ import style from "../css/Header.module.css";
 
 const Header = () => {
   const [isMypage, setIsMypage] = useState(false);
-  // const [login, setLogin] = useState(false); // 로그인 상태 변수
-  const [isIconChanged, setIsIconChanged] = useState(false); // 아이콘 상태 변수
+  const [isIconChanged, setIsIconChanged] = useState(false);
   const [modal, setModal] = useState(null);
+
+  const dispatch = useDispatch();
+  const location = useLocation();
+
   const user = useSelector((state) => state.user.user);
   const emailID = user ? user?.emailID : null;
   const nickName = user ? user?.nickName : null;
   const certified = user ? user?.certified : null;
 
-  const showPpup = (content) => {
+  const showPopup = (content) => {
     setModal(content);
   };
+
   const closePopup = () => {
     setModal(null);
   };
+
   useEffect(() => {
     if (certified === false) {
-      showPpup("profile");
+      showPopup("profile");
     }
   }, [user]);
 
-  const dispatch = useDispatch();
-  const location = useLocation();
-
+  //fetchProfile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -40,7 +43,6 @@ const Header = () => {
           console.warn("로그인하지 않은 상태입니다.");
           return;
         }
-
         const response = await fetch(`${url}/profile`, {
           method: "GET",
           credentials: "include",
@@ -54,10 +56,10 @@ const Header = () => {
         } else if (response.status === 401) {
           throw new Error("로그인이 필요합니다.");
         } else {
-          console.error("fetch profile erroor");
+          console.error("fetchProfile 에러");
         }
       } catch (error) {
-        console.error("Fetch error: ", error);
+        return;
       }
     };
     fetchProfile();
@@ -73,8 +75,8 @@ const Header = () => {
   };
 
   const mypageClick = () => {
-    setIsIconChanged(!isIconChanged); // 아이콘 상태 변경
-    setIsMypage(!isMypage); // 마이페이지 상태 반전
+    setIsIconChanged(!isIconChanged);
+    setIsMypage(!isMypage);
   };
 
   useEffect(() => {
@@ -101,14 +103,6 @@ const Header = () => {
 
         {emailID ? (
           <div className={style.loginDiv}>
-            {/* <button>
-              <i className="fa-regular fa-bell"></i>
-              <span></span>
-            </button>
-            <button>
-              <i className="fa-regular fa-comment-dots"></i>
-              <span></span>
-            </button> */}
             <div className={style.thumb} onClick={mypageClick}>
               <img
                 src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
@@ -153,8 +147,8 @@ const Header = () => {
                 <Link to='/job-offer'>구인글 관리</Link>
               </div>
               <div className={style.cate2}>
-                <Link to='/mypage/profileEdit'>프로필 수정</Link>
-                <Link to='/mypage/personalEdit'>회원정보 수정</Link>
+                <Link to='/mypage/profileedit'>프로필 수정</Link>
+                <Link to='/mypage/personaledit'>회원정보 수정</Link>
                 <Link to='/logout' onClick={logout}>
                   로그아웃
                 </Link>
@@ -172,11 +166,6 @@ const Header = () => {
           </div>
         )}
       </div>
-
-      {/* <button>
-        <i className='fa-regular fa-bell'></i>
-      </button>
-       */}
       <button className={style.ham} onClick={mypageClick}>
         <i className={isIconChanged ? "fa-solid fa-x" : "fa-solid fa-bars"}></i>
       </button>

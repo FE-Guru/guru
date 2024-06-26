@@ -40,9 +40,9 @@ function App() {
         <Route path='/job-edit' element={<JobEdit />} />
         <Route path='/job-detail' element={<JobDetail />} />
         <Route path='/mypage' element={<Mypage />}>
-          <Route path='profileEdit' element={<ProfileEdit />} />
-          <Route path='personalEdit' element={<PersonalEdit />} />
-          <Route path='acctDelete' element={<AcctDelete />} />
+          <Route path='profileedit' element={<ProfileEdit />} />
+          <Route path='personaledit' element={<PersonalEdit />} />
+          <Route path='acctdelete' element={<AcctDelete />} />
         </Route>
         <Route path='acctbye' element={<AcctBye />} />
       </Routes>
