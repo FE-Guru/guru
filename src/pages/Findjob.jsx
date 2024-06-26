@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCateType } from "../store/findjob";
+import { setCateField, setCateTalent } from "../store/filter";
 import { url } from "../store/ref";
 import JobItem from "../components/JobItem";
 import Filter from "../components/Filter";
@@ -10,17 +11,19 @@ import "../css/Findjob.css";
 const Findjob = () => {
   const dispatch = useDispatch();
   const cateType = useSelector((state) => state.findjob.cateType);
+  const cateTalent = useSelector((state) => state.filter.cateTalent);
+  const cateField = useSelector((state) => state.filter.cateField);
   const [jobList, setJobList] = useState([]);
   const [filteredJobList, setFilteredJobList] = useState([]);
   const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 });
   const [loadPage, setLoadPage] = useState(1);
   const [totalJobs, setTotalJobs] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [cateTalent, setCateTalent] = useState("all");
-  const [cateField, setCateField] = useState("all");
-  const [cateTime, setCateTime] = useState("all");
+  const [cateTime, setCateTime] = useState([0, 1440]);
+  const [titleText, setTitleText] = useState("");
   const [lnbHas, setLnbHas] = useState(false);
   const [modalAlert, setModalAlert] = useState(null);
+  const [scrollEnabled, setScrollEnabled] = useState(true);
 
   /*스크롤 이벤트 중복 방지*/
   const throttle = (func, delay) => {
@@ -41,11 +44,15 @@ const Findjob = () => {
 
   const callOnLine = () => {
     dispatch(setCateType({ cateType: "onLine" }));
+    dispatch(setCateField("all"));
+    dispatch(setCateTalent("all"));
     setLoadPage(1);
     setJobList([]);
   };
   const callOffLine = () => {
     dispatch(setCateType({ cateType: "offLine" }));
+    dispatch(setCateField("all"));
+    dispatch(setCateTalent("all"));
     setLoadPage(1);
     setJobList([]);
   };
@@ -65,36 +72,39 @@ const Findjob = () => {
     setLoading(true);
     try {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ lat: latitude, lon: longitude });
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ lat: latitude, lon: longitude });
 
-          const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
-          const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
-          const response = await fetch(`${url}/job/${endpoint}?page=${loadPage}${queryType}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await response.json();
-          if (response.ok) {
-            setJobList((prevJobList) => {
-              const newJobList = [...prevJobList, ...data];
-              const uniqueJobList = newJobList.filter((job, index, self) => index === self.findIndex((j) => j._id === job._id));
-              return uniqueJobList;
+            const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
+            const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
+            const response = await fetch(`${url}/job/${endpoint}?page=${loadPage}${queryType}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
             });
-            const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
-            setTotalJobs(totalCount);
-          } else {
-            setModalAlert("notAuthorized");
+            const data = await response.json();
+            if (response.ok) {
+              setJobList((prevJobList) => {
+                const newJobList = [...prevJobList, ...data];
+                const uniqueJobList = newJobList.filter((job, index, self) => index === self.findIndex((j) => j._id === job._id));
+                return uniqueJobList;
+              });
+              const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
+              setTotalJobs(totalCount);
+            } else {
+              setModalAlert("notAuthorized");
+            }
+          },
+          (error) => {
+            console.error("Error getting geolocation:", error);
+            setLoading(false);
           }
-        }, (error) => {
-          console.error("Error getting geolocation:", error);
-          setLoading(false);
-        });
+        );
       } else {
-        console.error('Geolocation is not supported by this browser.');
+        console.error("Geolocation is not supported by this browser.");
         setLoading(false);
       }
     } catch (error) {
@@ -114,6 +124,10 @@ const Findjob = () => {
       if (cateField !== "all") {
         filteredList = filteredList.filter((job) => job.category.field === cateField && job.category.jobType === "onLine");
       }
+      if (cateTime[0] !== 0 || cateTime[1] !== 1440) {
+        const [startTime, endTime] = cateTime;
+        filteredList = filteredList.filter((job) => job.category.time >= startTime && job.category.time <= endTime && job.category.jobType === "onLine");
+      }
     } else if (cateType === "offLine") {
       if (cateTalent !== "all") {
         filteredList = filteredList.filter((job) => job.category.talent === cateTalent && job.category.jobType === "offLine");
@@ -121,16 +135,67 @@ const Findjob = () => {
       if (cateField !== "all") {
         filteredList = filteredList.filter((job) => job.category.field === cateField && job.category.jobType === "offLine");
       }
+      if (cateTime[0] !== 0 || cateTime[1] !== 1440) {
+        const [startTime, endTime] = cateTime;
+        filteredList = filteredList.filter((job) => job.category.time >= startTime && job.category.time <= endTime && job.category.jobType === "offLine");
+      }
     }
+    enableScroll();
     setFilteredJobList(filteredList);
   };
 
+  const searchTitle = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lon: longitude });
+
+          const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
+          const endpoint = cateType === "offLine" ? "alloffLine" : "allonLine";
+          const response = await fetch(`${url}/job/${endpoint}??&titleText=${titleText}${queryType}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await response.json();
+          if (response.ok) {
+            setFilteredJobList(Array.isArray(data) ? data : []);
+            setTitleText("");
+            disableScroll();
+          } else {
+            setModalAlert("notAuthorized");
+          }
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+          setLoading(false);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      setLoading(false);
+    }
+  };
+
+  const disableScroll = () => {
+    window.removeEventListener("scroll", scrollEv);
+    setScrollEnabled(false);
+  };
+
+  const enableScroll = () => {
+    if (!scrollEnabled) {
+      window.addEventListener("scroll", scrollEv);
+      setScrollEnabled(true);
+    }
+  };
   /*스크롤 증가 이벤트*/
   const scrollEv = throttle(() => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
-    if (windowHeight + scrollTop >= documentHeight - 210 && !loading) {
+    if (windowHeight + scrollTop >= documentHeight - 210) {
       if (jobList.length < totalJobs) {
         setLoadPage((prevPage) => prevPage + 1);
       }
@@ -139,18 +204,29 @@ const Findjob = () => {
 
   /* 스크롤 이벤트 상태관리*/
   useEffect(() => {
-    window.addEventListener("scroll", scrollEv);
+    if (scrollEnabled && !titleText) {
+      window.addEventListener("scroll", scrollEv);
+    }
     return () => {
       window.removeEventListener("scroll", scrollEv);
     };
-  }, [jobList, totalJobs, loading]);
+  }, [jobList, totalJobs, scrollEnabled, titleText]);
 
   /* 필터링 */
-  const talentChange = useCallback((filter) => {
-    setCateTalent(filter);
-  }, []);
-  const fieldChange = useCallback((filter) => {
-    setCateField(filter);
+  const talentChange = useCallback(
+    (filter) => {
+      dispatch(setCateTalent(filter));
+    },
+    [dispatch]
+  );
+  const fieldChange = useCallback(
+    (filter) => {
+      dispatch(setCateField(filter));
+    },
+    [dispatch]
+  );
+  const timeChange = useCallback((filter) => {
+    setCateTime(filter);
   }, []);
   const lnbHandler = () => {
     setLnbHas(!lnbHas);
@@ -180,29 +256,46 @@ const Findjob = () => {
               오프라인
             </button>
           </div>
-          <form>
-            <label>
-              <input type="text" placeholder="키워드를 입력해주세요." />
-              <button type="submit"></button>
-            </label>
-          </form>
+          <label>
+            <input
+              type="text"
+              value={titleText}
+              onChange={(e) => setTitleText(e.target.value)}
+              placeholder="키워드를 입력해주세요."
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchTitle();
+                }
+              }}
+            />
+            <button type="button" onClick={searchTitle}></button>
+          </label>
         </div>
       </section>
       <section className="mw midSection">
-        <Filter cateTalent={cateTalent} cateField={cateField} cateTime={cateTime} talentChange={talentChange} fieldChange={fieldChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
+        <Filter
+          cateTalent={cateTalent}
+          cateField={cateField}
+          cateTime={cateTime}
+          talentChange={talentChange}
+          fieldChange={fieldChange}
+          timeChange={timeChange}
+          lnbHas={lnbHas}
+          lnbHandler={lnbHandler}
+        />
         <div className="contents">
           <div className="conTitle">
             <h3>{pageH3}</h3>
-            <button>필터</button>
+            <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="JobList">
-            {cateType === "offLine" && ( 
+            {cateType === "offLine" && (
               <li className="mapApiArea">
                 <Map jobList={jobList} location={location} setLocation={setLocation} />
               </li>
             )}
             {filteredJobList.length === 0 ? (
-              <li>등록된 일자리가 없습니다.</li>
+              <li className="noneList">조건에 맞는 일자리가 없습니다.</li>
             ) : (
               filteredJobList.map((item) => (
                 <li key={item._id}>

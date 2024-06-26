@@ -61,25 +61,25 @@ h2 > span {
 .offLine .topSection .tab button.on {
   background: var(--cr-m-g);
 }
-.topSection form label {
+.topSection label {
   display: flex;
   height: 5.9rem;
   padding: 0 2.9rem;
   border: 3px solid var(--cr-bl1);
   background: var(--cr-w);
-  max-width: 35.6rem;
+  max-width: 30rem;
   width: 100%;
   border-radius: 100rem;
 }
-.topSection form label input {
+.topSection label input {
   border: 0;
   font-weight: 600;
 }
-.topSection form label input::placeholder {
+.topSection label input::placeholder {
   color: var(--cr-g1);
   font-weight: 400;
 }
-.topSection form label button::after {
+.topSection label button::after {
   content: "\f002";
   font: var(--fa-font-solid);
   font-size: 1.8rem;
@@ -87,9 +87,10 @@ h2 > span {
 }
 
 .findjob .midSection {
-  margin: 7.3rem auto 8rem;
+  margin: 4.3rem auto 8rem;
   display: flex;
   gap: 0 4.6rem;
+  align-items: flex-start;
 }
 
 /*filter*/
@@ -128,6 +129,14 @@ h2 > span {
   border: 3px solid var(--cr-bl1);
   border-radius: 1rem;
   padding: 4rem;
+}
+.midSection .contents ul .noneList {
+  background: var(--cr-w);
+  padding: 3rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  box-shadow: 2px 3px 3px 0 rgba(0, 0, 0, 0.08);
 }
 .onLine .contents ul {
   background: #faf3e5;
@@ -171,16 +180,67 @@ h2 > span {
     margin: 3.5rem 0 0 0;
     transform: translate(0, 0);
   }
-  .filter {
-    display: none;
-  }
 }
 @media (max-width: 990px) {
+  .topSection {
+    margin-bottom: 10rem;
+  }
+  .topSection label {
+    position: absolute;
+    bottom: -3rem;
+    left: 50%;
+    width: calc(100% - var(--sm-gap) * 2);
+    transform: translate(-50%, 100%);
+    max-width: 100%;
+    justify-content: space-between;
+    border-radius: 1rem;
+  }
+  .topSection label input {
+    flex: 1;
+  }
+  .topSection label button {
+    padding-left: 1.6rem;
+  }
+  .midSection .contents {
+    width: 100%;
+  }
   .findjob .midSection {
     flex-direction: column;
     margin-top: 3.5rem;
   }
   .midSection .contents ul {
     padding: 2.4rem;
+  }
+}
+@media (max-width: 660px) {
+  .topSection {
+    border-width: 2px;
+    padding: 4rem 0 3rem 0;
+  }
+  .topSection .tab {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-width: 2px;
+  }
+  .topSection .tab button {
+    height: 3.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+    font-size: 1.4rem;
+  }
+  .topSection .tab button.on {
+    border-width: 2px;
+  }
+  .topSection label {
+    border-width: 2px;
+    border-radius: 0.4rem;
+    padding: 0 1.4rem;
+  }
+  .midSection .contents ul .noneList {
+    font-size: 1.6rem;
+    text-align: center;
+    margin-top: 0.8rem;
   }
 }
