@@ -14,12 +14,10 @@
   --lg-gap: 6.8rem;
   --md-gap: 2.8rem;
   --sm-gap: 1.8rem;
-  --email-icon: url('../assets/images/email.png');
-  --pw-icon: url('../assets/images/pw.svg');
-  font-family: 'Pretendard Variable', Pretendard, -apple-system,
-    BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
-    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  --email-icon: url("../assets/images/email.png");
+  --pw-icon: url("../assets/images/pw.svg");
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   --email-icon: url("../assets/images/email.png");
   --pw-icon: url("../assets/images/pw.svg");
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
@@ -385,6 +383,7 @@ main .lnbCompo {
   .subPage > section {
     gap: 2rem;
   }
+  .findjob .midSection .contents ul,
   .subPage .contents > .boxContainer {
     padding: 2.4rem;
   }
@@ -432,8 +431,13 @@ main .lnbCompo {
     transform: translateX(0);
     visibility: visible;
     transition: opacity 1.2s, transform 0.4s, visibility 1.2s, width 0.3s;
+    position: sticky;
+    top: 1.6rem;
   }
-
+  main.findjob .midSection {
+    gap: 4.6rem;
+  }
+  main.has.findjob .midSection,
   main.has.subPage > section {
     gap: 0;
   }
@@ -518,6 +522,7 @@ main.has .lnbCompo .filterWrap > div {
     padding-top: 3.8rem;
     padding-bottom: 0;
   }
+  .findjob .midSection .contents ul,
   .subPage .contents > .boxContainer {
     padding: 1rem;
     border-radius: 0.4rem;
@@ -554,6 +559,7 @@ main.has .lnbCompo .filterWrap > div {
     font-size: 1rem;
     padding-right: 0.5rem;
   }
+  .findjob .midSection .contents ul,
   .subPage .contents > .boxContainer {
     padding: 0.7rem;
   }
