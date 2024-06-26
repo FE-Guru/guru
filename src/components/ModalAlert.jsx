@@ -7,12 +7,15 @@ const ModalAlert = ({
   desc,
   error,
   confirm,
+  onConfirm,
   goPage,
   throwFn,
 }) => {
   const navigate = useNavigate();
   const okSubmit = () => {
-    if (goPage) {
+    if (onConfirm) {
+      onConfirm();
+    } else if (goPage) {
       navigate(goPage);
     } else if (throwFn) {
       throwFn();

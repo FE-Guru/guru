@@ -32,12 +32,16 @@ const AcctDelete = () => {
       });
 
       if (response.status === 200) {
-        localStorage.removeItem("token");
-        window.location.href = "/acctbye";
+        setModalAlert("certain");
       }
     } else {
       setModalAlert("notoken");
     }
+  };
+
+  const confirmDel = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/acctbye";
   };
 
   return (
@@ -72,6 +76,15 @@ const AcctDelete = () => {
               desc={"로그인이 필요합니다."}
               error={true}
               confirm={false}
+            />
+          )}
+          {modalAlert === "certain" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"정말 탈퇴하시겠습니까? 확인을 누르면 탈퇴됩니다."}
+              error={false}
+              confirm={true}
+              onConfirm={confirmDel}
             />
           )}
         </Modal>
