@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import style from '../css/Modal.module.css';
+import { url } from "../store/ref";
 
 const SatisfactionModal = ({ onClose, userEmail, item }) => {
   const [starRating, setStarRating] = useState(0);
   const [feedback, setFeedback] = useState({
-    kind: false,
-    onTime: false,
-    highQuality: false,
-    unkind: false,
-    notOnTime: false,
-    lowQuality: false,
-    etc: false,
+    kind: 0,
+    onTime: 0,
+    highQuality: 0,
+    unkind: 0,
+    notOnTime: 0,
+    lowQuality: 0,
+    etc: 0,
   });
   const [otherFeedbackText, setOtherFeedbackText] = useState('');
   const [writerID, setWriterID] = useState('');
@@ -44,11 +45,11 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
       star >= 3 ? feedbackOptions.negative : feedbackOptions.positive;
     setFeedback((prevFeedback) => {
       const newFeedback = { ...prevFeedback };
-      toReset.forEach((item) => (newFeedback[item] = false));
+      toReset.forEach((item) => (newFeedback[item] = 0));
       return newFeedback;
     });
     if (feedback.etc) {
-      setFeedback((prevFeedback) => ({ ...prevFeedback, etc: false }));
+      setFeedback((prevFeedback) => ({ ...prevFeedback, etc: 0 }));
       setOtherFeedbackText('');
     }
   };
@@ -57,15 +58,15 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
     if (item === 'etc') {
       setFeedback((prevFeedback) => ({
         ...prevFeedback,
-        etc: !prevFeedback.etc,
+        etc: prevFeedback.etc === 1 ? 0 : 1,
       }));
-      if (!feedback.etc) {
+      if (feedback.etc === 0) {
         setOtherFeedbackText('');
       }
     } else {
       setFeedback((prevFeedback) => ({
         ...prevFeedback,
-        [item]: !prevFeedback[item],
+        [item]: prevFeedback[item] === 1 ? 0 : 1,
       }));
     }
   };
@@ -90,10 +91,11 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
     };
 
     try {
-      await axios.post('http://localhost:8000/satisfied', satisfiedData);
-      onClose();
+      const response = await axios.post(`${url}/satisfied`, satisfiedData);
+      onClose(); // 데이터 전송 후 모달 닫기
     } catch (error) {
       console.error('Error submitting feedback:', error);
+      onClose(); // 에러 발생 시에도 모달 닫기
     }
   };
 
@@ -128,7 +130,7 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
             <button
               key={item}
               className={`btn primary ${style.fbBtn} ${
-                feedback[item] ? style.selected : ''
+                feedback[item] === 1 ? style.selected : ''
               }`}
               onClick={() => handleFeedbackClick(item)}
             >
@@ -142,7 +144,7 @@ const SatisfactionModal = ({ onClose, userEmail, item }) => {
             </button>
           ))}
         </div>
-        {feedback.etc && (
+        {feedback.etc === 1 && (
           <textarea
             className={style.satisfaction_textarea}
             placeholder="기타 의견을 작성해 주세요"
