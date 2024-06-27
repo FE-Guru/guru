@@ -23,16 +23,9 @@ const Header = () => {
   const showPopup = (content) => {
     setModal(content);
   };
-
   const closePopup = () => {
     setModal(null);
   };
-
-  useEffect(() => {
-    if (certified === false) {
-      showPopup("profile");
-    }
-  }, [user]);
 
   //fetchProfile
   useEffect(() => {
@@ -53,6 +46,9 @@ const Header = () => {
         if (response.ok) {
           const userInfo = await response.json();
           dispatch(userState(userInfo));
+          if (certified === false) {
+            showPopup("profile");
+          }
         } else if (response.status === 401) {
           throw new Error("로그인이 필요합니다.");
         } else {
@@ -63,7 +59,7 @@ const Header = () => {
       }
     };
     fetchProfile();
-  }, [dispatch, location]);
+  }, [dispatch, location, certified]);
 
   const logout = (e) => {
     e.preventDefault();

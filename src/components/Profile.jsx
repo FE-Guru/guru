@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
@@ -25,13 +25,12 @@ const Profile = ({ show, onclose, modal, mode }) => {
         });
         const result = await res.json();
         if (res.ok) {
-          console.log(result);
-          setValue("career", result.career);
-          setValue("certi", result.certi);
-          setValue("skill", result.skill);
-          setValue("time", result.time);
-          setValue("introduce", result.introduce);
-          setImgPath(result.image);
+          setValue("career", result.career || "");
+          setValue("certi", result.certi || "");
+          setValue("skill", result.skill || "");
+          setValue("time", result.time || "");
+          setValue("introduce", result.introduce || "");
+          setImgPath(result.image ? result.image : null);
           setGetUser(result);
         }
       } catch (e) {
@@ -41,6 +40,15 @@ const Profile = ({ show, onclose, modal, mode }) => {
     findUser();
   }, [emailID, setValue]);
 
+  useEffect(() => {
+    if (modalAlert === "isOk" && onclose) {
+      onclose();
+    }
+  }, [modalAlert, onclose]);
+
+  const showAlert = (content) => {
+    setModalAlert(content);
+  };
   const closeAlert = () => {
     setModalAlert(null);
   };
@@ -86,17 +94,13 @@ const Profile = ({ show, onclose, modal, mode }) => {
       });
       const result = await res.json();
       if (res.ok) {
-        setModalAlert("content");
-        if (onclose) {
-          onclose();
-        }
-        console.log(result);
+        showAlert("isOk");
       } else {
-        setModalAlert("failed");
+        showAlert("failed");
         console.error("Failed to submit profile:", res.statusText);
       }
     } catch (error) {
-      setModalAlert("failed");
+      showAlert("failed");
       console.error("Error:", error);
     }
   };
@@ -164,7 +168,7 @@ const Profile = ({ show, onclose, modal, mode }) => {
       </form>
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "content" && <ModalAlert close={closeAlert} desc={`프로필이 정상적으로 ${mode}되었습니다.`} error={false} confirm={false} />}
+          {modalAlert === "isOk" && <ModalAlert close={closeAlert} desc={`프로필이 정상적으로 ${mode}되었습니다.`} error={false} confirm={false} />}
           {modalAlert === "noImageType" && <ModalAlert close={closeAlert} desc={"유효하지 않는 이미지 파일 형식입니다."} error={true} confirm={false} />}
           {modalAlert === "failed" && <ModalAlert close={closeAlert} desc={`프로필 ${mode} 중 오류가 생겼습니다.`} error={true} confirm={false} />}
         </Modal>
