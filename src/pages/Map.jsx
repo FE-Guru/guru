@@ -1,9 +1,6 @@
 /* global kakao */
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
 import styles from '../css/Map.module.css';
-import { url } from "../store/ref";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
@@ -29,66 +26,36 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('ko-KR', options);
 };
 
-const Map = ({ jobList, setJobList, location, setLocation }) => {
-  const [loading, setLoading] = useState(true);
-  const [map, setMap] = useState(null);
-  const navigate = useNavigate();
+const Map = ({ jobList, location }) => {
+  const [map, setMap] = useState(null); // 지도 객체 상태
 
+  // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
-    // Geolocation API를 사용하여 현재 위치 가져오기
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ lat: latitude, lon: longitude });
+    loadKakaoMapScript(() => {
+      const mapContainer = document.getElementById('map');
+      if (!mapContainer) {
+        console.error('Map container not found');
+        return;
+      }
+      const mapOption = {
+        center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
+        level: 3,
+      };
 
-          try {
-            // 서버에 현재 위치 전송하여 가까운 순서로 일자리 리스트 요청
-            const response = await axios.get(`${url}/job/findoffLine`, {
-              params: {
-                lat: latitude,
-                lon: longitude,
-                page: 1,
-              },
-            });
+      const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
+      setMap(mapInstance);
+    });
+  }, [location.lat, location.lon]);
 
-            setJobList(response.data);
-            setLoading(false);
-          } catch (error) {
-            console.error('Error fetching jobs:', error);
-            setLoading(false);
-          }
-        },
-        (error) => {
-          console.error('Error getting geolocation:', error);
-          setLoading(false);
-        }
-      );
-    } else {
-      console.error('Geolocation is not supported by this browser.');
-      setLoading(false);
-    }
-  }, [setLocation, setJobList]);
-
+  // 지도의 중심을 현재 위치로 업데이트
   useEffect(() => {
-    if (!loading && location.lat !== 0 && location.lon !== 0) {
-      loadKakaoMapScript(() => {
-        const mapContainer = document.getElementById('map');
-        if (!mapContainer) {
-          console.error('Map container not found');
-          return;
-        }
-        const mapOption = {
-          center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
-          level: 3,
-        };
-
-        const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
-        setMap(mapInstance);
-      });
+    if (map) {
+      const moveLatLon = new kakao.maps.LatLng(location.lat, location.lon);
+      map.setCenter(moveLatLon);
     }
-  }, [loading, location]);
+  }, [location, map]);
 
+  // 지도와 마커 클러스터러 설정
   useEffect(() => {
     if (map && jobList.length > 0) {
       // 마커 클러스터러를 생성합니다
@@ -121,8 +88,8 @@ const Map = ({ jobList, setJobList, location, setLocation }) => {
                 </div>
                 <div class="${styles.desc}">
                   <div class="${styles.ellipsis}">${job.location.address}</div>
-                  <div class="${styles.date}">${workStartDate} ~ ${workEndDate}</div>
-                  <div class="${styles.link}" data-id="${job._id}">리스트로 이동 ></div>
+                  <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
+                  <div><a href="${job.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
                 </div>
               </div>
             </div>
@@ -147,23 +114,13 @@ const Map = ({ jobList, setJobList, location, setLocation }) => {
         const closeBtn = content.querySelector(`.${styles.close}`);
         closeBtn.addEventListener('click', closeOverlay);
 
-        // 링크 클릭 이벤트 리스너 추가
-        const link = content.querySelector(`.${styles.link}`);
-        link.addEventListener('click', () => {
-          navigate("/job-detail", { state: { _id: job._id } });
-        });
-
         return marker;
       });
 
       // 클러스터러에 마커들을 추가합니다
       clusterer.addMarkers(markers);
     }
-  }, [map, jobList, navigate]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  }, [map, jobList, location]);
 
   return (
     <div>
