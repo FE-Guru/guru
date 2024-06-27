@@ -16,23 +16,9 @@ const PersonalEdit = () => {
   const emailID = user ? user.emailID : null;
   const userName = user ? user.userName : null;
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const closeAlert = () => {
-    setModalAlert(null);
-  };
-
-  //비번 변경의 경우 닫기함수 따로 만듦
-  const closePwchanged = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
-
   const navigate = useNavigate();
-  const accountDel = () => {
-    navigate("/mypage/acctdelete");
-  };
-
   const dispatch = useDispatch();
+
   const pageInfo = useMemo(
     () => ({
       menuKR: "마이 페이지",
@@ -46,6 +32,20 @@ const PersonalEdit = () => {
   useEffect(() => {
     dispatch(setPageInfo(pageInfo));
   }, [dispatch, pageInfo]);
+
+  const closeAlert = () => {
+    setModalAlert(null);
+  };
+
+  //비번 변경의 경우 닫기함수 따로 만듦(로그아웃시키기)
+  const closePwchanged = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
+  const accountDel = () => {
+    navigate("/mypage/acctdelete");
+  };
 
   const [formData, setFormData] = useState({
     emailID: user ? user.emailID : "",
@@ -88,7 +88,7 @@ const PersonalEdit = () => {
       formData.nickName === user.nickName &&
       formData.phone === user.phone &&
       formData.account === user.account &&
-      !formData.password
+      !formData.password //비번 입력되지 않았을때
     ) {
       setModalAlert("notchanged");
       return;
@@ -103,7 +103,7 @@ const PersonalEdit = () => {
         body: JSON.stringify(formData),
       });
 
-      // 비번 변경된 경우 로그아웃 시킴
+      // 경우에 따라 모달띄우기
       if (response.ok) {
         const data = await response.json();
         if (data.isPwChanged) {

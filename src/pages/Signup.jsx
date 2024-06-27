@@ -31,6 +31,9 @@ const Signup = () => {
   const [idMsg, setIdMsg] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwConMsg, setPwConMsg] = useState("");
+  const [nameMsg, setNameMsg] = useState("");
+  const [phoneMsg, setPhoneMsg] = useState("");
+  const [acctMsg, setAcctMsg] = useState("");
   const [authNum, setAuthNum] = useState(null);
   const [veriCode, setVeriCode] = useState("");
 
@@ -60,6 +63,24 @@ const Signup = () => {
       setPwConMsg("");
     }
 
+    if (userName.length === 0) {
+      setNameMsg("이름을 입력해주세요.");
+    } else {
+      setNameMsg("");
+    }
+
+    if (phone.length === 0) {
+      setPhoneMsg("전화번호를 입력해주세요.");
+    } else {
+      setPhoneMsg("");
+    }
+
+    if (account.length === 0) {
+      setAcctMsg("계좌를 입력해주세요.");
+    } else {
+      setAcctMsg("");
+    }
+
     const response = await fetch(`${url}/signup`, {
       method: "POST",
       credentials: "include",
@@ -76,7 +97,7 @@ const Signup = () => {
       },
     });
 
-    //signupok 페이지 데이터 url 로 보내기
+    //signupok 페이지에 데이터 url 로 보내기
     if (response.status === 200) {
       const signupData = await response.json();
       dispatch(userState(signupData));
@@ -85,6 +106,8 @@ const Signup = () => {
         &nickName=${signupData.nickName}
         &phone=${signupData.phone}
         &account=${signupData.account}`;
+    } else if (response.status === 409) {
+      setModalAlert("alreadyexist");
     } else {
       setModalAlert("userrequired");
     }
@@ -260,7 +283,7 @@ const Signup = () => {
           </label>
         </div>
       </section>
-      <form className={` ${form.formStyle} signupForm`} onSubmit={chkSubmit}>
+      <form className={`${form.formStyle} signupForm`} onSubmit={chkSubmit}>
         <div className={form.formContainer}>
           <div className={`${form.formGrup} ${idMsg ? mem.errorForm : ""}`}>
             <span className={idMsg ? mem.errorTitle : ""}>이메일(아이디)</span>
@@ -306,16 +329,19 @@ const Signup = () => {
               <p className={mem.error}>{pwConMsg}</p>
             </div>
           </div>
-          <div className={form.formGrup}>
-            <span>이름</span>
-            <input
-              type='text'
-              placeholder=' '
-              value={userName}
-              onChange={(e) => {
-                setuserName(e.target.value);
-              }}
-            />
+          <div className={`${form.formGrup} ${nameMsg ? mem.errorForm : ""}`}>
+            <span className={nameMsg ? mem.errorTitle : ""}>이름</span>
+            <div className={form.formCon}>
+              <input
+                type='text'
+                placeholder=' '
+                value={userName}
+                onChange={(e) => {
+                  setuserName(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{nameMsg}</p>
+            </div>
           </div>
           <div className={form.formGrup}>
             <span>닉네임</span>
@@ -328,20 +354,25 @@ const Signup = () => {
               }}
             />
           </div>
-          <div className={`${form.formGrup} ${mem.phoneGrup}`}>
-            <span>연락처</span>
+          <div className={`${form.formGrup} ${phoneMsg ? mem.errorForm : ""}`}>
+            <span className={phoneMsg ? mem.errorTitle : ""}>연락처</span>
             <div className={mem.phoneInner}>
-              <div className={mem.phoneAuth}>
-                <input
-                  type='text'
-                  placeholder='하이픈(-) 제외 숫자만 입력'
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                  }}
-                  // onChange={phoneChange}
-                  // maxLength='11'
-                />
+              <div className={`${mem.phoneAuth}`}>
+                <div className={`${form.formCon} ${mem.formCon}`}>
+                  <input
+                    type='text'
+                    className={`${mem.phoneInput} ${
+                      phoneMsg ? mem.errorInput : ""
+                    }`}
+                    placeholder='하이픈(-) 제외 숫자만 입력'
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                    }}
+                    // onChange={phoneChange}
+                    // maxLength='11'
+                  />
+                </div>
                 <button
                   type='button'
                   className={`btn primary green ${mem.greenBtn}`}
@@ -350,14 +381,20 @@ const Signup = () => {
                   인증하기
                 </button>
               </div>
-              <div className={mem.phoneConfirm}>
-                <input
-                  type='text'
-                  placeholder='인증번호'
-                  value={veriCode}
-                  onChange={(e) => setVeriCode(e.target.value)}
-                />
-                {/* <p className={mem.time}>00:00</p> */}
+              <div className={`${mem.phoneAuth}`}>
+                <div className={`${form.formCon} ${mem.formCon}`}>
+                  <input
+                    type='text'
+                    className={`${mem.authInput} ${
+                      phoneMsg ? mem.errorInput : ""
+                    }`}
+                    placeholder='인증번호'
+                    value={veriCode}
+                    onChange={(e) => setVeriCode(e.target.value)}
+                  />
+                  {/* <p className={mem.time}>00:00</p> */}
+                  <p className={mem.error}>{phoneMsg}</p>
+                </div>
                 <button
                   type='button'
                   className={`btn primary yellow ${mem.yellowBtn}`}
@@ -368,16 +405,19 @@ const Signup = () => {
               </div>
             </div>
           </div>
-          <div className={form.formGrup}>
-            <span>계좌번호</span>
-            <input
-              type='text'
-              placeholder=' '
-              value={account}
-              onChange={(e) => {
-                setAccount(e.target.value);
-              }}
-            />
+          <div className={`${form.formGrup} ${acctMsg ? mem.errorForm : ""}`}>
+            <span className={acctMsg ? mem.errorTitle : ""}>계좌번호</span>
+            <div className={`${form.formCon}`}>
+              <input
+                type='text'
+                placeholder=' '
+                value={account}
+                onChange={(e) => {
+                  setAccount(e.target.value);
+                }}
+              />
+              <p className={mem.error}>{acctMsg}</p>
+            </div>
           </div>
         </div>
         <div className={`${mem.btnWrap} btnWrap`}>
@@ -423,6 +463,14 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"입력하신 정보를 확인해주세요!"}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert === "alreadyexist" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"이미 존재하는 이메일아이디 입니다."}
               error={true}
               confirm={false}
             />

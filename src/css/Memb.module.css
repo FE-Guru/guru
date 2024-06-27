@@ -62,8 +62,13 @@
   color: var(--cr-red);
 }
 
-.phoneGrup {
-  display: block;
+.formCon {
+  position: relative;
+  height: 5rem;
+}
+
+.errorForm .formCon {
+  display: block !important;
 }
 
 .phoneInner {
@@ -71,32 +76,39 @@
   flex-direction: column;
 }
 
-.phoneGrup {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 .phoneAuth {
-  justify-content: space-between;
-}
-
-.phoneAuth,
-.phoneConfirm {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
   gap: 10px;
   margin-top: 10px;
 }
 
-.phoneAuth input,
-.phoneConfirm input {
-  width: calc(100% - 5.5rem);
+.phoneAuth .phoneInput {
+  width: calc(80% - 0.05rem);
+}
+
+.phoneConfirm .authInput {
+  width: calc(80% - 5rem) !important;
+}
+
+.errorInput {
+  width: calc(90% - 0.05rem) !important;
+  border-color: var(--cr-red) !important;
+}
+
+.errorForm .phoneConfirm .authInput.errorInput {
+  width: calc(80% - 5rem) !important;
 }
 
 .time {
   color: var(--cr-red);
   font-size: 1.48rem;
+}
+
+.greenBtn,
+.yellowBtn {
+  flex-shrink: 0;
 }
 
 .greenBtn {
@@ -145,8 +157,7 @@
 }
 
 .loginCon {
-  width: 100%;
-  padding: 10px;
+  width: 85%;
 }
 
 .emailLabel {
@@ -296,6 +307,11 @@
   margin: 5rem 0;
 }
 
+.findmsg {
+  display: block;
+  margin-bottom: 3.5rem;
+  color: var(--cr-red);
+}
 .findLabel {
   margin-bottom: 25px;
 }
