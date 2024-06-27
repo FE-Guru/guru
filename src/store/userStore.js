@@ -9,8 +9,12 @@ const user = createSlice({
     userState: (state, action) => {
       state.user = action.payload;
     },
+    logout: (state) => {
+      state.user = null;
+      localStorage.removeItem("token");
+    },
   },
 });
 
-export const { userState } = user.actions;
+export const { userState, logout } = user.actions;
 export default user.reducer;
