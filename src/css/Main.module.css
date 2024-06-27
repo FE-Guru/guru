@@ -3,19 +3,363 @@
   width: calc(100% - 14rem);
   margin: auto;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   padding: 5.3rem 0 5.3rem 0;
-  gap: 4rem;
+  gap: 3.2rem;
 }
 .category > div {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
   gap: 1rem;
   padding: 2.1rem;
-  border: 4px solid var(--cr-bl1);
+  border: 3px solid var(--cr-bl1);
   border-radius: 1.6rem;
   text-align: center;
   font-size: 1.8rem;
   font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.main h2 {
+  text-align: center;
+  padding: 0 0 6rem 0;
+}
+.main h2 img {
+  margin: 0 auto 1.8rem;
+}
+
+.MainOnline,
+.MainOffline {
+  padding: 10rem 0;
+}
+.MainOnline {
+  background: #f6f6f6;
+}
+
+.MainOnline > div > button,
+.MainOffline > div > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 30rem;
+  height: 5.9rem;
+  line-height: 0;
+  font-size: 2.2rem;
+}
+.onWrap,
+.offWrap {
+  padding-bottom: 6rem;
+}
+.jobList {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.onWrap .jobList {
+  gap: 2.4rem;
+}
+.onWrap .jobList li {
+  width: calc(50% - 1.2rem);
+}
+
+.offWrap {
+  display: flex;
+  gap: 2.5rem;
+}
+.offWrap .mainMap {
+  width: calc(50% - 2.5rem / 2);
+  border: 3px solid var(--cr-bl1);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.offWrap .mainMap > div,
+.offWrap .mainMap > div > div {
+  width: 100%;
+  height: 100% !important;
+}
+.offWrap .jobList {
+  width: calc(50% - 2.5rem / 2);
+  gap: 1.6rem;
+}
+.offWrap .jobList li {
+  width: 100%;
+}
+
+.itemWrap {
+  padding: 3rem 6rem;
+  display: flex;
+  flex-direction: column;
+  background: var(--cr-w);
+  border: 3px solid var(--cr-bl1);
+  border-radius: 1rem;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+.itemWrap > div:first-of-type {
+  display: flex;
+}
+.itemWrap .itemTop {
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(100% - 6rem);
+}
+.itemWrap .itemTop h3 {
+  width: 100%;
+  padding: 0 0 1rem 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.itemWrap .itemTop > span {
+  color: #787878;
+  font-size: 1.4rem;
+  height: 3rem;
+  line-height: 3rem;
+  padding: 0 1.6rem;
+  background: var(--cr-g3);
+  border-radius: 100rem;
+  margin-right: 0.5rem;
+}
+.itemWrap > div:first-of-type > strong {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+  color: var(--cr-blue);
+  width: 6rem;
+  text-align: right;
+  line-height: 127%;
+}
+
+.itemWrap > div:last-of-type {
+  display: flex;
+  align-items: flex-end;
+  font-weight: 800;
+  color: #8f8f8f;
+  padding-top: 2.4rem;
+}
+.itemWrap > div:last-of-type strong {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.1rem;
+  color: var(--cr-bl1);
+  padding: 0 0.3rem 0 0.5rem;
+}
+
+.itemWrap .thumb {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translate(-6rem, -3rem);
+  overflow: hidden;
+  border: 3px solid var(--cr-bl1);
+}
+.itemWrap .thumb > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (min-width: 1241px) {
+  .category > div:hover {
+    background: var(--cr-m-y);
+  }
+
+  .MainOnline .itemWrap:hover {
+    background: var(--cr-m-y);
+  }
+  .MainOffline .itemWrap:hover {
+    background: var(--cr-m-g);
+  }
+  .itemWrap:hover > div:first-of-type > strong {
+    color: var(--cr-bl1);
+  }
+}
+@media (max-width: 1240px) {
+  .category {
+    padding: 4% 0;
+    gap: 2rem;
+  }
+  .MainOnline,
+  .MainOffline {
+    padding: 10% 0;
+  }
+  .itemWrap {
+    padding: 3rem;
+  }
+  .itemWrap .thumb {
+    transform: translate(-3rem, -3rem);
+  }
+}
+@media (max-width: 990px) {
+  .onWrap .jobList {
+    gap: 1.6rem;
+  }
+  .onWrap .jobList li {
+    width: calc(50% - 0.8rem);
+  }
+  .offWrap {
+    gap: 1rem;
+  }
+  .offWrap .mainMap,
+  .offWrap .jobList {
+    width: calc(50% - 0.5rem);
+    gap: 1rem;
+  }
+}
+@media (max-width: 720px) {
+  .category {
+    gap: 0.8rem;
+  }
+  .category > div {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    font-size: 1.6rem;
+  }
+  .main h2 {
+    padding-bottom: 6%;
+  }
+  .onWrap,
+  .offWrap {
+    padding-bottom: 1.2rem;
+  }
+  .main h2 img {
+    margin: 0 auto 1rem;
+    zoom: 0.7;
+  }
+  .onWrap .jobList {
+    gap: 1rem;
+  }
+  .onWrap .jobList li {
+    width: calc(50% - 0.5rem);
+  }
+  .itemWrap,
+  .offWrap .mainMap {
+    border: 1px solid var(--cr-line);
+    border-radius: 0.4rem;
+  }
+  .itemWrap {
+    padding: 2.2rem;
+  }
+  .itemWrap .thumb {
+    transform: translate(-2.2rem, -2.2rem);
+  }
+  .itemWrap h3 {
+    font-size: 2.2rem;
+  }
+  .itemWrap > div:first-of-type > strong {
+    font-size: 2.2rem;
+  }
+
+  .itemWrap .itemTop > span {
+    color: var(--cr-g2);
+    font-size: 1.4rem;
+    height: auto;
+    line-height: 1;
+    padding: 0;
+    background: transparent;
+    font-weight: 500;
+    border-radius: 0;
+    margin-right: 0;
+  }
+  .itemWrap .itemTop > span::after {
+    content: ",";
+    margin-right: 0.4rem;
+  }
+  .itemWrap .itemTop > span:last-of-type::after,
+  .offWrap .itemWrap .itemTop > span:first-of-type {
+    display: none;
+  }
+
+  .MainOnline > div > button,
+  .MainOffline > div > button {
+    width: 100%;
+    height: 5.3rem;
+    font-size: 1.8rem;
+    border-width: 2px;
+    border: 0;
+  }
+}
+
+@media (max-width: 660px) {
+  .category {
+    gap: 0.5rem;
+  }
+  .category > div {
+    font-weight: 500;
+    font-size: 1.4rem;
+  }
+  .onWrap .jobList {
+    gap: 0.8rem;
+  }
+  .onWrap .jobList li {
+    width: 100%;
+  }
+  .offWrap {
+    flex-wrap: wrap;
+  }
+  .offWrap .mainMap,
+  .offWrap .jobList {
+    width: 100%;
+  }
+  .offWrap .mainMap {
+    height: 30rem;
+  }
+  .itemWrap {
+    padding: 2.2rem 2rem;
+  }
+  .itemWrap .thumb {
+    transform: translate(-2.2rem, -2rem);
+  }
+  .itemWrap .thumb {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-width: 1px;
+  }
+  .itemWrap > div:last-of-type {
+    font-size: 1.3rem;
+  }
+  .itemWrap > div:last-of-type strong {
+    font-size: 1.8rem;
+    font-weight: 900;
+  }
+  .itemWrap .itemTop > span {
+    font-size: 1.3rem;
+  }
+}
+@media (max-width: 380px) {
+  .offWrap .mainMap {
+    height: 20rem;
+  }
+  .itemWrap .itemTop {
+    width: calc(100% - 5rem);
+  }
+  .itemWrap h3,
+  .itemWrap > div:first-of-type > strong {
+    font-size: 2rem;
+    width: 5rem;
+  }
+  .itemWrap .itemTop h3 {
+    padding-bottom: 0.5rem;
+  }
+  .itemWrap > div:last-of-type {
+    padding-top: 1.8rem;
+  }
+  .MainOnline > div > button,
+  .MainOffline > div > button {
+    width: 100%;
+    height: 4.3rem;
+    font-size: 1.5rem;
+    border-width: 2px;
+    border: 0;
+  }
 }
