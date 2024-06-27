@@ -15,6 +15,7 @@ import AppliedList from "./pages/AppliedList";
 import JobOffer from "./pages/JobOffer";
 import JobDetail from "./pages/JobDetail";
 import AcctDelete from "./pages/AcctDelete";
+import ResetConfirm from "./pages/ResetConfirm";
 import AcctBye from "./pages/AcctBye";
 import Footer from "./components/Footer";
 import "./css/Reset.css";
@@ -44,7 +45,8 @@ function App() {
           <Route path='personaledit' element={<PersonalEdit />} />
           <Route path='acctdelete' element={<AcctDelete />} />
         </Route>
-        <Route path='acctbye' element={<AcctBye />} />
+        <Route path='/resetconfirm' element={<ResetConfirm />} />
+        <Route path='/acctbye' element={<AcctBye />} />
       </Routes>
       <Footer />
     </div>

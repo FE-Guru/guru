@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userState } from "../store/userStore";
 import { url } from "../store/ref";
@@ -65,6 +65,7 @@ const Header = () => {
       credentials: "include",
     });
     dispatch(userState(null));
+    window.location.href = "/";
   };
 
   const mypageClick = () => {

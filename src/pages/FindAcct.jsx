@@ -68,7 +68,7 @@ const FindAcct = () => {
         body: JSON.stringify({ emailID: formData.emailID }),
       });
       if (response.ok) {
-        setModalAlert("pwfindsuccess");
+        setModalAlert("certain");
       } else {
         setModalAlert("findfailed");
       }
@@ -77,9 +77,13 @@ const FindAcct = () => {
     }
   };
 
+  const confirmreset = () => {
+    window.location.href = "/resetconfirm";
+  };
+
   return (
     <main className={`login fullLayout`}>
-      <section className={`boxCon ${mem.boxCon} ${mem.findCon}`}>
+      <section className={`${mem.boxCon} ${mem.findCon}`}>
         <div className={mem.loginCon}>
           <div className={mem.tab}>
             <button
@@ -98,6 +102,9 @@ const FindAcct = () => {
           {tab === "findId" && (
             <form className={`${mem.form}`} onSubmit={idFindSubmit}>
               <div className={`full ${mem.findForm}`}>
+                <span className={mem.findmsg}>
+                  ※ 회원가입시 입력한 이름과 연락처를 입력해주세요.
+                </span>
                 <div className={`${mem.loginLabel} ${mem.findLabel}`}>
                   <input
                     className={`${mem.memInput} ${form.row}`}
@@ -136,6 +143,9 @@ const FindAcct = () => {
           {tab === "findPw" && (
             <form className={`${mem.form}`} onSubmit={fwFindSubmit}>
               <div className={`full ${mem.findForm}`}>
+                <span className={mem.findmsg}>
+                  ※ 회원가입시 입력한 이메일아이디를 입력해주세요.
+                </span>
                 <div className={`${mem.loginLabel} ${mem.findLabel}`}>
                   <input
                     className={`${mem.memInput} ${form.row}`}
@@ -171,12 +181,13 @@ const FindAcct = () => {
               confirm={true}
             />
           )}
-          {modalAlert === "pwfindsuccess" && (
+          {modalAlert === "certain" && (
             <ModalAlert
               close={closeAlert}
-              desc={`회원님의 비밀번호가 이메일로 전송되었습니다.`}
+              desc={"비밀번호 재설정을 위한 이메일이 전송됩니다."}
               error={false}
               confirm={true}
+              onConfirm={confirmreset}
             />
           )}
           {modalAlert === "findfailed" && (
