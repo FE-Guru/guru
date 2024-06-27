@@ -150,7 +150,7 @@
 
 .AppInfo > div {
   width: 100%;
-  padding-left: 5rem;
+  padding-left: 3rem;
   display: flex;
   gap: 1.4rem;
   flex-direction: column;
@@ -189,7 +189,7 @@
   .jobItem:hover .jobInfo .jobDes > div strong,
   .jobItem:hover .AppInfo .row > p,
   .jobItem:hover .AppInfo .row > p span {
-    color: var(--cr-w);
+    color: var(--cr-bl1);
   }
 
   .jobItem:hover h4 > span {

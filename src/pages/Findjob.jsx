@@ -38,10 +38,6 @@ const Findjob = () => {
     };
   };
 
-  useEffect(() => {
-    dispatch(setCateType({ cateType: "onLine" }));
-  }, [dispatch]);
-
   const callOnLine = () => {
     dispatch(setCateType({ cateType: "onLine" }));
     dispatch(setCateField("all"));
@@ -291,7 +287,7 @@ const Findjob = () => {
           <ul className="JobList">
             {cateType === "offLine" && (
               <li className="mapApiArea">
-                <Map jobList={jobList} location={location} setLocation={setLocation} setJobList={setJobList}/>
+                <Map jobList={jobList} location={location} setLocation={setLocation} setJobList={setJobList} endpoint={"findoffLine"} />
               </li>
             )}
             {filteredJobList.length === 0 ? (

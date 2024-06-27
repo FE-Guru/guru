@@ -21,7 +21,11 @@
   align-items: center;
   justify-content: space-between;
 }
-h2 > span {
+.topSection h2 {
+  text-align: left;
+  padding-bottom: 0;
+}
+.topSection h2 > span {
   display: block;
   font-size: 2.8rem;
   opacity: 0.4;
