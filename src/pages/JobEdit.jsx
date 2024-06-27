@@ -529,9 +529,9 @@ const JobEdit = () => {
       )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "WriteOk" && <ModalAlert close={closeAlert} title={"구인글 수정 메시지"} desc={"구인글이 정상적으로 수정되었습니다."} error={false} confirm={false} goPage={"/job-offer"} />}
-          {modalAlert === "Error" && <ModalAlert close={closeAlert} title={"구인글 수정  메시지"} desc={"구인글 수정 중 오류가 발생했습니다."} error={true} confirm={false} />}
-          {modalAlert === "none_id" && <ModalAlert close={closeAlert} title={"구인글 수정  메시지"} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
+          {modalAlert === "WriteOk" && <ModalAlert close={closeAlert} desc={"구인글이 정상적으로 수정되었습니다."} error={false} confirm={false} goPage={"/job-offer"} />}
+          {modalAlert === "Error" && <ModalAlert close={closeAlert} desc={"구인글 수정 중 오류가 발생했습니다."} error={true} confirm={false} />}
+          {modalAlert === "none_id" && <ModalAlert close={closeAlert} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
         </Modal>
       )}
     </main>
