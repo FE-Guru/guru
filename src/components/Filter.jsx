@@ -149,9 +149,6 @@ const Filter = ({ cateTime, timeChange, lnbHandler }) => {
               <button className={cateTalent === "교육·강사" ? style.active : ""} onClick={() => talentChange("교육·강사")}>
                 교육·강사
               </button>
-              <button className={cateTalent === "운전" ? style.active : ""} onClick={() => talentChange("운전")}>
-                운전
-              </button>
               <button className={cateTalent === "서비스" ? style.active : ""} onClick={() => talentChange("서비스")}>
                 서비스
               </button>

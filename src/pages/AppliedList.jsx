@@ -38,7 +38,7 @@ const AppliedList = () => {
     dispatch(
       setPageInfo({
         menuKR: "지원목록",
-        menuEn: "Applied List",
+        menuEn: "Application List",
         currentPage: { pageName: "지원목록", path: "/applied-list" },
       })
     );

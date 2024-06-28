@@ -88,7 +88,7 @@ const Header = () => {
         <nav>
           <Link to="/findjob">일자리찾기</Link>
           <Link to="/applied-list">지원목록</Link>
-          <Link to="/job-offer">공고관리</Link>
+          <Link to="/job-offer">구인관리</Link>
           <Link to="/job-write">구인글 작성</Link>
         </nav>
 
@@ -122,7 +122,7 @@ const Header = () => {
                 <Link to="/findjob">일자리 찾기</Link>
                 <Link to="/applied-list">내가 지원한 일자리</Link>
                 <Link to="/job-write">구인글 작성</Link>
-                <Link to="/job-offer">구인글 관리</Link>
+                <Link to="/job-offer">구인 관리</Link>
               </div>
               <div className={style.cate2}>
                 <Link to="/mypage/profileedit">프로필 수정</Link>
