@@ -68,6 +68,7 @@
 .offWrap {
   display: flex;
   gap: 2.5rem;
+  height: 66.5rem;
 }
 .offWrap .mainMap {
   width: calc(50% - 2.5rem / 2);
@@ -78,7 +79,7 @@
 .offWrap .mainMap > div,
 .offWrap .mainMap > div > div {
   width: 100%;
-  height: 100% !important;
+  height: 100%;
 }
 .offWrap .jobList {
   width: calc(50% - 2.5rem / 2);
@@ -209,9 +210,18 @@
   .offWrap {
     gap: 1rem;
   }
+
+  .offWrap {
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+  }
+  .offWrap .mainMap {
+    height: 30rem;
+  }
   .offWrap .mainMap,
   .offWrap .jobList {
-    width: calc(50% - 0.5rem);
+    width: 100%;
     gap: 1rem;
   }
 }
@@ -246,6 +256,9 @@
   .offWrap .mainMap {
     border: 1px solid var(--cr-line);
     border-radius: 0.4rem;
+  }
+  .offWrap .mainMap {
+    height: 25rem;
   }
   .itemWrap {
     padding: 2.2rem;
