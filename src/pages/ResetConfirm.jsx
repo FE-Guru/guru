@@ -15,7 +15,7 @@ const ResetConfirm = () => {
         </span>
       </h2>
       <div className='btnWrap'>
-        <Link to='/' className='btn primary yellow'>
+        <Link to='/' className={`btn primary yellow ${mem.mainBtn}`}>
           메인으로
         </Link>
       </div>

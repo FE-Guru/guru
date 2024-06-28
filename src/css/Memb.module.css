@@ -271,6 +271,7 @@
 /* acctbye */
 .spanMsg {
   font-size: 1.85rem;
+  margin-top: 0.5rem;
 }
 
 /* findacct*/
@@ -320,4 +321,11 @@
   width: 30%;
   margin: 0 auto;
   display: block;
+}
+
+/* resetconfirm*/
+.mainBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
