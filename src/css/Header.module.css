@@ -124,10 +124,21 @@
   align-items: center;
 }
 
-.myprofile img {
+.myprofile .profileThumb {
   width: 5.4rem;
   height: 5.4rem;
-  border-radius: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+.myprofile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .myprofile h2 {
