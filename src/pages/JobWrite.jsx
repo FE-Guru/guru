@@ -156,7 +156,6 @@ const JobWrit = () => {
     { value: "디자인", label: "디자인" },
     { value: "IT·기술", label: "IT·기술" },
     { value: "교육·강사", label: "교육·강사" },
-    { value: "운전", label: "운전" },
     { value: "서비스", label: "서비스" },
   ];
   const cateFieldOp = [

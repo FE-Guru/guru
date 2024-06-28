@@ -388,7 +388,7 @@ main .lnbCompo {
     padding: 2.4rem;
   }
   .subPage .contents > h3 {
-    padding-top: 3.4rem;
+    /* padding-top: 3.4rem; */
   }
   .subPage .contents > .conTitle {
     align-items: center;
@@ -520,7 +520,7 @@ main.has .lnbCompo .filterWrap > div {
   }
   .subPage {
     padding-top: 3.8rem;
-    padding-bottom: 0;
+    padding-bottom: 4rem;
   }
   .findjob .midSection .contents ul,
   .subPage .contents > .boxContainer {

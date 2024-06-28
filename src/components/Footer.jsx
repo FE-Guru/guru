@@ -18,11 +18,8 @@ const Footer = () => {
   };
 
   return (
-    <div className={footer.footerCon}>
-      <img
-        src={`${process.env.PUBLIC_URL}/img/common/footerLogo.png`}
-        alt='footerLogo'
-      ></img>
+    <footer className={footer.footerCon}>
+      <img src={`${process.env.PUBLIC_URL}/img/common/footerLogo.png`} alt="footerLogo"></img>
       <span onClick={() => showPopup("content1")}>개인정보취급방침</span>
       <span onClick={() => showPopup("content2")}>서비스이용약관</span>
       <p>Copyright© Guru. All Rights Reserved.</p>
@@ -40,7 +37,7 @@ const Footer = () => {
           </div>
         )}
       </Modal>
-    </div>
+    </footer>
   );
 };
 

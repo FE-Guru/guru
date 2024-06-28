@@ -1,3 +1,10 @@
+.main h2 {
+  text-align: center;
+  padding: 0 0 6rem 0;
+}
+.main h2 img {
+  margin: 0 auto 1.8rem;
+}
 .category {
   /* max-width: 144rem; */
   width: calc(100% - 14rem);
@@ -22,14 +29,6 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.main h2 {
-  text-align: center;
-  padding: 0 0 6rem 0;
-}
-.main h2 img {
-  margin: 0 auto 1.8rem;
-}
-
 .MainOnline,
 .MainOffline {
   padding: 10rem 0;
@@ -169,6 +168,66 @@
   height: 100%;
   object-fit: cover;
 }
+
+.talent {
+  background: #e0eef0;
+  padding: 10rem 0 7.8rem 0;
+}
+.talent span {
+  font-size: 2rem;
+  display: block;
+  font-weight: 400;
+  line-height: 1;
+  padding-top: 0.8rem;
+  opacity: 0.6;
+}
+.talent > div {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+}
+.talent > div > div {
+  background: var(--cr-w);
+  border-radius: 1.6rem;
+  padding: 3rem 2.8rem;
+  border: 3px solid var(--cr-bl1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.talent > div > div strong {
+  font-size: 2.4rem;
+  letter-spacing: -3%;
+  font-weight: 800;
+}
+.talent > div > div > p {
+  color: #5f5f5f;
+  line-height: 130%;
+  letter-spacing: -0.025em;
+  padding: 1.6rem 0 4.2rem 0;
+}
+.talent > div > div:nth-of-type(odd) img {
+  border-radius: 20rem 20rem 0 0;
+  background: #f4e6c7;
+}
+.talent > div > div:nth-of-type(even) img {
+  border-radius: 50%;
+  background: #f4e6c7;
+}
+.talent > div > div:hover {
+  background: var(--cr-m-y);
+}
+.talent > div > div:hover img {
+  background: var(--cr-w);
+}
+.talent .smView {
+  display: none;
+}
+.guruBanner {
+  background: var(--cr-m-y);
+}
+
 @media (min-width: 1241px) {
   .category > div:hover {
     background: var(--cr-m-y);
@@ -189,6 +248,7 @@
     padding: 4% 0;
     gap: 2rem;
   }
+  .talent,
   .MainOnline,
   .MainOffline {
     padding: 10% 0;
@@ -198,6 +258,12 @@
   }
   .itemWrap .thumb {
     transform: translate(-3rem, -3rem);
+  }
+  .talent > div > div {
+    width: calc(25% - 6rem / 3);
+  }
+  .talent > div > div img {
+    width: 100%;
   }
 }
 @media (max-width: 990px) {
@@ -224,8 +290,25 @@
     width: 100%;
     gap: 1rem;
   }
+  .talent > div {
+    gap: 0;
+    justify-content: space-between;
+  }
+  .talent > div > div {
+    padding: 2.8rem 2.2rem;
+    width: calc(25% - 0.8rem);
+  }
+  .talent > div > div > p {
+    padding-bottom: 2.8rem;
+    font-size: 1.5rem;
+  }
 }
 @media (max-width: 720px) {
+  .talent,
+  .MainOnline,
+  .MainOffline {
+    padding: 17% 0;
+  }
   .category {
     gap: 0.8rem;
   }
@@ -301,6 +384,33 @@
     border-width: 2px;
     border: 0;
   }
+  .talent h2 > span {
+    font-size: 1.6rem;
+    line-height: 142%;
+    padding-top: 0.4rem;
+  }
+  .talent .smView {
+    display: block;
+  }
+  .talent > div {
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  .talent > div > div {
+    padding: 2.2rem 2rem;
+    width: calc(50% - 0.5rem);
+
+    border-radius: 0.4rem;
+    border: 1px solid var(--cr-line);
+  }
+  .talent > div > div > img {
+    width: auto;
+    margin: 0 auto;
+  }
+  .talent > div > div > p {
+    font-size: 1.4rem;
+    padding: 1.2rem 0 2rem 0;
+  }
 }
 
 @media (max-width: 660px) {
@@ -374,5 +484,23 @@
     font-size: 1.5rem;
     border-width: 2px;
     border: 0;
+  }
+  .talent > div {
+    gap: 0.8rem;
+    justify-content: space-between;
+  }
+  .talent > div > div {
+    padding: 2rem 1.6rem;
+    width: calc(50% - 0.4rem);
+  }
+  .talent > div > div > img {
+    width: 100%;
+  }
+  .talent > div > div > strong {
+    font-size: 1.8rem;
+  }
+  .talent > div > div > p {
+    font-size: 1.3rem;
+    padding: 1rem 0 1.6rem 0;
   }
 }

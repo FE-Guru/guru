@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCateField } from "../store/filter";
+import { setCateField, setCateTalent } from "../store/filter";
 import { setCateType } from "../store/findjob";
 import MainSlide from "../components/MainSlide";
 import MainOnline from "../components/MainOnline";
@@ -16,10 +16,18 @@ const Main = () => {
   const fieldLinkClick = (field, cateType) => {
     dispatch(setCateField(field));
     dispatch(setCateType({ cateType }));
+    dispatch(setCateTalent("all"));
+    navigate("/findjob");
+  };
+  const talentLinkClick = (talent, cateType) => {
+    dispatch(setCateField("all"));
+    dispatch(setCateType({ cateType }));
+    dispatch(setCateTalent(talent));
     navigate("/findjob");
   };
   const goFindJob = (cateType) => {
     dispatch(setCateField("all"));
+    dispatch(setCateTalent("all"));
     dispatch(setCateType({ cateType }));
     navigate("/findjob");
   };
@@ -72,6 +80,55 @@ const Main = () => {
             더보기 +
           </button>
         </div>
+      </section>
+      <section className={style.talent}>
+        <h2>
+          재능별 카테고리
+          <span>
+            당신의 전문성을 기반으로
+            <br className={style.smView} /> 다양한 일거리를 찾아보세요
+          </span>
+        </h2>
+        <div className="mw">
+          <div onClick={() => talentLinkClick("디자인", "onLine")}>
+            <strong>디자인</strong>
+            <p>
+              # 웹·모바일 디자인
+              <br /># 그래픽·영상·편집
+            </p>
+            <img src={`${process.env.PUBLIC_URL}/img/common/mcate1.png`} alt="디자인" />
+          </div>
+          <div onClick={() => talentLinkClick("IT·기술", "onLine")}>
+            <strong>IT·기술</strong>
+            <p>
+              # 프로그래밍
+              <br /># 시스템·네트워크
+            </p>
+            <img src={`${process.env.PUBLIC_URL}/img/common/mcate2.png`} alt="교육·강사" />
+          </div>
+          <div onClick={() => talentLinkClick("대행업무", "offLine")}>
+            <strong>교육·강사</strong>
+            <p>
+              # 입시 #외국어
+              <br /># 파견강사
+            </p>
+            <img src={`${process.env.PUBLIC_URL}/img/common/mcate3.png`} alt="서비스" />
+          </div>
+          <div onClick={() => talentLinkClick("서비스", "offLine")}>
+            <strong>서비스</strong>
+            <p>
+              # 배달 # 대행업무
+              <br />
+              #CS
+            </p>
+            <img src={`/img/common/mcate4.png`} alt="cate1" />
+          </div>
+        </div>
+        <section className={style.guruBanner}>
+          <div className="mw">
+            <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
+          </div>
+        </section>
       </section>
     </main>
   );

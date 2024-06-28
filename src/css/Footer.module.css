@@ -4,7 +4,6 @@
   align-items: flex-end;
   flex-wrap: wrap;
   gap: 1.5rem;
-  margin-top: 8rem;
   padding: 3.5rem var(--lg-gap);
   background-color: var(--cr-g3);
   position: relative;
@@ -26,13 +25,13 @@
 .footerCon span:hover {
   color: var(--cr-g2);
 }
-
 .footerCon > p {
   width: 100%;
   font-size: 1.5rem;
   letter-spacing: -0.5px;
   color: #b4b0b0;
 }
+
 @media (max-width: 1120px) {
   .footerCon {
     padding: 3rem var(--sm-gap);
@@ -40,7 +39,6 @@
 }
 @media (max-width: 990px) {
   .footerCon {
-    margin-top: 10%;
     padding: 10rem var(--sm-gap) 4.2rem var(--sm-gap);
   }
   .footerCon img {
@@ -49,7 +47,6 @@
     left: 50%;
     transform: translateX(-50%);
   }
-
   .footerCon {
     justify-content: center;
   }
