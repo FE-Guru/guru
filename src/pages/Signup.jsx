@@ -366,11 +366,11 @@ const Signup = () => {
                     }`}
                     placeholder='하이픈(-) 제외 숫자만 입력'
                     value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                    // onChange={phoneChange}
-                    // maxLength='11'
+                    // onChange={(e) => {
+                    //   setPhone(e.target.value);
+                    // }}
+                    onChange={phoneChange}
+                    maxLength='11'
                   />
                 </div>
                 <button
@@ -393,7 +393,7 @@ const Signup = () => {
                     onChange={(e) => setVeriCode(e.target.value)}
                   />
                   {/* <p className={mem.time}>00:00</p> */}
-                  <p className={mem.error}>{phoneMsg}</p>
+                  <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
                 </div>
                 <button
                   type='button'
@@ -479,8 +479,8 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증번호 전송이 완료되었습니다."}
-              error={true}
-              confirm={false}
+              error={false}
+              confirm={true}
             />
           )}
           {modalAlert === "authsendfailed" && (
@@ -495,8 +495,8 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증이 완료되었습니다."}
-              error={true}
-              confirm={false}
+              error={false}
+              confirm={true}
             />
           )}
           {modalAlert === "authfailed" && (

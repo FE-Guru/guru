@@ -18,6 +18,7 @@ import JobOffer from "./pages/JobOffer";
 import JobDetail from "./pages/JobDetail";
 import AcctDelete from "./pages/AcctDelete";
 import ResetConfirm from "./pages/ResetConfirm";
+import ResetPassword from "./pages/ResetPassword";
 import AcctBye from "./pages/AcctBye";
 import Footer from "./components/Footer";
 import "./css/Reset.css";
@@ -29,17 +30,17 @@ import "./css/Swiper.css";
 function App() {
   return (
     <AuthProvider>
-      <div className="App">
+      <div className='App'>
         <Header />
         <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/findacct" element={<FindAcct />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signupok" element={<SignupOk />} />
-          <Route path="/findjob" element={<Findjob />} />
+          <Route path='/' element={<Main />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/findacct' element={<FindAcct />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/signupok' element={<SignupOk />} />
+          <Route path='/findjob' element={<Findjob />} />
           <Route
-            path="/applied-list"
+            path='/applied-list'
             element={
               <PrivateRoute>
                 <AppliedList />
@@ -47,7 +48,7 @@ function App() {
             }
           />
           <Route
-            path="/job-offer"
+            path='/job-offer'
             element={
               <PrivateRoute>
                 <JobOffer />
@@ -55,7 +56,7 @@ function App() {
             }
           />
           <Route
-            path="/job-write"
+            path='/job-write'
             element={
               <PrivateRoute>
                 <JobWrite />
@@ -63,7 +64,7 @@ function App() {
             }
           />
           <Route
-            path="/job-edit"
+            path='/job-edit'
             element={
               <PrivateRoute>
                 <JobEdit />
@@ -71,7 +72,7 @@ function App() {
             }
           />
           <Route
-            path="/job-detail"
+            path='/job-detail'
             element={
               <PrivateRoute>
                 <JobDetail />
@@ -79,18 +80,20 @@ function App() {
             }
           />
           <Route
-            path="/mypage"
+            path='/mypage'
             element={
               <PrivateRoute>
                 <Mypage />
               </PrivateRoute>
-            }>
-            <Route path="profileedit" element={<ProfileEdit />} />
-            <Route path="personaledit" element={<PersonalEdit />} />
-            <Route path="acctdelete" element={<AcctDelete />} />
+            }
+          >
+            <Route path='profileedit' element={<ProfileEdit />} />
+            <Route path='personaledit' element={<PersonalEdit />} />
+            <Route path='acctdelete' element={<AcctDelete />} />
           </Route>
-          <Route path="/resetconfirm" element={<ResetConfirm />} />
-          <Route path="/acctbye" element={<AcctBye />} />
+          <Route path='/resetconfirm' element={<ResetConfirm />} />
+          <Route path='/acctbye' element={<AcctBye />} />
+          <Route path='/resetpassword' element={<ResetPassword />} />
         </Routes>
         <Footer />
       </div>
