@@ -64,7 +64,7 @@ const Main = () => {
         </h2>
         <div className="mw">
           <MainOnline />
-          <button onClick={() => goFindJob("onLine")} className="btn primary yellow">
+          <button onClick={() => goFindJob("onLine")} className="btn primary">
             더보기 +
           </button>
         </div>
@@ -124,19 +124,22 @@ const Main = () => {
             <img src={`/img/common/mcate4.png`} alt="cate1" />
           </div>
         </div>
-        <section className={style.guruBanner}>
-          <div className="mw">
-            <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
-            <div className={style.BannerText}>
-              <h3>
-                <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="베너이미지" />에서<br></br>
-                하루만에 끝낼 수 있는 부업을 찾으세요.
-              </h3>
-              <p>하루 만에 완료할 수 있는 빠르고 쉬운 사이드잡을 찾을 수 있는 초단기 매칭 플랫폼 GURU를 만나보세요.
-              여가 시간에 돈을 벌고 싶은 사람들에게 이상적인 Guru는 유연하게 돈을 벌 수 있는 기회를 제공합니다.</p>
-            </div>
+      </section>
+      <section className={style.guruBanner}>
+        <div className="mw">
+          <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
+          <div className={style.BannerText}>
+            <h3>
+              <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="베너이미지" />
+              에서<br></br>
+              하루만에 끝낼 수 있는 부업을 찾으세요.
+            </h3>
+            <p>
+              하루 만에 완료할 수 있는 빠르고 쉬운 사이드잡을 찾을 수 있는 초단기 매칭 플랫폼 GURU를 만나보세요. 여가 시간에 돈을 벌고 싶은 사람들에게 이상적인 Guru는 유연하게 돈을 벌 수 있는 기회를
+              제공합니다.
+            </p>
           </div>
-        </section>
+        </div>
       </section>
     </main>
   );
