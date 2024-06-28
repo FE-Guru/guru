@@ -1,29 +1,29 @@
 /* global kakao */
-import React, { useEffect, useState, useCallback } from 'react';
-import styles from '../css/Map.module.css';
+import React, { useEffect, useState } from "react";
+import styles from "../css/Map.module.css";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
-  const script = document.createElement('script');
+  const script = document.createElement("script");
   script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}&libraries=services,clusterer`;
   script.async = true;
   script.onload = () => {
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(callback);
     } else {
-      console.error('Failed to load Kakao Maps API.');
+      console.error("Failed to load Kakao Maps API.");
     }
   };
   script.onerror = () => {
-    console.error('Error loading Kakao Maps API script.');
+    console.error("Error loading Kakao Maps API script.");
   };
   document.head.appendChild(script);
 };
 
 // 날짜 포맷 함수
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return new Date(dateString).toLocaleDateString('ko-KR', options);
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  return new Date(dateString).toLocaleDateString("ko-KR", options);
 };
 
 const Map = ({ jobList, location }) => {
@@ -32,9 +32,9 @@ const Map = ({ jobList, location }) => {
   // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
     loadKakaoMapScript(() => {
-      const mapContainer = document.getElementById('map');
+      const mapContainer = document.getElementById("map");
       if (!mapContainer) {
-        console.error('Map container not found');
+        console.error("Map container not found");
         return;
       }
       const mapOption = {
@@ -74,7 +74,7 @@ const Map = ({ jobList, location }) => {
         const workStartDate = formatDate(job.workStartDate);
         const workEndDate = formatDate(job.workEndDate);
 
-        const content = document.createElement('div');
+        const content = document.createElement("div");
         content.innerHTML = `
           <div class="${styles.wrap}">
             <div class="${styles.info}">
@@ -101,7 +101,7 @@ const Map = ({ jobList, location }) => {
           position: marker.getPosition(),
         });
 
-        kakao.maps.event.addListener(marker, 'click', function () {
+        kakao.maps.event.addListener(marker, "click", function () {
           overlay.setMap(map);
         });
 
@@ -112,7 +112,7 @@ const Map = ({ jobList, location }) => {
 
         // 닫기 버튼에 이벤트 리스너 추가
         const closeBtn = content.querySelector(`.${styles.close}`);
-        closeBtn.addEventListener('click', closeOverlay);
+        closeBtn.addEventListener("click", closeOverlay);
 
         return marker;
       });
@@ -124,7 +124,7 @@ const Map = ({ jobList, location }) => {
 
   return (
     <div>
-      <div id="map" style={{ width: '100%', height: '400px' }}></div>
+      <div id="map"></div>
     </div>
   );
 };
