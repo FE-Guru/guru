@@ -334,7 +334,7 @@ const Detail = ({ _id, closeDetail }) => {
           {btnWrapStatus === 3 && <p>완료 된 공고입니다.</p>}
         </div>
         <h2>상세설명</h2>
-        <p>{item?.desc}</p>
+        <pre>{item?.desc}</pre>
         <div className="btnWrap">
           <button
             className="btn white border"

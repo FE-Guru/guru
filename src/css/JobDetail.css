@@ -65,8 +65,8 @@
 }
 .midSection .MidUl {
     display: flex;
-    justify-content: space-evenly;
-    padding: 34px 40px;
+    gap: 5%;   
+    padding: 3.4rem 4rem;
 }
 .onLine.midSection .MidUl {
     background-color: rgba(255, 197, 72, 0.4);
@@ -137,7 +137,8 @@
 .offLine.midSection h2 {
     color: #118468;
 }
-.midSection > p {
+.midSection > pre {
+    line-height: 2.4rem;
     padding-bottom: 2.5rem;
     color: #5f5f5f;
     margin-top: 2.5rem;
@@ -159,6 +160,13 @@
     }
 }
 @media (max-width: 990px)  {
+    .detail .topSection {
+        margin-bottom: 0;
+    }
+    .topSection .topTitle {
+        width: calc( 100% - 6rem);
+        align-items: flex-start;
+    }
     .midSection .btnWrap {
         padding: 1.5rem 0 1.5rem 0;
     }
