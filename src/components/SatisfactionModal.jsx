@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import style from '../css/Modal.module.css';
 import { url } from '../store/ref';
+import { useSelector } from 'react-redux';
 
 const SatisfactionModal = ({ onClose, item }) => {
   const [starRating, setStarRating] = useState(0);
@@ -15,7 +16,7 @@ const SatisfactionModal = ({ onClose, item }) => {
     etc: 0,
   });
   const [otherFeedbackText, setOtherFeedbackText] = useState('');
-  const [writerID, setWriterID] = useState(''); // 글쓴이 emailID
+  const [writerID, setWriterID] = useState(''); // 만족도 조사를 작성한 사람 emailID
   const [emailID, setEmailID] = useState(''); // 매칭된 사람 emailID
 
   const feedbackOptions = {
@@ -23,21 +24,51 @@ const SatisfactionModal = ({ onClose, item }) => {
     negative: ['unkind', 'notOnTime', 'lowQuality', 'etc'],
   };
 
-  //매칭 된 사람 찾아서 writerID/ emailID 넣기
+  //토큰에 있는 아이디를 찾아서 writerID 에 할당 = 만족도 조사를 작성한 사람
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        //console.log('토큰:', token); // 토큰 확인
+        if (!token) {
+          console.warn('로그인하지 않은 상태입니다.');
+          return;
+        }
+        
+        const response = await fetch(`${url}/profile`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        //console.log('응답 상태:', response.status); // 응답 상태 확인
+        if (response.ok) {
+          const userInfo = await response.json();
+          //console.log('받은 데이터의 아이디!!: ', userInfo.emailID); // 데이터 확인
+          setWriterID(userInfo.emailID);
+        } else {
+          console.error('fetchProfile 에러', response.statusText); // 에러 메시지 출력
+        }
+      } catch (error) {
+        console.error('fetchProfile 예외 에러', error); // 예외 에러 출력
+      }
+    };
+
+    fetchProfile();
+  }, []); 
+
+  //매칭된 사람의 emailID 를 찾아서 emailID 에 할당
+  useEffect(() => {
+    //console.log('item--',item);
     if (item) {
       const matchedApplicant = item.applicants.find(
         (applicant) => applicant.status === 2 && applicant.matched === true
       );
-
+      //console.log('매칭인',matchedApplicant);
       if (matchedApplicant) {
-        setWriterID(item.emailID);
         setEmailID(matchedApplicant.emailID);
       }
-      // else {
-      //   setWriterID(item.emailID);
-      //   setEmailID(''); // 매칭된 지원자가 없을 경우 emailID를 빈 문자열로 설정
-      // }
     }
   }, [item]);
 
@@ -56,36 +87,30 @@ const SatisfactionModal = ({ onClose, item }) => {
     }
   };
 
-  // 피드백 버튼 상태 관리
   const handleFeedbackClick = (item) => {
-    // 클릭된 항목이 'etc'인 경우
     if (item === 'etc') {
       setFeedback((prevFeedback) => ({
         ...prevFeedback,
-        etc: prevFeedback.etc === 1 ? 0 : 1, // 'etc' 항목의 상태를 토글 (0이면 1로, 1이면 0으로)
+        etc: prevFeedback.etc === 1 ? 0 : 1,
       }));
       if (feedback.etc === 0) {
-        // 'etc' 항목이 활성화되지 않은 경우
-        setOtherFeedbackText(''); // 기타 피드백 텍스트를 빈 문자열로 초기화
+        setOtherFeedbackText('');
       }
     } else {
-      // 클릭된 항목이 'etc'가 아닌 경우
       setFeedback((prevFeedback) => ({
         ...prevFeedback,
-        [item]: prevFeedback[item] === 1 ? 0 : 1, // 클릭된 피드백 항목의 상태를 토글 (0이면 1로, 1이면 0으로)
+        [item]: prevFeedback[item] === 1 ? 0 : 1,
       }));
     }
   };
 
-  // etc에 대한 설명 입력
   const handleOtherFeedbackChange = (e) => {
     setOtherFeedbackText(e.target.value);
   };
 
-  // 서버로 데이터 전송
   const handleSubmit = async () => {
     const satisfiedData = {
-      Post_id: item._id, //Detail 에서 받아온 item의 _id
+      Post_id: item._id,
       emailID,
       writerID,
       starRating,
@@ -102,15 +127,14 @@ const SatisfactionModal = ({ onClose, item }) => {
     try {
       const response = await axios.post(`${url}/satisfied`, satisfiedData);
       if (response.status === 200) {
-        window.location.reload();  // 페이지 새로 고침
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      onClose(); // 에러 발생 시에도 모달 닫기
+      onClose();
     }
   };
 
-  // 별점 갯수에 따라 긍정-부정 옵션
   const currentFeedbackOptions =
     starRating >= 3 ? feedbackOptions.positive : feedbackOptions.negative;
 

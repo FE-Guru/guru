@@ -40,11 +40,16 @@ const JobItem = ({ item, jobOffer, findjob }) => {
   }, [item?.category?.jobType]);
 
   /*모집상태 바인딩*/
+  //[2 - 예약중 // 3,4 - 완료대기 // 5 - 완료]
   let appliStatus;
   if (item.status === 2) {
     appliStatus = { text: "예약중", val: "stat2" };
   } else if (item.status === 3) {
-    appliStatus = { text: "완료", val: "stat3" };
+    appliStatus = { text: "완료대기", val: "stat3" };
+  } else if (item.status === 4) {
+    appliStatus = { text: "완료대기", val: "stat4" };
+  } else if (item.status === 5) {
+    appliStatus = { text: "완료", val: "stat5" };
   } else if (item.status === -1) {
     appliStatus = { text: "취소", val: "stat-1" };
   } else {

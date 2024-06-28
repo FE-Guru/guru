@@ -27,20 +27,21 @@
   border: 0;
   box-shadow: 0 0.1rem 0.2rem #888;
 }
+
 .info .title {
-  padding: 0.5rem 0 0 1rem;
+  padding-left: 1.6rem;
   height: 3rem;
-  background: #eee;
-  border-bottom: 0.1rem solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cr-m-g);
   font-size: 1.6rem;
   font-weight: bold;
+  color: white;
 }
 .info .close {
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  color: #888;
-  font-size: 2rem;
+  color: white;
+  background-color: transparent;
 }
 .info .close:hover {
   cursor: pointer;
