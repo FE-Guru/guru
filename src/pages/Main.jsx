@@ -64,7 +64,7 @@ const Main = () => {
         </h2>
         <div className="mw">
           <MainOnline />
-          <button onClick={() => goFindJob("onLine")} className="btn primary yellow">
+          <button onClick={() => goFindJob("onLine")} className="btn primary">
             더보기 +
           </button>
         </div>
@@ -124,11 +124,11 @@ const Main = () => {
             <img src={`/img/common/mcate4.png`} alt="cate1" />
           </div>
         </div>
-        <section className={style.guruBanner}>
-          <div className="mw">
-            <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
-          </div>
-        </section>
+      </section>
+      <section className={style.guruBanner}>
+        <div className="mw">
+          <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
+        </div>
       </section>
     </main>
   );
