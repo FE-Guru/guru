@@ -127,14 +127,14 @@
   }
   .mainSwiper .mainSlider {
     background-size: 150%;
-    background-position: 110% 31%;
+    background-position: 114% 31%;
     padding-bottom: 70%;
   }
   .mainSwiper .sliderTxt {
     position: absolute;
-    width: 90%;
+    width: 84%;
     height: auto;
-    padding: 8% 0;
+    padding: 10% 0;
     font-size: 1.6rem;
     text-align: center;
     left: 50%;
@@ -153,13 +153,13 @@
     margin: 0 auto;
   }
   .mainSwiper .swiper-slide .slider01 .sliderTxt {
-    background-color: rgba(255, 197, 72, 0.85);
+    background-color: rgba(255, 197, 72, 0.75);
   }
   .mainSwiper .swiper-slide .slider02 .sliderTxt {
-    background-color: rgba(136, 177, 166, 0.85);
+    background-color: rgba(136, 177, 166, 0.75);
   }
   .mainSwiper .swiper-slide .slider03 .sliderTxt {
-    background-color: rgba(207, 117, 90, 0.85);
+    background-color: rgba(207, 117, 90, 0.75);
   }
 
   .main .pagination {

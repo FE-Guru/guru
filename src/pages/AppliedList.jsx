@@ -157,7 +157,7 @@ const AppliedList = () => {
       </section>
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} title={"권한 메시지"} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
         </Modal>
       )}
     </main>

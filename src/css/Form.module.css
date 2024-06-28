@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-.modalprofile h3 {
+.modalprofile > h3 {
   margin-bottom: 2.1rem;
 }
 .formStyle.formProfile {

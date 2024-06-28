@@ -40,16 +40,13 @@ const Profile = ({ show, onclose, modal, mode }) => {
     findUser();
   }, [emailID, setValue]);
 
-  useEffect(() => {
-    if (modalAlert === "isOk" && onclose) {
-      onclose();
-    }
-  }, [modalAlert, onclose]);
-
   const showAlert = (content) => {
     setModalAlert(content);
   };
   const closeAlert = () => {
+    if (modalAlert === "isOk" && onclose) {
+      onclose();
+    }
     setModalAlert(null);
   };
   if (modal) {
@@ -107,6 +104,7 @@ const Profile = ({ show, onclose, modal, mode }) => {
 
   return (
     <div className={style.modalprofile}>
+      {modal && <h3>프로필 등록 </h3>}
       <form className={`${style.formStyle} ${style.formProfile}`} onSubmit={handleSubmit(onSubmit)}>
         <div className={style.formContainer}>
           <div className={style.formThumb}>
