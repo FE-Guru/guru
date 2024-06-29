@@ -175,9 +175,9 @@ const Detail = ({ _id, closeDetail }) => {
     return null;
   }, [item?.category?.jobType]);
 
-  console.log("구인글 정보", item);
-  console.log("작성자 정보", author);
-  console.log(item?.category.jobType);
+  // console.log("구인글 정보", item);
+  // console.log("작성자 정보", author);
+  // console.log(item?.category.jobType);
 
   // 약속 날짜
   const formattedDate = useMemo(() => {
@@ -347,7 +347,7 @@ const Detail = ({ _id, closeDetail }) => {
       </section>
 
       {popupVisible && (
-        <SatisfactionModal onClose={closeAlert} type="alert" item={item} />
+        <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />
       )}
       {modalAlert && (
         <Modal
