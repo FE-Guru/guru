@@ -62,6 +62,10 @@
   color: var(--cr-red);
 }
 
+.phoneMsg {
+  margin-top: 7px;
+}
+
 .formCon {
   position: relative;
   height: 5rem;

@@ -175,6 +175,7 @@ const Detail = ({ _id, closeDetail }) => {
     return null;
   }, [item?.category?.jobType]);
 
+
   // 약속 날짜
   const formattedDate = useMemo(() => {
     if (memoizedData.workStartDate?.date) {
@@ -318,7 +319,10 @@ const Detail = ({ _id, closeDetail }) => {
         </div>
       </section>
 
-      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} />}
+
+      {popupVisible && (
+        <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />
+      )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlertModal} type="alert">
           {modalAlert === "deleteJob" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}

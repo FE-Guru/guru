@@ -75,11 +75,11 @@ const Signup = () => {
       setPhoneMsg("");
     }
 
-    if (account.length === 0) {
-      setAcctMsg("계좌를 입력해주세요.");
-    } else {
-      setAcctMsg("");
-    }
+    // if (account.length === 0) {
+    //   setAcctMsg("계좌를 입력해주세요.");
+    // } else {
+    //   setAcctMsg("");
+    // }
 
     const response = await fetch(`${url}/signup`, {
       method: "POST",
@@ -104,8 +104,8 @@ const Signup = () => {
       window.location.href = `/signupok?emailID=${signupData.emailID}
         &userName=${signupData.userName}
         &nickName=${signupData.nickName}
-        &phone=${signupData.phone}
-        &account=${signupData.account}`;
+        &phone=${signupData.phone}`;
+      // &account=${signupData.account}
     } else if (response.status === 409) {
       setModalAlert("alreadyexist");
     } else {
@@ -143,19 +143,38 @@ const Signup = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        setModalAlert("authfailed");
+        setModalAlert("authsendfailed");
       });
   };
 
   const verifyCode = () => {
-    if (parseInt(veriCode) === authNum) {
-      setModalAlert("authsuccess");
-    } else {
-      setModalAlert("authfailed");
-    }
+    fetch(`${url}/verifycode`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone, code: veriCode }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("verifycode not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setModalAlert("authsuccess");
+        } else {
+          setModalAlert("authfailed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setModalAlert("authfailed");
+      });
   };
 
-  //agreement func
+  //약관 관련 함수
   const handleAllChange = () => {
     if (allAgree === false) {
       setAllAgree(true);
@@ -366,11 +385,8 @@ const Signup = () => {
                     }`}
                     placeholder='하이픈(-) 제외 숫자만 입력'
                     value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                    // onChange={phoneChange}
-                    // maxLength='11'
+                    maxLength='11'
+                    onChange={phoneChange}
                   />
                 </div>
                 <button
@@ -393,7 +409,7 @@ const Signup = () => {
                     onChange={(e) => setVeriCode(e.target.value)}
                   />
                   {/* <p className={mem.time}>00:00</p> */}
-                  <p className={mem.error}>{phoneMsg}</p>
+                  <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
                 </div>
                 <button
                   type='button'
@@ -405,7 +421,7 @@ const Signup = () => {
               </div>
             </div>
           </div>
-          <div className={`${form.formGrup} ${acctMsg ? mem.errorForm : ""}`}>
+          {/* <div className={`${form.formGrup} ${acctMsg ? mem.errorForm : ""}`}>
             <span className={acctMsg ? mem.errorTitle : ""}>계좌번호</span>
             <div className={`${form.formCon}`}>
               <input
@@ -418,7 +434,7 @@ const Signup = () => {
               />
               <p className={mem.error}>{acctMsg}</p>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className={`${mem.btnWrap} btnWrap`}>
           <button type='button' className='btn tertiary' onClick={cancelBtn}>
@@ -479,8 +495,8 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증번호 전송이 완료되었습니다."}
-              error={true}
-              confirm={false}
+              error={false}
+              confirm={true}
             />
           )}
           {modalAlert === "authsendfailed" && (
@@ -495,8 +511,8 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증이 완료되었습니다."}
-              error={true}
-              confirm={false}
+              error={false}
+              confirm={true}
             />
           )}
           {modalAlert === "authfailed" && (
