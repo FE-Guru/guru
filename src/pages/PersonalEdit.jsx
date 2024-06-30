@@ -11,11 +11,14 @@ import ModalAlert from "../components/ModalAlert";
 
 const PersonalEdit = () => {
   const [modalAlert, setModalAlert] = useState(null);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [authNum, setAuthNum] = useState(null);
+  const [veriCode, setVeriCode] = useState("");
 
   const user = useSelector((state) => state.user.user);
   const emailID = user ? user.emailID : null;
   const userName = user ? user.userName : null;
-  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -66,6 +69,71 @@ const PersonalEdit = () => {
         [name]: value,
       });
     }
+  };
+
+  const phoneChange = (e) => {
+    const input = e.target.value;
+    const phoneValue = input.replace(/[^0-9]/g, "");
+    // setPhone(phoneValue);
+    setFormData({
+      ...formData,
+      phone: phoneValue,
+    });
+  };
+
+  const sendSms = () => {
+    fetch(`${url}/sendsms`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("sendsms not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setAuthNum(data.auth);
+          setModalAlert("authsend");
+        } else {
+          setModalAlert("authsendfailed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setModalAlert("authsendfailed");
+      });
+  };
+
+  const verifyCode = () => {
+    fetch(`${url}/verifycode`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone, code: veriCode }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("verifycode not ok");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setModalAlert("authsuccess");
+        } else {
+          setModalAlert("authfailed");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setModalAlert("authfailed");
+      });
   };
 
   const editSubmit = async (e) => {
@@ -121,6 +189,7 @@ const PersonalEdit = () => {
       setModalAlert("editfailed");
     }
   };
+
   return (
     <div className='contents'>
       <h3>{currentPage.pageName}</h3>
@@ -169,28 +238,49 @@ const PersonalEdit = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className={`${form.formGrup} ${mem.phoneGrup}`}>
+            <div className={`${form.formGrup}`}>
               <span>연락처</span>
               <div className={mem.phoneInner}>
                 <div className={mem.phoneAuth}>
-                  <input
-                    type='text'
-                    name='phone'
-                    value={formData.phone}
-                    maxLength='11'
-                    onChange={handleChange}
-                  />
-                  <p className={mem.time}></p>
+                  <div className={`${form.formCon} ${mem.formCon}`}>
+                    <input
+                      type='text'
+                      className={mem.phoneInput}
+                      placeholder='하이픈(-) 제외 숫자만 입력'
+                      value={formData.phone}
+                      maxLength='11'
+                      onChange={phoneChange}
+                    />
+                  </div>
                   <button
                     type='button'
                     className={`btn primary green ${mem.greenBtn}`}
+                    onClick={sendSms}
                   >
-                    연락처 변경
+                    인증하기
+                  </button>
+                </div>
+                <div className={mem.phoneAuth}>
+                  <div className={`${form.formCon} ${mem.formCon}`}>
+                    <input
+                      type='text'
+                      className={mem.authInput}
+                      placeholder='인증번호'
+                      value={veriCode}
+                      onChange={(e) => setVeriCode(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    type='button'
+                    className={`btn primary yellow ${mem.yellowBtn}`}
+                    onClick={verifyCode}
+                  >
+                    확인
                   </button>
                 </div>
               </div>
             </div>
-            <div className={form.formGrup}>
+            {/* <div className={form.formGrup}>
               <span>계좌번호</span>
               <input
                 type='text'
@@ -199,7 +289,7 @@ const PersonalEdit = () => {
                 value={formData.account}
                 onChange={handleChange}
               />
-            </div>
+            </div> */}
           </div>
           <div className={mem.accountDel} onClick={accountDel}>
             <span>회원탈퇴</span>
@@ -257,6 +347,38 @@ const PersonalEdit = () => {
             <ModalAlert
               close={closeAlert}
               desc={"변경된 정보가 없습니다."}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert === "authsend" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"인증번호 전송이 완료되었습니다."}
+              error={false}
+              confirm={true}
+            />
+          )}
+          {modalAlert === "authsendfailed" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"입력하신 번호를 확인해주세요"}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert === "authsuccess" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"인증이 완료되었습니다."}
+              error={false}
+              confirm={true}
+            />
+          )}
+          {modalAlert === "authfailed" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"인증번호를 다시 확인해주세요."}
               error={true}
               confirm={false}
             />
