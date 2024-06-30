@@ -26,6 +26,9 @@
   overflow-y: auto;
   max-height: 90vh;
 }
+.modalOverlay.detail .modalContent {
+  max-width: 124rem;
+}
 .modalContent::-webkit-scrollbar {
   width: 0.6rem;
 }
