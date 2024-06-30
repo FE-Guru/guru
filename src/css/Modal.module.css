@@ -26,6 +26,16 @@
   overflow-y: auto;
   max-height: 90vh;
 }
+.modalContent::-webkit-scrollbar {
+  width: 0.6rem;
+}
+.modalContent::-webkit-scrollbar-thumb {
+  background: var(--cr-m-y);
+  border-radius: 10rem;
+}
+.modalContent::-webkit-scrollbar-track {
+  background: #ededed;
+}
 
 /* 만족도 조사 부분 Start */
 .satisfaction_rating {
@@ -41,7 +51,7 @@
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: space-between;
-  padding: 2rem 0 ;
+  padding: 2rem 0;
 }
 .fbBtn {
   width: 48%;
@@ -53,7 +63,7 @@
   color: var(--cr-w) !important;
   border-color: var(--cr-bl1);
 }
-.satisfaction_textarea{
+.satisfaction_textarea {
   width: 100%;
   height: 100px;
   margin-bottom: 2rem;

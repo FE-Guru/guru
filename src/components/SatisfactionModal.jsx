@@ -4,7 +4,7 @@ import style from '../css/Modal.module.css';
 import { url } from '../store/ref';
 import { useSelector } from 'react-redux';
 
-const SatisfactionModal = ({ onClose, item, author }) => {
+const SatisfactionModal = ({ onClose, item }) => {
   const [starRating, setStarRating] = useState(0);
   const [feedback, setFeedback] = useState({
     kind: 0,
@@ -17,17 +17,14 @@ const SatisfactionModal = ({ onClose, item, author }) => {
   });
   const [otherFeedbackText, setOtherFeedbackText] = useState('');
   const [writerID, setWriterID] = useState(''); // 만족도 조사를 작성한 사람 emailID
-  const [matchedID, setMatchedID] = useState(''); // 만족도 조사를 작성한 사람 emailID
-  const [repondentID, setRepondentID] = useState(''); // 토큰으로 받은 emailID(=조사 쓴사람)
-  const [repondentNick, setRepondentNick] = useState(''); // 토큰으로 받은 닉네임(=조사 쓴사람)
-  const [recipientID, setRecipientID] = useState(''); // 조사 받은 사람
+  const [emailID, setEmailID] = useState(''); // 매칭된 사람 emailID
 
   const feedbackOptions = {
     positive: ['kind', 'onTime', 'highQuality', 'etc'],
     negative: ['unkind', 'notOnTime', 'lowQuality', 'etc'],
   };
 
-  //토큰에 있는 아이디를 찾아서 repondentID 에 할당 = 만족도 조사를 작성한 사람
+  //토큰에 있는 아이디를 찾아서 writerID 에 할당 = 만족도 조사를 작성한 사람
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -37,7 +34,7 @@ const SatisfactionModal = ({ onClose, item, author }) => {
           console.warn('로그인하지 않은 상태입니다.');
           return;
         }
-
+        
         const response = await fetch(`${url}/profile`, {
           method: 'GET',
           credentials: 'include',
@@ -48,9 +45,8 @@ const SatisfactionModal = ({ onClose, item, author }) => {
         //console.log('응답 상태:', response.status); // 응답 상태 확인
         if (response.ok) {
           const userInfo = await response.json();
-          // console.log('받은 데이터의 아이디!!: ', userInfo); // 데이터 확인
-          setRepondentID(userInfo.emailID);
-          setRepondentNick(userInfo.nickName);
+          //console.log('받은 데이터의 아이디!!: ', userInfo.emailID); // 데이터 확인
+          setWriterID(userInfo.emailID);
         } else {
           console.error('fetchProfile 에러', response.statusText); // 에러 메시지 출력
         }
@@ -60,36 +56,22 @@ const SatisfactionModal = ({ onClose, item, author }) => {
     };
 
     fetchProfile();
-  }, []);
+  }, []); 
 
-  //writerID, matchedID 할당
+  //매칭된 사람의 emailID 를 찾아서 emailID 에 할당
   useEffect(() => {
-    console.log('글 작성자 정보', author);
-    console.log('item--', item);
-    setWriterID(author.emailID);
-    //console.log('매칭인 아이디', matchedID);
+    //console.log('item--',item);
     if (item) {
       const matchedApplicant = item.applicants.find(
         (applicant) => applicant.status === 2 && applicant.matched === true
       );
       //console.log('매칭인',matchedApplicant);
       if (matchedApplicant) {
-        setMatchedID(matchedApplicant.emailID);
+        setEmailID(matchedApplicant.emailID);
       }
     }
-  }, [item, author]);
+  }, [item]);
 
-  //recipientID 할당 = writerID, matchedID 와 비교해서 repondentID와 다른 사람
-  useEffect(() => {
-    if (writerID !== matchedID) {
-      setRecipientID(writerID);
-    } else {
-      setRecipientID(matchedID);
-    }
-  }, [writerID, matchedID]);
-
-
-  //별점
   const handleStarClick = (star) => {
     setStarRating(star);
     const toReset =
@@ -105,7 +87,6 @@ const SatisfactionModal = ({ onClose, item, author }) => {
     }
   };
 
-  //피드백 버튼
   const handleFeedbackClick = (item) => {
     if (item === 'etc') {
       setFeedback((prevFeedback) => ({
@@ -130,9 +111,7 @@ const SatisfactionModal = ({ onClose, item, author }) => {
   const handleSubmit = async () => {
     const satisfiedData = {
       Post_id: item._id,
-      repondentID, // 조사 쓴 사람 이메일
-      repondentNick, // 조사 쓴 사람 닉네임
-      matchedID,
+      emailID,
       writerID,
       starRating,
       kind: feedback.kind,
