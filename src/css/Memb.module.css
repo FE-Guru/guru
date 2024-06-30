@@ -62,6 +62,10 @@
   color: var(--cr-red);
 }
 
+.phoneMsg {
+  margin-top: 7px;
+}
+
 .formCon {
   position: relative;
   height: 5rem;
@@ -256,16 +260,9 @@
 
 /*acctDelete*/
 .delDesc {
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.78;
   letter-spacing: -0.25px;
   color: var(--cr-g1);
-}
-
-.delDesc p {
-  padding: 30px 0 0;
 }
 
 /* acctbye */
@@ -328,4 +325,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 660px) {
+  .delDesc {
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
 }
