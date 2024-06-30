@@ -13,7 +13,7 @@ const Detail = ({ _id, closeDetail }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  const data = useSelector((state) => state.findjob);
+
   const [modalAlert, setModalAlert] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
   const [item, setItem] = useState(null);
@@ -21,7 +21,13 @@ const Detail = ({ _id, closeDetail }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [status, setStatus] = useState(item?.applicants || []);
   const [btnWrapStatus, setBtnWrapStatus] = useState(0);
+  const data = useSelector((state) => state.findjob);
   const memoizedData = useMemo(() => data[item?._id] || {}, [data, item?._id]);
+
+  /*매칭된 유저 찾기*/
+  const matchingUser = item?.applicants.find((applicant) => applicant.matched);
+  const matchingID = matchingUser ? matchingUser.emailID : null;
+  const matchingStatus = matchingUser ? matchingUser.status : null;
 
   const openModal = (item) => {
     setItem(item);
@@ -54,11 +60,26 @@ const Detail = ({ _id, closeDetail }) => {
     }
   }, [_id, dispatch]);
 
+  // useEffect(() => {
+  //   if (item?.applicants) {
+  //     setStatus(item.applicants);
+  //   }
+  // }, [item]);
+
   useEffect(() => {
-    if (item?.applicants) {
+    if (item) {
+      const { workStartDate, workEndDate, endDate } = item;
+      dispatch(
+        setDates({
+          id: item._id,
+          workStartDate,
+          workEndDate,
+          endDate,
+        })
+      );
       setStatus(item.applicants);
     }
-  }, [item]);
+  }, [item, dispatch]);
 
   useEffect(() => {
     if (item) {
@@ -78,7 +99,6 @@ const Detail = ({ _id, closeDetail }) => {
       fetchUser();
     }
   }, [item]);
-
   const showAlert = useCallback((content) => {
     setModalAlert(content);
   }, []);
@@ -157,14 +177,33 @@ const Detail = ({ _id, closeDetail }) => {
   if (item) {
     if (item.status === 2) {
       appliStatus = { text: "예약중", val: "stat2" };
-    } else if (item.status === 3) {
-      appliStatus = { text: "완료", val: "stat3" };
+    } else if (item.status === 3 || item.status === 4) {
+      appliStatus = { text: "완료대기", val: "stat3" };
+    } else if (item.status === 5) {
+      appliStatus = { text: "완료", val: "stat5" };
     } else if (item.status === -1) {
       appliStatus = { text: "취소", val: "stat-1" };
     } else {
       appliStatus = { text: memoizedData.dFormat || "-", val: "stat1" };
     }
   }
+  let statusText;
+  if (item) {
+    if (item.status === 1) {
+      statusText = "모집중";
+    } else if (item.status === 2) {
+      statusText = "예약중";
+    } else if (item.status === 3 || item.status === 4) {
+      statusText = "완료대기";
+    } else if (item.status === 5) {
+      statusText = "완료";
+    } else if (item.status === -1) {
+      statusText = "취소완료";
+    } else {
+      appliStatus = "-";
+    }
+  }
+
   // 온오프 상태
   const onOff = useMemo(() => {
     if (item?.category?.jobType === "onLine") {
@@ -175,31 +214,6 @@ const Detail = ({ _id, closeDetail }) => {
     return null;
   }, [item?.category?.jobType]);
 
-
-  // 약속 날짜
-  const formattedDate = useMemo(() => {
-    if (memoizedData.workStartDate?.date) {
-      const date = new Date(memoizedData.workStartDate.date);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-      return `${month}/${day}`;
-    }
-    return "-";
-  }, [memoizedData.workStartDate?.date]);
-  // 모집 현황
-  const getStatusText = (status) => {
-    switch (status) {
-      case 2:
-        return "[예약중]";
-      case 3:
-        return "[완료]";
-      case -1:
-        return "[취소]";
-      default:
-        return "[모집중]";
-    }
-  };
-
   return (
     <>
       <section className={`${style.topSection} ${style[item?.category.jobType]}`}>
@@ -209,22 +223,21 @@ const Detail = ({ _id, closeDetail }) => {
           </div>
           <div className={style.titleWrap}>
             <div className={style.cateWrap}>
+              <span className={`${style.status} ${style[appliStatus.val]}`}>{statusText}</span>
               <span># {item?.category?.talent}</span>
               <span># {item?.category?.field}</span>
             </div>
-            <h2>
-              {getStatusText(item?.status)} {item?.title}
-            </h2>
-            <lable>
+            <h2>{item?.title}</h2>
+            <label htmlFor="satisfied">
               <strong>{item?.nickName}</strong>
               <span>님</span>
-              <progress></progress>
-            </lable>
+              <progress name="satisfied" max="100" value="70"></progress>
+            </label>
           </div>
         </div>
       </section>
       <section className={`${style.midSection} ${style[item?.category.jobType]} mw`}>
-        <ul className={style.MidUl}>
+        <ul className={style.midUl}>
           <li>
             <i className="fa-solid fa-won-sign"></i>
             <p>
@@ -240,14 +253,14 @@ const Detail = ({ _id, closeDetail }) => {
             </p>
           </li>
           <li>
-            <i className="fa-solid fa-calendar-days"></i>
+            <i className="fa-regular fa-calendar-check"></i>
             <p>
               <span>약속날짜</span>
-              {formattedDate}
+              {memoizedData.workStartDate?.date || "-"}
             </p>
           </li>
           <li>
-            <i className="fa-solid fa-location-dot"></i>
+            <i className="fa-regular fa-clock"></i>
             <p>
               <span>약속시간</span>
               {memoizedData.workStartDate?.time || "-"}~{memoizedData.workEndDate?.time || "-"}
@@ -261,7 +274,7 @@ const Detail = ({ _id, closeDetail }) => {
             </p>
           </li>
         </ul>
-        <div className={`btnWrap ${style.midBtnWrap}`}>
+        <div className={`btnWrap ${style.detailBtnWRap}`}>
           {user?.emailID === "admin" && (
             <button
               className="btn tertiary"
@@ -306,12 +319,42 @@ const Detail = ({ _id, closeDetail }) => {
               </button>
             </>
           )}
+          {btnWrapStatus === 3 && (
+            <>
+              {user?.emailID === item?.emailID ? (
+                <button
+                  className="btn yellow"
+                  onClick={() => {
+                    setPopupVisible(true);
+                  }}>
+                  결제 및 완료
+                </button>
+              ) : (
+                <p>상대방이 완료처리 전입니다.</p>
+              )}
+            </>
+          )}
+          {btnWrapStatus === 4 && (
+            <>
+              {user?.emailID === matchingID ? (
+                <button
+                  className="btn yellow"
+                  onClick={() => {
+                    setPopupVisible(true);
+                  }}>
+                  결제 및 완료
+                </button>
+              ) : (
+                <p>상대방이 완료처리 전입니다.</p>
+              )}
+            </>
+          )}
           {btnWrapStatus === -1 && <p>취소 된 공고입니다.</p>}
           {btnWrapStatus === 5 && <p>완료 된 공고입니다.</p>}
         </div>
         <h2>상세설명</h2>
         <pre>{item?.desc}</pre>
-        <div className={`btnWrap ${style.btmBtnWrap}`}>
+        <div className={`btnWrap ${style.detailBtnWRap}`}>
           <button className="btn primary" onClick={() => navigate("/findJob", { state: { _id: item._id } })}>
             {" "}
             목록으로
@@ -319,10 +362,7 @@ const Detail = ({ _id, closeDetail }) => {
         </div>
       </section>
 
-
-      {popupVisible && (
-        <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />
-      )}
+      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlertModal} type="alert">
           {modalAlert === "deleteJob" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
