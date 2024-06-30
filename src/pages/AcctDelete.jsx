@@ -50,7 +50,7 @@ const AcctDelete = () => {
       <div className='full'>
         <form className={` ${form.formStyle} ${mem.editForm}`}>
           <div className={form.formContainer}>
-            <div className={`${form.formGrup} `}>
+            <div className={`${form.formGrup} ${mem.formGrup}`}>
               <pre className={mem.delDesc}>{accountDel}</pre>
             </div>
           </div>
