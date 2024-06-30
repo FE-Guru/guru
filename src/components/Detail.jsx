@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { setDates } from '../store/findjob';
-import { updateItemStatus } from '../store/updateItemStatus';
-import { url } from '../store/ref';
-import Modal from '../components/Modal';
-import ModalAlert from '../components/ModalAlert';
-import SatisfactionModal from './SatisfactionModal';
-import "../css/JobDetail.css";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { setDates } from "../store/findjob";
+import { updateItemStatus } from "../store/updateItemStatus";
+import { url } from "../store/ref";
+import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
+import SatisfactionModal from "./SatisfactionModal";
+import style from "../css/Detail.module.css";
 
 const Detail = ({ _id, closeDetail }) => {
   const navigate = useNavigate();
@@ -175,10 +175,6 @@ const Detail = ({ _id, closeDetail }) => {
     return null;
   }, [item?.category?.jobType]);
 
-  console.log("구인글 정보", item);
-  console.log("작성자 정보", author);
-  console.log(item?.category.jobType);
-
   // 약속 날짜
   const formattedDate = useMemo(() => {
     if (memoizedData.workStartDate?.date) {
@@ -205,35 +201,29 @@ const Detail = ({ _id, closeDetail }) => {
 
   return (
     <>
-      <section className={`topSection ${item?.category.jobType}`}>
-        <div className="topTitle">
-          <div className="thumb">
-            {!author?.image ? (
-              <img
-                src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
-                alt="이미지 없음"
-              />
-            ) : (
-              <img src={`${url}/${author?.image}`} alt="프로필 이미지" />
-            )}
+      <section className={`${style.topSection} ${style[item?.category.jobType]}`}>
+        <div className="mw">
+          <div className={style.thumb}>
+            {!author?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${author?.image}`} alt="프로필 이미지" />}
           </div>
-          <div className="titleWrap">
-            <div className="cateWrap">
-              <span>{item?.category?.talent}</span>
-              <span>{item?.category?.field}</span>
+          <div className={style.titleWrap}>
+            <div className={style.cateWrap}>
+              <span># {item?.category?.talent}</span>
+              <span># {item?.category?.field}</span>
             </div>
-            <h1>
+            <h2>
               {getStatusText(item?.status)} {item?.title}
-            </h1>
-            <div className="nickName">
-              {item?.nickName} <span>님</span>
-            </div>
-            <progress></progress>
+            </h2>
+            <lable>
+              <strong>{item?.nickName}</strong>
+              <span>님</span>
+              <progress></progress>
+            </lable>
           </div>
         </div>
       </section>
-      <section className={`midSection ${item?.category.jobType}`}>
-        <ul className="MidUl">
+      <section className={`${style.midSection} ${style[item?.category.jobType]} mw`}>
+        <ul className={style.MidUl}>
           <li>
             <i className="fa-solid fa-won-sign"></i>
             <p>
@@ -259,8 +249,7 @@ const Detail = ({ _id, closeDetail }) => {
             <i className="fa-solid fa-location-dot"></i>
             <p>
               <span>약속시간</span>
-              {memoizedData.workStartDate?.time || "-"}~
-              {memoizedData.workEndDate?.time || "-"}
+              {memoizedData.workStartDate?.time || "-"}~{memoizedData.workEndDate?.time || "-"}
             </p>
           </li>
           <li>
@@ -271,35 +260,25 @@ const Detail = ({ _id, closeDetail }) => {
             </p>
           </li>
         </ul>
-        <div className="btnWrap">
+        <div className={`btnWrap ${style.midBtnWrap}`}>
           {user?.emailID === "admin" && (
             <button
               className="btn tertiary"
               onClick={(e) => {
                 setModalAlert("deleteJob");
-              }}
-            >
+              }}>
               삭제하기
             </button>
           )}
           {btnWrapStatus === 1 && (
             <>
               {user?.emailID === item?.emailID ? (
-                <button
-                  className="btn tertiary"
-                  onClick={() =>
-                    navigate("/job-edit", { state: { _id: item._id } })
-                  }
-                >
+                <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id: item._id } })}>
                   수정하기
                 </button>
               ) : (
                 <>
-                  {status?.some(
-                    (applicant) =>
-                      applicant.emailID === user?.emailID &&
-                      applicant.status === 1
-                  ) ? (
+                  {status?.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
                     <button className="btn tertiary" onClick={appCancell}>
                       지원취소(모집전)
                     </button>
@@ -314,57 +293,35 @@ const Detail = ({ _id, closeDetail }) => {
           )}
           {btnWrapStatus === 2 && (
             <>
-              <button
-                className="btn tertiary"
-                onClick={() => setModalAlert("appCancell")}
-              >
+              <button className="btn tertiary" onClick={() => setModalAlert("appCancell")}>
                 취소하기
               </button>
               <button
                 className="btn yellow"
                 onClick={() => {
                   setPopupVisible(true);
-                }}
-              >
+                }}>
                 결제 및 완료
               </button>
             </>
           )}
           {btnWrapStatus === -1 && <p>취소 된 공고입니다.</p>}
-          {btnWrapStatus === 3 && <p>완료 된 공고입니다.</p>}
+          {btnWrapStatus === 5 && <p>완료 된 공고입니다.</p>}
         </div>
         <h2>상세설명</h2>
         <pre>{item?.desc}</pre>
-        <div className="btnWrap">
-          <button
-            className="btn white border"
-            onClick={() => navigate("/findJob", { state: { _id: item._id } })}
-          >
+        <div className={`btnWrap ${style.btmBtnWrap}`}>
+          <button className="btn primary" onClick={() => navigate("/findJob", { state: { _id: item._id } })}>
             {" "}
             목록으로
           </button>
         </div>
       </section>
 
-      {popupVisible && (
-        <SatisfactionModal onClose={closeAlert} type="alert" item={item} />
-      )}
+      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} />}
       {modalAlert && (
-        <Modal
-          show={modalAlert !== null}
-          onClose={closeAlertModal}
-          type="alert"
-        >
-          {modalAlert === "deleteJob" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={"정말 삭제하시겠습니까?"}
-              error={true}
-              confirm={true}
-              throwFn={deleteJob}
-            />
-          )}
+        <Modal show={modalAlert !== null} onClose={closeAlertModal} type="alert">
+          {modalAlert === "deleteJob" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"정말 삭제하시겠습니까?"} error={true} confirm={true} throwFn={deleteJob} />}
           {modalAlert === "appCancell" && (
             <ModalAlert
               close={closeAlertModal}
@@ -381,52 +338,11 @@ const Detail = ({ _id, closeDetail }) => {
               throwFn={appCancell}
             />
           )}
-          {modalAlert === "deleteOk" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={"구인글이 삭제되었습니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "none_id" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={"잘못된 접근입니다."}
-              error={true}
-              confirm={false}
-              goPage={"/"}
-            />
-          )}
-          {modalAlert === "appError" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={errorMessage}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "appOk" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={"지원이 정상적으로 처리되었습니다."}
-              error={false}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "appCencellOk" && (
-            <ModalAlert
-              close={closeAlertModal}
-              title={"상세페이지 메시지"}
-              desc={"지원취소가 정상적으로 처리되었습니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
+          {modalAlert === "deleteOk" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"구인글이 삭제되었습니다."} error={true} confirm={false} />}
+          {modalAlert === "none_id" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"잘못된 접근입니다."} error={true} confirm={false} goPage={"/"} />}
+          {modalAlert === "appError" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={errorMessage} error={true} confirm={false} />}
+          {modalAlert === "appOk" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"지원이 정상적으로 처리되었습니다."} error={false} confirm={false} />}
+          {modalAlert === "appCencellOk" && <ModalAlert close={closeAlertModal} title={"상세페이지 메시지"} desc={"지원취소가 정상적으로 처리되었습니다."} error={true} confirm={false} />}
         </Modal>
       )}
     </>
