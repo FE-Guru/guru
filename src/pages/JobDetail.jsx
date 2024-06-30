@@ -6,7 +6,7 @@ const JobDetail = () => {
   const { _id } = location.state || {};
 
   return (
-    <main className={`detail`}>
+    <main className="detail">
       <Detail _id={_id} />
     </main>
   );
