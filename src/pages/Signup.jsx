@@ -210,7 +210,7 @@ const Signup = () => {
     let isValid = true;
 
     if (!chkRequired()) {
-      setModalAlert("userrequired");
+      setModalAlert("required");
       isValid = false;
     }
 
