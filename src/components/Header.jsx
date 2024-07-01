@@ -56,7 +56,7 @@ const Header = () => {
         if (response.ok) {
           const userInfo = await response.json();
           dispatch(userState(userInfo));
-          if (!userInfo.certified) {
+          if (certified === false) {
             showPopup("profile");
           }
         } else {
@@ -220,16 +220,18 @@ const Header = () => {
       <button className={style.ham} onClick={mypageClick}>
         <i className={isIconChanged ? "fa-solid fa-x" : "fa-solid fa-bars"}></i>
       </button>
-      <Modal show={modal !== null} onClose={closePopup}>
-        {modal === "profile" && (
-          <Profile
-            show={modal !== null}
-            onclose={closePopup}
-            mode={"등록"}
-            modal={true}
-          />
-        )}
-      </Modal>
+      {modal && (
+        <Modal show={modal !== null} onclose={closePopup} type={"profile"}>
+          {modal === "profile" && (
+            <Profile
+              show={modal !== null}
+              onclose={closePopup}
+              mode={"등록"}
+              modal={true}
+            />
+          )}
+        </Modal>
+      )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
           {modalAlert === "invalidaccess" && (
