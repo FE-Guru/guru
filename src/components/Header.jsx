@@ -11,6 +11,8 @@ import style from "../css/Header.module.css";
 const Header = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
+
   const user = useSelector((state) => state.user.user);
   const [isMypage, setIsMypage] = useState(false);
   const [isIconChanged, setIsIconChanged] = useState(false);
@@ -34,7 +36,8 @@ const Header = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          // console.warn("로그인하지 않은 상태입니다.");
+          console.warn("로그인하지 않은 상태입니다.");
+          setLoading(false);
           return;
         }
         const response = await fetch(`${url}/profile`, {
@@ -47,28 +50,44 @@ const Header = () => {
         if (response.ok) {
           const userInfo = await response.json();
           dispatch(userState(userInfo));
-          if (certified === false) {
+          if (!userInfo.certified) {
             showPopup("profile");
           }
         } else {
-          console.error("fetchProfile 에러");
+          console.error("fetchProfile 에러:", response.statusText);
         }
       } catch (error) {
-        return;
+        console.error("fetchProfile 중 오류 발생:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProfile();
   }, [dispatch, location]);
 
-  const logout = (e) => {
+  const logout = async (e) => {
     e.preventDefault();
-    fetch(`${url}/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    dispatch(userState(null));
-    isLogout();
-    window.location.href = "/";
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${url}/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem("token");
+        dispatch(userState(null));
+        isLogout();
+        window.location.href = "/";
+      } else {
+        console.error("로그아웃 실패:", response.statusText);
+      }
+    } catch (error) {
+      console.error("로그아웃 중 오류 발생:", error);
+    }
   };
 
   const mypageClick = () => {

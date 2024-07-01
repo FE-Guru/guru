@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
+import { url } from "../store/ref";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -7,11 +7,29 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-    }
-    setLoading(false);
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const response = await fetch(`${url}/verify-token`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.ok) {
+            setIsAuthenticated(true);
+          } else {
+            localStorage.removeItem("token");
+          }
+        } catch (error) {
+          console.error("토큰 검증 오류:", error);
+        }
+      }
+      setLoading(false);
+    };
+    verifyToken();
   }, []);
 
   const islogin = () => setIsAuthenticated(true);
@@ -20,7 +38,11 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("token");
   };
 
-  return <AuthContext.Provider value={{ isAuthenticated, islogin, isLogout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, islogin, isLogout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
