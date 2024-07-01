@@ -44,19 +44,22 @@ const JobOffer = () => {
     );
   }, [dispatch]);
 
-  /* fetch 함수 실행 */
   useEffect(() => {
-    fetchData();
-  }, [loadPage]);
-  useEffect(() => {
-    filterJobs();
-  }, [onOFffilter, statusFilter, jobList]);
+    setLoadPage(1);
+    fetchData(1, onOFffilter, statusFilter, true);
+  }, [onOFffilter, statusFilter]);
 
-  const fetchData = async () => {
-    if (loading) return; // 이미 로딩 중이면 새로운 요청을 방지
-    setLoading(true); // 로딩 상태 시작
+  useEffect(() => {
+    if (loadPage > 1) {
+      fetchData(loadPage, onOFffilter, statusFilter, false);
+    }
+  }, [loadPage]);
+
+  const fetchData = async (page, jobType, status, reset) => {
+    if (loading) return;
+    setLoading(true);
     try {
-      const response = await fetch(`${url}/job/jobOffer?page=${loadPage}`, {
+      const response = await fetch(`${url}/job/jobOffer?page=${page}&jobType=${jobType}&status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -66,13 +69,9 @@ const JobOffer = () => {
       const data = await response.json();
       if (response.ok) {
         setJobList((prevJobList) => {
-          // 기존 데이터를 새로운 데이터와 병합하여 설정
+          if (reset) return data;
           const newJobList = [...prevJobList, ...data];
-          const uniqueJobList = newJobList.filter(
-            (job, index, self) =>
-              index === self.findIndex((j) => j._id === job._id)
-          );
-          return uniqueJobList;
+          return newJobList;
         });
         const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
         setTotalJobs(totalCount);
@@ -90,11 +89,8 @@ const JobOffer = () => {
   const filterJobs = () => {
     let filteredList = jobList;
     if (onOFffilter !== "all") {
-      filteredList = filteredList.filter(
-        (job) => job.category.jobType === onOFffilter
-      );
+      filteredList = filteredList.filter((job) => job.category.jobType === onOFffilter);
     }
-    console.log(statusFilter);
     if (statusFilter !== "all") {
       filteredList = filteredList.filter((job) => job.status === statusFilter);
     }
@@ -142,25 +138,18 @@ const JobOffer = () => {
 
   return (
     <main className={`subPage jobOffer ${lnbHas ? "has" : ""}`}>
-      <section className='mw'>
-        <Lnb
-          onOFfFilter={onOFffilter}
-          statusFilter={statusFilter}
-          onOffChange={onOffChange}
-          statusChange={statusChange}
-          lnbHas={lnbHas}
-          lnbHandler={lnbHandler}
-        />
-        <div className='contents'>
-          <div className='conTitle'>
+      <section className="mw">
+        <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
+        <div className="contents">
+          <div className="conTitle">
             <h3> {currentPage.pageName}</h3>
-            <button className='LobHandler' onClick={lnbHandler}></button>
+            <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
-          <ul className='boxContainer'>
-            {filteredJobList.length === 0 ? (
+          <ul className="boxContainer">
+            {jobList.length === 0 ? (
               <li>등록된 구인글이 없습니다.</li>
             ) : (
-              filteredJobList.map((item) => (
+              jobList.map((item) => (
                 <li key={item._id}>
                   <JobItem item={item} jobOffer={true} />
                 </li>
@@ -170,16 +159,8 @@ const JobOffer = () => {
         </div>
       </section>
       {modalAlert && (
-        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
-          {modalAlert === "notAuthorized" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"로그인이 필요한 페이지입니다."}
-              error={true}
-              confirm={false}
-              goPage={"/login"}
-            />
-          )}
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
         </Modal>
       )}
     </main>
