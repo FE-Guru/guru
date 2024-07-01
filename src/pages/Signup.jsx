@@ -26,6 +26,7 @@ const Signup = () => {
   const [userName, setuserName] = useState("");
   const [nickName, setNickName] = useState("");
   const [phone, setPhone] = useState("");
+  const [auth, setAuth] = useState("");
   const [account, setAccount] = useState("");
 
   const [idMsg, setIdMsg] = useState("");
@@ -33,54 +34,14 @@ const Signup = () => {
   const [pwConMsg, setPwConMsg] = useState("");
   const [nameMsg, setNameMsg] = useState("");
   const [phoneMsg, setPhoneMsg] = useState("");
-  const [acctMsg, setAcctMsg] = useState("");
+  const [authMsg, setAuthMsg] = useState("");
+  // const [acctMsg, setAcctMsg] = useState("");
   const [authNum, setAuthNum] = useState(null);
   const [veriCode, setVeriCode] = useState("");
 
   const dispatch = useDispatch();
 
-  const signup = async (e) => {
-    e.preventDefault();
-
-    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*$/.test(emailID)) {
-      setIdMsg("영문, 숫자로 이루어진 이메일 형태로 만들어주세요.");
-      return;
-    } else {
-      setIdMsg("");
-    }
-
-    if (password.length < 4) {
-      setPwMsg("최소 4자 이상으로 만들어주세요.");
-      return;
-    } else {
-      setPwMsg("");
-    }
-
-    if (password !== pwConfirm) {
-      setPwConMsg("비밀번호가 일치하지 않습니다.");
-      return;
-    } else {
-      setPwConMsg("");
-    }
-
-    if (userName.length === 0) {
-      setNameMsg("이름을 입력해주세요.");
-    } else {
-      setNameMsg("");
-    }
-
-    if (phone.length === 0) {
-      setPhoneMsg("전화번호를 입력해주세요.");
-    } else {
-      setPhoneMsg("");
-    }
-
-    // if (account.length === 0) {
-    //   setAcctMsg("계좌를 입력해주세요.");
-    // } else {
-    //   setAcctMsg("");
-    // }
-
+  const signup = async () => {
     const response = await fetch(`${url}/signup`, {
       method: "POST",
       credentials: "include",
@@ -90,6 +51,7 @@ const Signup = () => {
         userName,
         nickName,
         phone,
+        auth,
         account,
       }),
       headers: {
@@ -147,31 +109,32 @@ const Signup = () => {
       });
   };
 
-  const verifyCode = () => {
-    fetch(`${url}/verifycode`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone: phone, code: veriCode }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("verifycode not ok");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.success) {
-          setModalAlert("authsuccess");
-        } else {
-          setModalAlert("authfailed");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setModalAlert("authfailed");
+  const verifyCode = async () => {
+    try {
+      const response = await fetch(`${url}/verifycode`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phone: phone, code: veriCode }),
       });
+      if (!response.ok) {
+        throw new Error("인증번호가 올바르지 않습니다.");
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        setModalAlert("authsuccess");
+        return true;
+      } else {
+        setModalAlert("authfailed");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setModalAlert("authfailed");
+      return false;
+    }
   };
 
   //약관 관련 함수
@@ -241,12 +204,65 @@ const Signup = () => {
     return svcAgree && priAgree;
   };
 
-  const chkSubmit = (e) => {
+  const chkSubmit = async (e) => {
     e.preventDefault();
+
+    let isValid = true;
+
     if (!chkRequired()) {
-      setModalAlert("required");
+      setModalAlert("userrequired");
+      isValid = false;
+    }
+
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]*$/.test(emailID)) {
+      setIdMsg("영문, 숫자로 이루어진 이메일 형태로 만들어주세요.");
+      isValid = false;
     } else {
-      signup(e);
+      setIdMsg("");
+    }
+
+    if (password.length < 4) {
+      setPwMsg("최소 4자 이상으로 만들어주세요.");
+      isValid = false;
+    } else {
+      setPwMsg("");
+    }
+
+    if (password !== pwConfirm) {
+      setPwConMsg("비밀번호가 일치하지 않습니다.");
+      isValid = false;
+    } else {
+      setPwConMsg("");
+    }
+
+    if (userName.length === 0) {
+      setNameMsg("이름을 입력해주세요.");
+      isValid = false;
+    } else {
+      setNameMsg("");
+    }
+
+    if (phone.length === 0) {
+      setPhoneMsg("전화번호를 입력해주세요.");
+      isValid = false;
+    } else {
+      setPhoneMsg("");
+    }
+
+    if (veriCode.length === 0) {
+      setAuthMsg("인증번호를 입력해주세요.");
+      isValid = false;
+    } else {
+      setAuthMsg("");
+    }
+
+    if (isValid) {
+      const isAuthValid = await verifyCode();
+      if (!isAuthValid) {
+        setModalAlert("notauth");
+        return;
+      }
+      await signup();
     }
   };
 
@@ -373,8 +389,14 @@ const Signup = () => {
               }}
             />
           </div>
-          <div className={`${form.formGrup} ${phoneMsg ? mem.errorForm : ""}`}>
-            <span className={phoneMsg ? mem.errorTitle : ""}>연락처</span>
+          <div
+            className={`${form.formGrup} ${
+              phoneMsg || authMsg ? mem.errorForm : ""
+            }`}
+          >
+            <span className={phoneMsg || authMsg ? mem.errorTitle : ""}>
+              연락처
+            </span>
             <div className={mem.phoneInner}>
               <div className={`${mem.phoneAuth}`}>
                 <div className={`${form.formCon} ${mem.formCon}`}>
@@ -388,6 +410,7 @@ const Signup = () => {
                     maxLength='11'
                     onChange={phoneChange}
                   />
+                  <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
                 </div>
                 <button
                   type='button'
@@ -402,14 +425,14 @@ const Signup = () => {
                   <input
                     type='text'
                     className={`${mem.authInput} ${
-                      phoneMsg ? mem.errorInput : ""
+                      authMsg ? mem.errorInput : ""
                     }`}
                     placeholder='인증번호'
                     value={veriCode}
                     onChange={(e) => setVeriCode(e.target.value)}
                   />
                   {/* <p className={mem.time}>00:00</p> */}
-                  <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
+                  <p className={`${mem.error} ${mem.phoneMsg}`}>{authMsg}</p>
                 </div>
                 <button
                   type='button'
@@ -470,7 +493,7 @@ const Signup = () => {
           {modalAlert === "required" && (
             <ModalAlert
               close={closeAlert}
-              desc={"필수사항을 모두 선택해주세요!"}
+              desc={"약관 필수사항을 모두 선택해주세요!"}
               error={true}
               confirm={false}
             />
@@ -519,6 +542,14 @@ const Signup = () => {
             <ModalAlert
               close={closeAlert}
               desc={"인증번호를 다시 확인해주세요."}
+              error={true}
+              confirm={false}
+            />
+          )}
+          {modalAlert === "notauth" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"인증 확인 버튼을 눌러주세요."}
               error={true}
               confirm={false}
             />
