@@ -43,8 +43,6 @@ const Findjob = () => {
     dispatch(setCateType({ cateType: "onLine" }));
     dispatch(setCateField("all"));
     dispatch(setCateTalent("all"));
-    setLoadPage(1);
-    setJobList([]);
   };
 
   // 오프라인 일자리 리스트 호출
@@ -52,24 +50,24 @@ const Findjob = () => {
     dispatch(setCateType({ cateType: "offLine" }));
     dispatch(setCateField("all"));
     dispatch(setCateTalent("all"));
-    setLoadPage(1);
-    setJobList([]);
   };
 
   // 데이터 가져오기
   useEffect(() => {
-    fetchData();
-  }, [loadPage, cateType]);
+    setLoadPage(1);
+    fetchData(1, cateTalent, cateField, cateTime, true);
+  }, [cateTalent, cateField, cateTime, cateType]);
 
-  // 필터링 적용
   useEffect(() => {
-    filterJobs();
-  }, [jobList, cateTalent, cateField, cateType, cateTime]);
+    if (loadPage > 1) {
+      fetchData(loadPage, cateTalent, cateField, cateTime, false);
+    }
+  }, [loadPage]);
 
   const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
 
   // 데이터 가져오는 함수
-  const fetchData = async () => {
+  const fetchData = async (page, talent, field, cateTime, reset) => {
     if (loading) return;
     setLoading(true);
     try {
@@ -81,7 +79,7 @@ const Findjob = () => {
 
             const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
             const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
-            const response = await fetch(`${url}/job/${endpoint}?page=${loadPage}${queryType}`, {
+            const response = await fetch(`${url}/job/${endpoint}?page=${page}&talent=${talent}&field=${field}&startCateTime=${cateTime[0]}&endCateTime=${cateTime[1]}${queryType}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -91,17 +89,11 @@ const Findjob = () => {
             if (response.ok) {
               const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
               setTotalJobs(totalCount);
-              if (loadPage === 1) {
-                setJobList(data);
-              } else {
-                setJobList((prevJobList) => {
-                  const newJobList = [...prevJobList, ...data];
-                  return newJobList;
-                });
-              }
-              if (data.length === 0) {
-                setScrollEnabled(false);
-              }
+              setJobList((prevJobList) => {
+                if (reset) return data;
+                const newJobList = [...prevJobList, ...data];
+                return newJobList;
+              });
             } else {
               setModalAlert("notAuthorized");
             }
@@ -122,43 +114,14 @@ const Findjob = () => {
     }
   };
 
-  // 필터링 함수
-  const filterJobs = () => {
-    let filteredList = jobList;
-    if (cateType === "onLine") {
-      if (cateTalent !== "all") {
-        filteredList = filteredList.filter((job) => job.category.talent === cateTalent && job.category.jobType === "onLine");
-      }
-      if (cateField !== "all") {
-        filteredList = filteredList.filter((job) => job.category.field === cateField && job.category.jobType === "onLine");
-      }
-      if (cateTime[0] !== 0 || cateTime[1] !== 1440) {
-        const [startTime, endTime] = cateTime;
-        filteredList = filteredList.filter((job) => job.category.time >= startTime && job.category.time <= endTime && job.category.jobType === "onLine");
-      }
-    } else if (cateType === "offLine") {
-      if (cateTalent !== "all") {
-        filteredList = filteredList.filter((job) => job.category.talent === cateTalent && job.category.jobType === "offLine");
-      }
-      if (cateField !== "all") {
-        filteredList = filteredList.filter((job) => job.category.field === cateField && job.category.jobType === "offLine");
-      }
-      if (cateTime[0] !== 0 || cateTime[1] !== 1440) {
-        const [startTime, endTime] = cateTime;
-        filteredList = filteredList.filter((job) => job.category.time >= startTime && job.category.time <= endTime && job.category.jobType === "offLine");
-      }
-    }
-    enableScroll();
-    setFilteredJobList(filteredList);
-  };
-
   const searchTitle = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
           setLocation({ lat: latitude, lon: longitude });
-
+          dispatch(setCateField("all"));
+          dispatch(setCateTalent("all"));
           const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
           const endpoint = cateType === "offLine" ? "alloffLine" : "allonLine";
           const response = await fetch(`${url}/job/${endpoint}?titleText=${titleText}${queryType}`, {
@@ -169,7 +132,7 @@ const Findjob = () => {
           });
           const data = await response.json();
           if (response.ok) {
-            setFilteredJobList(Array.isArray(data) ? data : []);
+            setJobList(Array.isArray(data) ? data : []);
             setTitleText("");
             disableScroll();
           } else {
@@ -214,15 +177,13 @@ const Findjob = () => {
     }
   }, 200);
 
-  // 스크롤 이벤트 상태관리
+  /* 스크롤 이벤트 상태관리*/
   useEffect(() => {
-    if (scrollEnabled && !titleText) {
-      window.addEventListener("scroll", scrollEv);
-    }
+    window.addEventListener("scroll", scrollEv);
     return () => {
       window.removeEventListener("scroll", scrollEv);
     };
-  }, [jobList, totalJobs, scrollEnabled, titleText]);
+  }, [jobList, totalJobs, loading]);
 
   // 필터링 관련 상태 업데이트
   const talentChange = useCallback(
@@ -231,14 +192,12 @@ const Findjob = () => {
     },
     [dispatch]
   );
-
   const fieldChange = useCallback(
     (filter) => {
       dispatch(setCateField(filter));
     },
     [dispatch]
   );
-
   const timeChange = useCallback((filter) => {
     setCateTime(filter);
   }, []);
@@ -310,10 +269,10 @@ const Findjob = () => {
                 <Map jobList={jobList} location={location} />
               </li>
             )}
-            {filteredJobList.length === 0 ? (
+            {jobList.length === 0 ? (
               <li className="noneList">필터를 선택해 주세요. 조건에 맞는 일자리가 없습니다.</li>
             ) : (
-              filteredJobList.map((item) => (
+              jobList.map((item) => (
                 <li key={item._id}>
                   <JobItem item={item} findjob={true} />
                 </li>
