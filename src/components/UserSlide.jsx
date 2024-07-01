@@ -49,6 +49,7 @@ const UserSlide = ({ item }) => {
           if (response.ok) {
             const data = await response.json();
             setUserList(data);
+            
           } else {
             console.error("서버에러");
           }
@@ -59,6 +60,8 @@ const UserSlide = ({ item }) => {
     };
     fetchData();
   }, [itemAppli]);
+
+
 
   const showPopup = useCallback((content, user) => {
     setModal({ content, user });
@@ -126,7 +129,7 @@ const UserSlide = ({ item }) => {
         <Modal show={modal !== null} onClose={closePopup} type="userProfile">
           {modal.content === "userProfile" && (
             <div>
-              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} item={item} />
+              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} item={item}  />
             </div>
           )}
         </Modal>

@@ -30,6 +30,7 @@
 
 .info .title {
   padding-left: 1.6rem;
+  padding-right: 1.6rem;
   height: 3rem;
   display: flex;
   justify-content: space-between;
