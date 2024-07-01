@@ -5,6 +5,7 @@ import { userState } from "../store/userStore";
 import { url } from "../store/ref";
 import { useAuth } from "../assets/AuthContext";
 import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
 import Profile from "../components/Profile";
 import style from "../css/Header.module.css";
 
@@ -17,6 +18,7 @@ const Header = () => {
   const [isMypage, setIsMypage] = useState(false);
   const [isIconChanged, setIsIconChanged] = useState(false);
   const [modal, setModal] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
   const [visible, setVisible] = useState(true);
 
   const emailID = user ? user?.emailID : null;
@@ -29,6 +31,10 @@ const Header = () => {
   };
   const closePopup = () => {
     setModal(null);
+  };
+
+  const closeAlert = () => {
+    setModalAlert(null);
   };
 
   useEffect(() => {
@@ -54,7 +60,9 @@ const Header = () => {
             showPopup("profile");
           }
         } else {
-          console.error("fetchProfile 에러:", response.statusText);
+          const errorData = await response.json();
+          console.error("fetchProfile 에러:", errorData.message);
+          setModalAlert("invalidaccess");
         }
       } catch (error) {
         console.error("fetchProfile 중 오류 발생:", error);
@@ -212,14 +220,24 @@ const Header = () => {
       <button className={style.ham} onClick={mypageClick}>
         <i className={isIconChanged ? "fa-solid fa-x" : "fa-solid fa-bars"}></i>
       </button>
-      {modal && (
-        <Modal show={modal !== null} onclose={closePopup} type={"profile"}>
-          {modal === "profile" && (
-            <Profile
-              show={modal !== null}
-              onclose={closePopup}
-              mode={"등록"}
-              modal={true}
+      <Modal show={modal !== null} onClose={closePopup}>
+        {modal === "profile" && (
+          <Profile
+            show={modal !== null}
+            onclose={closePopup}
+            mode={"등록"}
+            modal={true}
+          />
+        )}
+      </Modal>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
+          {modalAlert === "invalidaccess" && (
+            <ModalAlert
+              close={closeAlert}
+              desc={"로그인 중 에러가 발생하였습니다."}
+              error={true}
+              confirm={false}
             />
           )}
         </Modal>

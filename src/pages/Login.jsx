@@ -34,6 +34,8 @@ const Login = () => {
         islogin();
         setRedirect(true);
       } else {
+        const errorData = await response.json();
+        console.log("로그인 중 에러 발생", errorData);
         setModalAlert("loginfailed");
       }
     } catch (error) {
