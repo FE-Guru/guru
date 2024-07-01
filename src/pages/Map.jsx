@@ -1,5 +1,6 @@
 /* global kakao */
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../css/Map.module.css";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
@@ -27,6 +28,7 @@ const formatDate = (dateString) => {
 };
 
 const Map = ({ jobList, location }) => {
+  const navigate = useNavigate(); // useNavigate 훅 사용
   const [map, setMap] = useState(null); // 지도 객체 상태
 
   // 지도 스크립트 로드 및 지도 초기화
@@ -90,7 +92,7 @@ const Map = ({ jobList, location }) => {
                 <div class="${styles.desc}">
                   <div class="${styles.ellipsis}">${job.location.address}</div>
                   <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
-                  <div><a href="${job.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
+                  <div><a href="#" class="${styles.link}" data-id="${job._id}">리스트로 이동 ></a></div>
                 </div>
               </div>
             </div>
@@ -115,17 +117,25 @@ const Map = ({ jobList, location }) => {
         const closeBtn = content.querySelector(`.${styles.close}`);
         closeBtn.addEventListener("click", closeOverlay);
 
+        // '리스트로 이동 >' 버튼 클릭 이벤트 추가
+        const listLink = content.querySelector(`.${styles.link}`);
+        listLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const jobId = e.target.getAttribute('data-id');
+          navigate(`/job-detail`, { state: { _id: jobId } });
+        });
+
         return marker;
       });
 
       // 클러스터러에 마커들을 추가합니다
       clusterer.addMarkers(markers);
     }
-  }, [map, jobList, location]);
+  }, [map, jobList, location, navigate]);
 
   return (
     <div>
-      <div id="map"></div>
+      <div id="map" className={styles.map}></div>
     </div>
   );
 };
