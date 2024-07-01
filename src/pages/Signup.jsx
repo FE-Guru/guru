@@ -118,12 +118,10 @@ const Signup = () => {
         },
         body: JSON.stringify({ phone: phone, code: veriCode }),
       });
-      if (!response.ok) {
-        throw new Error("인증번호가 올바르지 않습니다.");
-      }
 
       const data = await response.json();
-      if (data.success) {
+
+      if (response.ok && data.success) {
         setModalAlert("authsuccess");
         return true;
       } else {
