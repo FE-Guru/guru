@@ -224,13 +224,16 @@ const Detail = ({ _id, closeDetail }) => {
           <div className={style.titleWrap}>
             <div className={style.cateWrap}>
               <span className={`${style.status} ${style[appliStatus.val]}`}>{statusText}</span>
-              <span># {item?.category?.talent}</span>
-              <span># {item?.category?.field}</span>
+              <span>{item?.category?.talent}</span>
+              <span>{item?.category?.field}</span>
             </div>
             <h2>{item?.title}</h2>
             <label htmlFor="satisfied">
-              <strong>{item?.nickName}</strong>
-              <span>님</span>
+              <strong>
+                {item?.nickName}
+                <span>님</span>
+              </strong>
+              <span>신뢰도</span>
               <progress name="satisfied" max="100" value="70"></progress>
             </label>
           </div>
@@ -274,6 +277,9 @@ const Detail = ({ _id, closeDetail }) => {
             </p>
           </li>
         </ul>
+
+        <h2>상세설명</h2>
+        <pre>{item?.desc}</pre>
         <div className={`btnWrap ${style.detailBtnWRap}`}>
           {user?.emailID === "admin" && (
             <button
@@ -287,19 +293,34 @@ const Detail = ({ _id, closeDetail }) => {
           {btnWrapStatus === 1 && (
             <>
               {user?.emailID === item?.emailID ? (
-                <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id: item._id } })}>
-                  수정하기
-                </button>
+                <>
+                  <button className="btn tertiary" onClick={() => navigate("/job-edit", { state: { _id: item._id } })}>
+                    수정하기
+                  </button>
+                  <button className="btn primary" onClick={() => navigate(-1)}>
+                    뒤로가기
+                  </button>
+                </>
               ) : (
                 <>
                   {status?.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
-                    <button className="btn tertiary" onClick={appCancell}>
-                      지원취소(모집전)
-                    </button>
+                    <>
+                      <button className="btn tertiary" onClick={appCancell}>
+                        지원취소(모집전)
+                      </button>
+                      <button className="btn primary" onClick={() => navigate(-1)}>
+                        뒤로가기
+                      </button>
+                    </>
                   ) : (
-                    <button className="btn yellow" onClick={application}>
-                      지원하기
-                    </button>
+                    <>
+                      <button className="btn primary" onClick={() => navigate(-1)}>
+                        뒤로가기
+                      </button>
+                      <button className="btn yellow" onClick={application}>
+                        지원하기
+                      </button>
+                    </>
                   )}
                 </>
               )}
@@ -309,6 +330,9 @@ const Detail = ({ _id, closeDetail }) => {
             <>
               <button className="btn tertiary" onClick={() => setModalAlert("appCancell")}>
                 취소하기
+              </button>
+              <button className="btn primary" onClick={() => navigate(-1)}>
+                뒤로가기
               </button>
               <button
                 className="btn yellow"
@@ -330,7 +354,12 @@ const Detail = ({ _id, closeDetail }) => {
                   결제 및 완료
                 </button>
               ) : (
-                <p>상대방이 완료처리 전입니다.</p>
+                <>
+                  <p>상대방이 완료처리 전입니다.</p>
+                  <button className="btn primary" onClick={() => navigate(-1)}>
+                    뒤로가기
+                  </button>
+                </>
               )}
             </>
           )}
@@ -345,20 +374,20 @@ const Detail = ({ _id, closeDetail }) => {
                   결제 및 완료
                 </button>
               ) : (
-                <p>상대방이 완료처리 전입니다.</p>
+                <>
+                  <p>상대방이 완료처리 전입니다.</p>
+                  <button className="btn primary" onClick={() => navigate(-1)}>
+                    뒤로가기
+                  </button>
+                </>
               )}
             </>
           )}
-          {btnWrapStatus === -1 && <p>취소 된 공고입니다.</p>}
-          {btnWrapStatus === 5 && <p>완료 된 공고입니다.</p>}
-        </div>
-        <h2>상세설명</h2>
-        <pre>{item?.desc}</pre>
-        <div className={`btnWrap ${style.detailBtnWRap}`}>
-          <button className="btn primary" onClick={() => navigate("/findJob", { state: { _id: item._id } })}>
-            {" "}
-            목록으로
-          </button>
+          {btnWrapStatus === 5 || btnWrapStatus === -1 ? (
+            <button className="btn primary" onClick={() => navigate(-1)}>
+              뒤로가기
+            </button>
+          ) : null}
         </div>
       </section>
 

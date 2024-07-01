@@ -152,11 +152,12 @@ const JobItem = ({ item, jobOffer, findjob }) => {
 
   /*디테일페이지 모달 or 페이지이동*/
   const goDetail = () => {
-    if (findjob) {
-      navigate("/job-detail", { state: { _id: item._id } });
-    } else {
-      showPopup("getDetail");
-    }
+    // if (findjob) {
+    //   navigate("/job-detail", { state: { _id: item._id } });
+    // } else {
+    //   showPopup("getDetail");
+    // }
+    navigate("/job-detail", { state: { _id: item._id } });
   };
 
   return (
