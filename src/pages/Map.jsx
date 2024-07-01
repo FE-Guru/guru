@@ -27,9 +27,13 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString("ko-KR", options);
 };
 
+
+
 const Map = ({ jobList, location }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [map, setMap] = useState(null); // 지도 객체 상태
+
+  //console.log('jobList',jobList);
 
   // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
@@ -75,7 +79,7 @@ const Map = ({ jobList, location }) => {
         // 날짜 형식 수정 ex) 2024-06-24 ~ 2024-06-24
         const workStartDate = formatDate(job.workStartDate);
         const workEndDate = formatDate(job.workEndDate);
-        console.log(job);
+        // console.log(job);
 
         const content = document.createElement("div");
         content.innerHTML = `
