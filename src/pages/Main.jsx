@@ -127,7 +127,7 @@ const Main = () => {
       </section>
       <section className={style.guruBanner}>
         <div className="mw">
-          <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
+          <div className={style.BannerImg}><img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" /></div>
           <div className={style.BannerText}>
             <h3>
               <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="베너이미지" />
