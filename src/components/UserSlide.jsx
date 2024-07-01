@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import ModalAlert from "../components/ModalAlert";
 import UserProfile from "./UserProfile";
 import { url } from "../store/ref";
 
@@ -11,7 +10,6 @@ const UserSlide = ({ item }) => {
   const [itemAppli, setItemAppli] = useState();
   const [userList, setUserList] = useState([]);
   const [modal, setModal] = useState(null);
-  const [modalAlert, setModalAlert] = useState(null);
 
   const prevPage = () => {
     swiper?.slidePrev();
@@ -49,7 +47,6 @@ const UserSlide = ({ item }) => {
           if (response.ok) {
             const data = await response.json();
             setUserList(data);
-            
           } else {
             console.error("서버에러");
           }
@@ -61,26 +58,18 @@ const UserSlide = ({ item }) => {
     fetchData();
   }, [itemAppli]);
 
-
-
   const showPopup = useCallback((content, user) => {
     setModal({ content, user });
   }, []);
   const closePopup = useCallback(() => {
     setModal(null);
   }, []);
-  const showAlert = useCallback((content) => {
-    setModalAlert(content);
-  }, []);
-  const closeAlert = useCallback(() => {
-    setModalAlert(null);
-  }, [modalAlert]);
 
   const userProfile = (user) => {
     showPopup("userProfile", user);
   };
   return (
-    <div className="userSlide">
+    <div className='userSlide'>
       <Swiper
         centeredSlides={true}
         onSlideChange={(e) => setSwiperIndex(e.realIndex)}
@@ -100,36 +89,65 @@ const UserSlide = ({ item }) => {
             slidesPerView: 3,
             spaceBetween: 10,
           },
-        }}>
+        }}
+      >
         {userList.map((user) => (
           <SwiperSlide key={user?._id}>
-            <div className="userCard" onClick={() => userProfile(user)}>
-              <div className="thumb">
-                {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
+            <div className='userCard' onClick={() => userProfile(user)}>
+              <div className='thumb'>
+                {!user?.image ? (
+                  <img
+                    src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
+                    alt='이미지 없음'
+                  />
+                ) : (
+                  <img src={`${url}/${user?.image}`} alt='프로필 이미지' />
+                )}
               </div>
-              <div className="userInfo">
+              <div className='userInfo'>
                 <strong>
                   {user?.nickName}
                   <span>님</span>
                 </strong>
-                <label htmlFor="trust">신뢰도</label>
-                <progress id="trust" max="100" value="20"></progress>
+                <label htmlFor='trust'>신뢰도</label>
+                <progress id='trust' max='100' value='20'></progress>
               </div>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
-      <button className={`userPrevBtn ${swiperIndex === 0 ? "disabled" : ""}`} disabled={swiperIndex === 0} onClick={prevPage}>
-        <img src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`} alt="prev 없음" />
+      <button
+        className={`userPrevBtn ${swiperIndex === 0 ? "disabled" : ""}`}
+        disabled={swiperIndex === 0}
+        onClick={prevPage}
+      >
+        <img
+          src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`}
+          alt='prev 없음'
+        />
       </button>
-      <button className={`userNextBtn ${swiperIndex === userList.length - 1 ? "disabled" : ""}`} disabled={swiperIndex === userList.length - 1} onClick={nextPage}>
-        <img src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`} alt="next" />
+      <button
+        className={`userNextBtn ${
+          swiperIndex === userList.length - 1 ? "disabled" : ""
+        }`}
+        disabled={swiperIndex === userList.length - 1}
+        onClick={nextPage}
+      >
+        <img
+          src={`${process.env.PUBLIC_URL}/img/common/userSlide_arrow.svg`}
+          alt='next'
+        />
       </button>
       {modal && (
-        <Modal show={modal !== null} onClose={closePopup} type="userProfile">
+        <Modal show={modal !== null} onClose={closePopup} type='userProfile'>
           {modal.content === "userProfile" && (
             <div>
-              <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} item={item}  />
+              <UserProfile
+                show={modal !== null}
+                onClose={closePopup}
+                user={modal.user}
+                item={item}
+              />
             </div>
           )}
         </Modal>
