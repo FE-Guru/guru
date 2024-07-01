@@ -73,6 +73,7 @@ const Map = ({ jobList, location }) => {
         // 날짜 형식 수정 ex) 2024-06-24 ~ 2024-06-24
         const workStartDate = formatDate(job.workStartDate);
         const workEndDate = formatDate(job.workEndDate);
+        console.log(job);
 
         const content = document.createElement("div");
         content.innerHTML = `
