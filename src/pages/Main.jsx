@@ -126,10 +126,10 @@ const Main = () => {
         </div>
         <section className={style.guruBanner}>
           <div className="mw">
-            <img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" />
+            <div className={style.BannerImg}><img src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`} alt="베너이미지" /></div>
             <div className={style.BannerText}>
               <h3>
-                <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="베너이미지" />에서<br></br>
+                <img src={`${process.env.PUBLIC_URL}/img/common/logo.svg`} alt="베너이미지" />  에서<br></br>
                 하루만에 끝낼 수 있는 부업을 찾으세요.
               </h3>
               <p>하루 만에 완료할 수 있는 빠르고 쉬운 사이드잡을 찾을 수 있는 초단기 매칭 플랫폼 GURU를 만나보세요.

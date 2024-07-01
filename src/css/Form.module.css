@@ -7,6 +7,7 @@
   margin-bottom: 2.1rem;
 }
 .formStyle.formProfile {
+  background-color: #f2ac18;
   flex-direction: row;
   display: flex;
   gap: 1.5rem;
@@ -335,7 +336,23 @@ span.bur {
   padding-top: 2rem;
   min-height: 40vh;
 }
-
+@media (max-width: 1120px) {
+    .modalprofile {
+    width: 100%;
+  }
+}
+@media (max-width: 830px) {
+  .formStyle > div.formContainer {
+    padding: 3%;
+  }
+  .formStyle.formProfile .formContainer:first-of-type {
+  padding: 3%;
+}
+  .formStyle.formProfile {
+   flex-direction: column;
+   flex-wrap: wrap;
+  }
+}
 @media (max-width: 660px) {
   .formStyle > div.formContainer {
     padding: 2rem;
@@ -414,6 +431,7 @@ span.bur {
   .formGrup .error-message {
     padding-bottom: 1.6rem;
   }
+
 }
 @media (max-width: 370px) {
   .formStyle > div.formContainer {
