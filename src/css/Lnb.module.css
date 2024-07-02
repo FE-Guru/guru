@@ -1,24 +1,24 @@
-.lnb nav {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.lnb nav a {
+.lnb ul li a {
   font-size: 1.7rem;
   font-weight: 600;
-  line-height: 1.76;
+  padding: 1rem 2rem 1rem 0;
+  display: inline-block;
   color: var(--cr-g1);
   transition: 0.3s;
+  background-size: 100% 0.5rem, 0 0.5rem;
+  background-position: 100% 100%, 0 calc(100% - 0.7rem);
+  background-repeat: no-repeat;
+  transition: 0.5s;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(#ffc548c7, #ffc548c7);
 }
 
-.lnb nav a.on,
-.lnb nav a:hover {
+.lnb ul li a.on {
   color: var(--cr-b1);
-  text-decoration: underline;
-  text-decoration-color: var(--cr-m-y);
-  text-decoration-thickness: 5px;
-  text-underline-offset: -0.5px;
+  background-size: 0 0.5rem, calc(100% - 2rem) 0.5rem;
+}
+
+.lnb ul li a:hover {
+  background-size: 0 0.5rem, calc(100% - 2rem) 0.5rem;
 }
 
 .filter {

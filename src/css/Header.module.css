@@ -26,21 +26,21 @@
 }
 .header nav > a {
   font-size: 1.7rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--cr-bl1);
   padding: 1rem;
-  background-size: calc(100% - 2rem) 0.3rem, 0 0.3rem;
-  background-position: 100% 100%, 1rem 90%;
+  background-size: calc(100% - 2rem) 0.5rem, 0 0.5rem;
+  background-position: 100% 100%, center calc(100% - 0.7rem);
   background-repeat: no-repeat;
   transition: 0.5s;
   background-image: linear-gradient(transparent, transparent), linear-gradient(#ffc548c7, #ffc548c7);
 }
 .header nav > a.active {
-  color: #e3a407;
-  background-size: 0 0.3rem, calc(100% - 2rem) 0.3rem;
+  color: var(--cr-bl1);
+  background-size: 0 0.5rem, calc(100% - 2rem) 0.5rem;
 }
 .header nav > a:hover {
-  background-size: 0 0.3rem, calc(100% - 2rem) 0.3rem;
+  background-size: 0 0.5rem, calc(100% - 2rem) 0.5rem;
 }
 
 /* 로그인 전 */
