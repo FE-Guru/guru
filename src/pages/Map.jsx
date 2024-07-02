@@ -107,11 +107,7 @@ const Map = ({ jobList, location }) => {
           try {
             const response = await fetch(`${url}/job/findUserData/${job.emailID}`);
             const data = await response.json();
-            if (!data) {
-              return { image: "" };
-            }
-            const imgSrc = data.image !== "" ? `${url}/${data.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
-
+            const imgSrc = data?.image ? `${url}/${data.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
             const content = document.createElement("div");
             content.innerHTML = `
               <div class="${styles.wrap}">
