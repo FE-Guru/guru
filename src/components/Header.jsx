@@ -107,6 +107,7 @@ const Header = () => {
 
       if (response.ok) {
         localStorage.removeItem("token");
+        setVisible(false);
         dispatch(userState(null));
         isLogout();
         window.location.href = "/";

@@ -345,14 +345,24 @@ span.bur {
 }
 @media (max-width: 830px) {
   .formStyle > div.formContainer {
-    padding: 3%;
-  }
-  .formStyle.formProfile .formContainer:first-of-type {
-    padding: 3%;
+    padding: 1.6rem;
   }
   .formStyle.formProfile {
     flex-direction: column;
     flex-wrap: wrap;
+  }
+  .formStyle.formProfile .formContainer:first-of-type {
+    padding: 1rem 0 0 0;
+    border-width: 0;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .formStyle.formProfile .formContainer:first-of-type > span,
+  .formStyle.formProfile .formContainer:first-of-type > progress {
+    display: none;
+  }
+  .formProfile .formThumb {
+    margin-bottom: 0;
   }
 }
 @media (max-width: 660px) {

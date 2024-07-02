@@ -310,4 +310,32 @@
     left: 50%;
     transform: scaleX(-1) translateY(-50%);
   }
+  .userSlide .userCard {
+    flex: 1;
+  }
+  .userSlide .userCard .userInfo > * {
+    width: 100%;
+  }
+}
+@media (max-width: 410px) {
+  .userSlide {
+    padding-left: 1.2rem;
+    width: 170%;
+  }
+  .userSlide .swiper-wrapper {
+    left: -25%;
+  }
+  .userSlide .userNextBtn {
+    left: 50%;
+    transform: scaleX(-1) translateY(-50%);
+  }
+  .userSlide .userCard {
+    flex: 1;
+  }
+  .userSlide .userCard .userInfo > * {
+    width: 100%;
+  }
+  .userSlide .userCard .userInfo > label {
+    display: none;
+  }
 }

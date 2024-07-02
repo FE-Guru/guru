@@ -105,7 +105,7 @@ progress::-webkit-progress-value {
 .subPage {
   width: 100%;
   padding: 6.8rem 0 8rem 0;
-  min-height: calc(100vh - 9.7rem - 21rem);
+  min-height: calc(100vh - 9.7rem - 13.1rem);
 }
 .subPage > section {
   display: flex;
@@ -376,6 +376,7 @@ main .lnbCompo {
   .subPage {
     flex-wrap: wrap;
     padding: 4rem 0;
+    min-height: calc(100vh - 6.2rem - 18.7rem);
   }
   .subPage > section {
     gap: 2rem;

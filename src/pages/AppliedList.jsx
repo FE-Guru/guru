@@ -133,7 +133,7 @@ const AppliedList = () => {
           </div>
           <ul className="boxContainer">
             {jobList.length === 0 ? (
-              <li>지원한 이력이 없습니다.</li>
+              <li className="noneList">지원한 이력이 없습니다.</li>
             ) : (
               jobList.map((item) => (
                 <li key={item._id}>
