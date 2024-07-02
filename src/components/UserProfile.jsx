@@ -87,7 +87,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
     if (user?.emailID) {
       const fetchSatisfactionID = async () => {
         try {
-          const response = await fetch(`${url}/satisfied/${user.emailID}`, {
+          const response = await fetch(`${url}/satisfaction/${user.emailID}`, { 
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
