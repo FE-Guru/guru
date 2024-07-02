@@ -265,51 +265,29 @@ const Signup = () => {
   };
 
   return (
-    <main className='signup fullLayout'>
+    <main className="signup fullLayout">
       <h2>회원가입</h2>
-      <section className='boxCon'>
+      <section className="boxCon">
         <div className={mem.agreeStyle}>
           <h3>약관동의</h3>
-          <label htmlFor='all' className={form.formGrup}>
-            <input
-              type='checkbox'
-              id='all'
-              checked={allAgree}
-              onChange={handleAllChange}
-            />
+          <label htmlFor="all" className={form.formGrup}>
+            <input type="checkbox" id="all" checked={allAgree} onChange={handleAllChange} />
             모든 약관을 확인하고 전체 동의합니다.
           </label>
-          <label htmlFor='service'>
-            <input
-              type='checkbox'
-              id='service'
-              checked={svcAgree}
-              onChange={handleSvcChange}
-              required
-            />
+          <label htmlFor="service">
+            <input type="checkbox" id="service" checked={svcAgree} onChange={handleSvcChange} required />
             서비스이용약관에 동의합니다.
             <span className={mem.required}>(필수)</span>
             <span onClick={() => showPopup("content1")}>[전문보기]</span>
           </label>
-          <label htmlFor='privacy'>
-            <input
-              type='checkbox'
-              id='privacy'
-              checked={priAgree}
-              onChange={handlePriChange}
-              required
-            />
+          <label htmlFor="privacy">
+            <input type="checkbox" id="privacy" checked={priAgree} onChange={handlePriChange} required />
             개인정보취급방침에 동의합니다.
             <span className={mem.required}>(필수)</span>
             <span onClick={() => showPopup("content2")}>[전문보기]</span>
           </label>
-          <label htmlFor='marketing'>
-            <input
-              type='checkbox'
-              id='marketing'
-              checked={mktAgree}
-              onChange={handleMktChange}
-            />
+          <label htmlFor="marketing">
+            <input type="checkbox" id="marketing" checked={mktAgree} onChange={handleMktChange} />
             마케팅 활용에 동의합니다.
             <span className={mem.optional}>(선택)</span>
             <span onClick={() => showPopup("content3")}>[전문보기]</span>
@@ -322,8 +300,8 @@ const Signup = () => {
             <span className={idMsg ? mem.errorTitle : ""}>이메일(아이디)</span>
             <div className={`${form.formCon} `}>
               <input
-                type='email'
-                placeholder=' '
+                type="email"
+                placeholder=" "
                 value={emailID}
                 onChange={(e) => {
                   setEmailID(e.target.value);
@@ -336,8 +314,8 @@ const Signup = () => {
             <span className={pwMsg ? mem.errorTitle : ""}>비밀번호</span>
             <div className={form.formCon}>
               <input
-                type='password'
-                placeholder=' '
+                type="password"
+                placeholder=" "
                 value={password}
                 onChange={(e) => {
                   setPassWord(e.target.value);
@@ -347,13 +325,11 @@ const Signup = () => {
             </div>
           </div>
           <div className={`${form.formGrup} ${pwConMsg ? mem.errorForm : ""}`}>
-            <span className={pwConMsg ? mem.errorTitle : ""}>
-              비밀번호 확인
-            </span>
+            <span className={pwConMsg ? mem.errorTitle : ""}>비밀번호 확인</span>
             <div className={form.formCon}>
               <input
-                type='password'
-                placeholder=' '
+                type="password"
+                placeholder=" "
                 value={pwConfirm}
                 onChange={(e) => {
                   setPwConfirm(e.target.value);
@@ -366,8 +342,8 @@ const Signup = () => {
             <span className={nameMsg ? mem.errorTitle : ""}>이름</span>
             <div className={form.formCon}>
               <input
-                type='text'
-                placeholder=' '
+                type="text"
+                placeholder=" "
                 value={userName}
                 onChange={(e) => {
                   setuserName(e.target.value);
@@ -378,65 +354,32 @@ const Signup = () => {
           </div>
           <div className={form.formGrup}>
             <span>닉네임</span>
-            <input
-              type='text'
-              placeholder=' '
-              value={nickName}
-              onChange={(e) => {
-                setNickName(e.target.value);
-              }}
-            />
+            <div className={form.formCon}>
+              <input
+                type="text"
+                placeholder=" "
+                value={nickName}
+                onChange={(e) => {
+                  setNickName(e.target.value);
+                }}
+              />
+            </div>
           </div>
-          <div
-            className={`${form.formGrup} ${
-              phoneMsg || authMsg ? mem.errorForm : ""
-            }`}
-          >
-            <span className={phoneMsg || authMsg ? mem.errorTitle : ""}>
-              연락처
-            </span>
-            <div className={mem.phoneInner}>
-              <div className={`${mem.phoneAuth}`}>
-                <div className={`${form.formCon} ${mem.formCon}`}>
-                  <input
-                    type='text'
-                    className={`${mem.phoneInput} ${
-                      phoneMsg ? mem.errorInput : ""
-                    }`}
-                    placeholder='하이픈(-) 제외 숫자만 입력'
-                    value={phone}
-                    maxLength='11'
-                    onChange={phoneChange}
-                  />
-                  <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
-                </div>
-                <button
-                  type='button'
-                  className={`btn primary green ${mem.greenBtn}`}
-                  onClick={sendSms}
-                >
+          <div className={`${form.formGrup} ${phoneMsg || authMsg ? mem.errorForm : ""}`}>
+            <span className={phoneMsg || authMsg ? mem.errorTitle : ""}>연락처</span>
+            <div className={`${form.formCon} ${form.addItem}`}>
+              <div className={form.row}>
+                <input type="text" className={`${mem.phoneInput} ${phoneMsg ? mem.errorInput : ""}`} placeholder="하이픈(-) 제외 숫자만 입력" value={phone} maxLength="11" onChange={phoneChange} />
+                <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
+                <button type="button" className={form.formBtn1} onClick={sendSms}>
                   인증하기
                 </button>
               </div>
-              <div className={`${mem.phoneAuth}`}>
-                <div className={`${form.formCon} ${mem.formCon}`}>
-                  <input
-                    type='text'
-                    className={`${mem.authInput} ${
-                      authMsg ? mem.errorInput : ""
-                    }`}
-                    placeholder='인증번호'
-                    value={veriCode}
-                    onChange={(e) => setVeriCode(e.target.value)}
-                  />
-                  {/* <p className={mem.time}>00:00</p> */}
-                  <p className={`${mem.error} ${mem.phoneMsg}`}>{authMsg}</p>
-                </div>
-                <button
-                  type='button'
-                  className={`btn primary yellow ${mem.yellowBtn}`}
-                  onClick={verifyCode}
-                >
+              <div className={form.row}>
+                <input type="text" className={`${mem.authInput} ${authMsg ? mem.errorInput : ""}`} placeholder="인증번호" value={veriCode} onChange={(e) => setVeriCode(e.target.value)} />
+                {/* <p className={mem.time}>00:00</p> */}
+                <p className={`${mem.error} ${mem.phoneMsg}`}>{authMsg}</p>
+                <button type="button" className={form.formBtn2} onClick={verifyCode}>
                   확인
                 </button>
               </div>
@@ -458,10 +401,10 @@ const Signup = () => {
           </div> */}
         </div>
         <div className={`${mem.btnWrap} btnWrap`}>
-          <button type='button' className='btn tertiary' onClick={cancelBtn}>
+          <button type="button" className="btn tertiary" onClick={cancelBtn}>
             취소
           </button>
-          <button type='submit' className='btn primary yellow'>
+          <button type="submit" className="btn primary yellow">
             회원가입
           </button>
         </div>
@@ -487,71 +430,15 @@ const Signup = () => {
         )}
       </Modal>
       {modalAlert && (
-        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
-          {modalAlert === "required" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"약관 필수사항을 모두 선택해주세요!"}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "userrequired" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"입력하신 정보를 확인해주세요!"}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "alreadyexist" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"이미 존재하는 이메일아이디 입니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "authsend" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증번호 전송이 완료되었습니다."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "authsendfailed" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"입력하신 번호를 확인해주세요"}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "authsuccess" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증이 완료되었습니다."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "authfailed" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증번호를 다시 확인해주세요."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "notauth" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증 확인 버튼을 눌러주세요."}
-              error={true}
-              confirm={false}
-            />
-          )}
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "required" && <ModalAlert close={closeAlert} desc={"약관 필수사항을 모두 선택해주세요!"} error={true} confirm={false} />}
+          {modalAlert === "userrequired" && <ModalAlert close={closeAlert} desc={"입력하신 정보를 확인해주세요!"} error={true} confirm={false} />}
+          {modalAlert === "alreadyexist" && <ModalAlert close={closeAlert} desc={"이미 존재하는 이메일아이디 입니다."} error={true} confirm={false} />}
+          {modalAlert === "authsend" && <ModalAlert close={closeAlert} desc={"인증번호 전송이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authsendfailed" && <ModalAlert close={closeAlert} desc={"입력하신 번호를 확인해주세요"} error={true} confirm={false} />}
+          {modalAlert === "authsuccess" && <ModalAlert close={closeAlert} desc={"인증이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authfailed" && <ModalAlert close={closeAlert} desc={"인증번호를 다시 확인해주세요."} error={true} confirm={false} />}
+          {modalAlert === "notauth" && <ModalAlert close={closeAlert} desc={"인증 확인 버튼을 눌러주세요."} error={true} confirm={false} />}
         </Modal>
       )}
     </main>

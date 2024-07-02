@@ -191,96 +191,55 @@ const PersonalEdit = () => {
   };
 
   return (
-    <div className='contents'>
+    <div className="contents">
       <h3>{currentPage.pageName}</h3>
-      <div className='full'>
-        <form
-          className={` ${form.formStyle} ${mem.editForm}`}
-          onSubmit={editSubmit}
-        >
-          <div className={form.formContainer}>
-            <div className={`${form.formGrup} `}>
-              <span>이메일(아이디)</span>
-              <span className={mem.editSpan}>{emailID}</span>
+      <form className={` ${form.formStyle} ${mem.editForm}`} onSubmit={editSubmit}>
+        <div className={form.formContainer}>
+          <div className={`${form.formGrup} `}>
+            <span>이메일(아이디)</span>
+            <span className={mem.editSpan}>{emailID}</span>
+          </div>
+          <div className={form.formGrup}>
+            <span>이름</span>
+            <span className={mem.editSpan}>{userName}</span>
+          </div>
+          <div className={`${form.formGrup} `}>
+            <span>비밀번호</span>
+            <div className={form.formCon}>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} />
             </div>
-            <div className={form.formGrup}>
-              <span>이름</span>
-              <span className={mem.editSpan}>{userName}</span>
+          </div>
+          <div className={`${form.formGrup} `}>
+            <span>비밀번호 확인</span>
+            <div className={form.formCon}>
+              <input type="password" name="confirmPassword" value={confirmPassword} onChange={handleChange} />
             </div>
-            <div className={`${form.formGrup} `}>
-              <span>비밀번호</span>
-              <div className={form.formCon}>
-                <input
-                  type='password'
-                  name='password'
-                  value={formData.password}
-                  onChange={handleChange}
-                />
+          </div>
+          <div className={form.formGrup}>
+            <span>닉네임</span>
+            <div className={form.formCon}>
+              <input type="text" name="nickName" value={formData.nickName} onChange={handleChange} />
+            </div>
+          </div>
+          <div className={`${form.formGrup}`}>
+            <span>연락처</span>
+            <div className={`${form.formCon} ${form.addItem}`}>
+              <div className={form.row}>
+                <input type="text" className={mem.phoneInput} placeholder="하이픈(-) 제외 숫자만 입력" value={formData.phone} maxLength="11" onChange={phoneChange} />
+                <button type="button" className={form.formBtn1} onClick={sendSms}>
+                  인증하기
+                </button>
+              </div>
+              <div className={form.row}>
+                <input type="text" className={mem.authInput} placeholder="인증번호" value={veriCode} onChange={(e) => setVeriCode(e.target.value)} />
+                <button type="button" className={form.formBtn2} onClick={verifyCode}>
+                  확인
+                </button>
               </div>
             </div>
-            <div className={`${form.formGrup} `}>
-              <span>비밀번호 확인</span>
-              <div className={form.formCon}>
-                <input
-                  type='password'
-                  name='confirmPassword'
-                  value={confirmPassword}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className={form.formGrup}>
-              <span>닉네임</span>
-              <input
-                type='text'
-                name='nickName'
-                value={formData.nickName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className={`${form.formGrup}`}>
-              <span>연락처</span>
-              <div className={mem.phoneInner}>
-                <div className={mem.phoneAuth}>
-                  <div className={`${form.formCon} ${mem.formCon}`}>
-                    <input
-                      type='text'
-                      className={mem.phoneInput}
-                      placeholder='하이픈(-) 제외 숫자만 입력'
-                      value={formData.phone}
-                      maxLength='11'
-                      onChange={phoneChange}
-                    />
-                  </div>
-                  <button
-                    type='button'
-                    className={`btn primary green ${mem.greenBtn}`}
-                    onClick={sendSms}
-                  >
-                    인증하기
-                  </button>
-                </div>
-                <div className={mem.phoneAuth}>
-                  <div className={`${form.formCon} ${mem.formCon}`}>
-                    <input
-                      type='text'
-                      className={mem.authInput}
-                      placeholder='인증번호'
-                      value={veriCode}
-                      onChange={(e) => setVeriCode(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    type='button'
-                    className={`btn primary yellow ${mem.yellowBtn}`}
-                    onClick={verifyCode}
-                  >
-                    확인
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* <div className={form.formGrup}>
+          </div>
+
+          {/* <div className={form.formGrup}>
               <span>계좌번호</span>
               <input
                 type='text'
@@ -290,99 +249,29 @@ const PersonalEdit = () => {
                 onChange={handleChange}
               />
             </div> */}
-          </div>
-          <div className={mem.accountDel} onClick={accountDel}>
-            <span>회원탈퇴</span>
-          </div>
-          <div className={`${mem.btnWrap} btnWrap`}>
-            <button type='submit' className='btn primary yellow'>
-              정보수정
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div className={mem.accountDel} onClick={accountDel}>
+          <span>회원탈퇴</span>
+        </div>
+        <div className={`${mem.btnWrap} btnWrap`}>
+          <button type="submit" className="btn primary yellow">
+            정보수정
+          </button>
+        </div>
+      </form>
+
       {modalAlert && (
-        <Modal show={modalAlert !== null} onClose={closeAlert} type='alert'>
-          {modalAlert === "editsuccess" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"회원정보가 수정되었습니다."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "editfailed" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"회원정보 수정에 실패했습니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "pwnotmatch" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"비밀번호가 일치하지 않습니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "pwnotsubmit" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"정보수정을 위해 비밀번호를 입력해주세요."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "pwchanged" && (
-            <ModalAlert
-              close={closePwchanged}
-              desc={"비밀번호가 변경되었습니다. 다시 로그인해주세요."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "notchanged" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"변경된 정보가 없습니다."}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "authsend" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증번호 전송이 완료되었습니다."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "authsendfailed" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"입력하신 번호를 확인해주세요"}
-              error={true}
-              confirm={false}
-            />
-          )}
-          {modalAlert === "authsuccess" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증이 완료되었습니다."}
-              error={false}
-              confirm={true}
-            />
-          )}
-          {modalAlert === "authfailed" && (
-            <ModalAlert
-              close={closeAlert}
-              desc={"인증번호를 다시 확인해주세요."}
-              error={true}
-              confirm={false}
-            />
-          )}
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "editsuccess" && <ModalAlert close={closeAlert} desc={"회원정보가 수정되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "editfailed" && <ModalAlert close={closeAlert} desc={"회원정보 수정에 실패했습니다."} error={true} confirm={false} />}
+          {modalAlert === "pwnotmatch" && <ModalAlert close={closeAlert} desc={"비밀번호가 일치하지 않습니다."} error={true} confirm={false} />}
+          {modalAlert === "pwnotsubmit" && <ModalAlert close={closeAlert} desc={"정보수정을 위해 비밀번호를 입력해주세요."} error={true} confirm={false} />}
+          {modalAlert === "pwchanged" && <ModalAlert close={closePwchanged} desc={"비밀번호가 변경되었습니다. 다시 로그인해주세요."} error={false} confirm={true} />}
+          {modalAlert === "notchanged" && <ModalAlert close={closeAlert} desc={"변경된 정보가 없습니다."} error={true} confirm={false} />}
+          {modalAlert === "authsend" && <ModalAlert close={closeAlert} desc={"인증번호 전송이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authsendfailed" && <ModalAlert close={closeAlert} desc={"입력하신 번호를 확인해주세요"} error={true} confirm={false} />}
+          {modalAlert === "authsuccess" && <ModalAlert close={closeAlert} desc={"인증이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authfailed" && <ModalAlert close={closeAlert} desc={"인증번호를 다시 확인해주세요."} error={true} confirm={false} />}
         </Modal>
       )}
     </div>
