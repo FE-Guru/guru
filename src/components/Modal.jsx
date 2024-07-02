@@ -15,7 +15,7 @@ const Modal = ({ show, onClose, children, type }) => {
           </button>
         )}
         {children}
-        {(type === null || type === undefined || type === "" || type === "detail") && (
+        {(type === null || type === undefined || type === "") && (
           <div className={style.modalBtn}>
             <button className={`btn primary yellow ${style.modalInnerBtn}`} onClick={onClose}>
               확인
