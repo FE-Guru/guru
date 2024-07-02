@@ -558,10 +558,8 @@
   }
   .BannerText h3 {
     font-size: 2rem;
+    line-height: 142%;
     padding-bottom: 1rem;
-  }
-  .BannerText h3 br {
-    display: none;
   }
   .BannerText h3 img {
     width: 9rem;
