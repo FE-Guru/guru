@@ -142,8 +142,8 @@ const Main = () => {
           </div>
         </div>
       </section>
-      <section className={style.guruBanner}>
-        <div className='mw'>
+      <section className={`${style.mainBanner}`}>
+        <div className={`${style.guruBanner} mw`}>
           <div className={style.BannerImg}>
             <img
               src={`${process.env.PUBLIC_URL}/img/common/guru_banner.png`}
@@ -162,7 +162,7 @@ const Main = () => {
             <p>
               하루 만에 완료할 수 있는 빠르고 쉬운 사이드잡을 찾을 수 있는
               초단기 매칭 플랫폼 GURU를 만나보세요. 여가 시간에 돈을 벌고 싶은
-              사람들에게 이상적인 Guru는 유연하게 돈을 벌 수 있는 기회를
+              사람들에게 이상적인 GURU는 유연하게 돈을 벌 수 있는 기회를
               제공합니다.
             </p>
           </div>
