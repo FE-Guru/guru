@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import style from '../css/Modal.module.css';
 import { url } from '../store/ref';
-import { useSelector } from 'react-redux';
 
 axios.defaults.baseURL = url;
 
@@ -97,21 +96,12 @@ const SatisfactionModal = ({ onClose, item, author }) => {
   };
 
   // 피드백 버튼
+  // 피드백 버튼
   const handleFeedbackClick = (item) => {
-    if (item === 'etc') {
-      setFeedback((prevFeedback) => ({
-        ...prevFeedback,
-        etc: prevFeedback.etc === 1 ? 0 : 1,
-      }));
-      if (feedback.etc === 0) {
-        setOtherFeedbackText('');
-      }
-    } else {
-      setFeedback((prevFeedback) => ({
-        ...prevFeedback,
-        [item]: prevFeedback[item] === 1 ? 0 : 1,
-      }));
-    }
+    setFeedback((prevFeedback) => ({
+      ...prevFeedback,
+      [item]: prevFeedback[item] === 1 ? 0 : 1,
+    }));
   };
 
   const handleOtherFeedbackChange = (e) => {
@@ -136,6 +126,7 @@ const SatisfactionModal = ({ onClose, item, author }) => {
       etc: feedback.etc,
       etcDescription: feedback.etc ? otherFeedbackText : '',
     };
+    //console.log('Sending data:', satisfiedData);
 
     try {
       const response = await axios.post('/satisfied', satisfiedData);
@@ -143,7 +134,10 @@ const SatisfactionModal = ({ onClose, item, author }) => {
         window.location.reload();
       }
     } catch (error) {
-      console.error('Error submitting feedback:', error);
+      console.error(
+        'Error submitting feedback:',
+        error.response ? error.response.data : error.message
+      );
       onClose();
     }
   };
