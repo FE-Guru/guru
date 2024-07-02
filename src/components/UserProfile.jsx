@@ -31,6 +31,29 @@ const UserProfile = ({ show, onClose, user, item }) => {
     }
   }, [dispatch, item._id]);
 
+  const calculateSatisfactionStats = (data) => {
+    const stats = {
+      kind: 0,
+      onTime: 0,
+      highQuality: 0,
+      unkind: 0,
+      notOnTime: 0,
+      lowQuality: 0,
+    };
+  
+    data.forEach(item => {
+      stats.kind += item.kind;
+      stats.onTime += item.onTime;
+      stats.highQuality += item.highQuality;
+      stats.unkind += item.unkind;
+      stats.notOnTime += item.notOnTime;
+      stats.lowQuality += item.lowQuality;
+    });
+  
+    return stats;
+  };
+  
+
   //만족도 조사 불러오기 - user.emailID
   const fetchSatisfaction = useCallback(async () => {
     try {
@@ -44,8 +67,9 @@ const UserProfile = ({ show, onClose, user, item }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Satisfaction data received:', data); // 확인 로그 추가
-        setSatisfactionData(data);
+        console.log('Satisfaction data received:', data); // 해당 이메일 관련 만족도 조사 찾기
+        
+        setSatisfactionData(calculateSatisfactionStats(data));
         setModalAlert('satisfaction');
       } else {
         console.error('Failed to fetch satisfaction data:', response.status);
@@ -57,11 +81,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
     }
   }, [user.emailID]);
 
-  useEffect(() => {
-    if (show) {
-      fetchSatisfaction();
-    }
-  }, [show, fetchSatisfaction]);
+
 
   const showAlert = useCallback((content) => {
     setModalAlert(content);
