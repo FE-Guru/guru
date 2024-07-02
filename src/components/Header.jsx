@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userState } from "../store/userStore";
 import { url } from "../store/ref";
@@ -141,10 +141,18 @@ const Header = () => {
       </h1>
       <div className={style.gnb}>
         <nav>
-          <Link to="/findjob">일자리찾기</Link>
-          <Link to="/applied-list">지원목록</Link>
-          <Link to="/job-offer">구인관리</Link>
-          <Link to="/job-write">구인글 작성</Link>
+          <NavLink to="/findjob" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
+            일자리찾기
+          </NavLink>
+          <NavLink to="/applied-list" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
+            지원목록
+          </NavLink>
+          <NavLink to="/job-offer" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
+            구인관리
+          </NavLink>
+          <NavLink to="/job-write" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
+            구인글 작성
+          </NavLink>
         </nav>
         {isAuthenticated ? (
           <div className={style.loginDiv}>
