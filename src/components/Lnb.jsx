@@ -65,13 +65,15 @@ const Lnb = ({ onOFfFilter, statusFilter, onOffChange, statusChange, lnbHas, lnb
         </div>
       ) : null}
       {subMenu.length > 0 && (
-        <nav>
+        <ul>
           {subMenu.map((menu) => (
-            <Link to={menu.path} className={`${style.menuLink} ${currentPage.pageName === menu.pageName ? style.on : ""}`} key={menu.pageName}>
-              {menu.pageName}
-            </Link>
+            <li key={menu.pageName}>
+              <Link to={menu.path} className={`${style.menuLink} ${currentPage.pageName === menu.pageName ? style.on : ""}`}>
+                {menu.pageName}
+              </Link>
+            </li>
           ))}
-        </nav>
+        </ul>
       )}
     </div>
   );
