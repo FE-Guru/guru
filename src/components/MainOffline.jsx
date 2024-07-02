@@ -45,7 +45,7 @@ const MainOffline = () => {
   return (
     <div className={style.offWrap}>
       <div className={style.mainMap}>
-        <Map jobList={jobList} location={location} setLocation={setLocation} setJobList={setJobList} endpoint={"mainOffline"} />
+        <Map jobList={jobList} location={location} />
       </div>
       <ul className={style.jobList}>
         {jobList.length === 0 ? (

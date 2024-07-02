@@ -14,10 +14,11 @@ const Filter = ({ cateTime, timeChange, lnbHandler }) => {
   const [show1, setShow1] = useState(true);
   const [show2, setShow2] = useState(true);
   const [show3, setShow3] = useState(true);
-  const [values, setValues] = useState([cateTime]);
+  const [values, setValues] = useState([0, 1440]);
 
   useEffect(() => {
-    setValues(cateTime);
+    const validValues = cateTime.map((value) => Math.max(0, Math.min(1440, Math.round(value / 120) * 120)));
+    setValues(validValues);
   }, [cateTime]);
   useEffect(() => {}, [cateTalent, cateField]);
 
@@ -76,8 +77,9 @@ const Filter = ({ cateTime, timeChange, lnbHandler }) => {
                     max={1440}
                     values={values}
                     onChange={(values) => {
-                      setValues(values);
-                      timeChange(values);
+                      const validValues = values.map((value) => Math.max(0, Math.min(1440, Math.round(value / 120) * 120)));
+                      setValues(validValues);
+                      timeChange(validValues);
                     }}
                     renderTrack={({ props, children }) => {
                       const { key, ...restProps } = props;
