@@ -147,7 +147,7 @@ const JobOffer = () => {
           </div>
           <ul className="boxContainer">
             {jobList.length === 0 ? (
-              <li>등록된 구인글이 없습니다.</li>
+              <li className="noneList">등록된 구인글이 없습니다.</li>
             ) : (
               jobList.map((item) => (
                 <li key={item._id}>

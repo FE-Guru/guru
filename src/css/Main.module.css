@@ -75,11 +75,12 @@
 
 .offWrap {
   display: flex;
+  align-items: flex-start;
   gap: 2.5rem;
-  height: 66.5rem;
 }
 .offWrap .mainMap {
   width: calc(50% - 2.5rem / 2);
+  height: 59.3rem;
   border: 1px solid #ccc;
   border-radius: 1rem;
   overflow: hidden;

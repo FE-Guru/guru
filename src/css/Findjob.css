@@ -142,6 +142,7 @@
   border-radius: 1rem;
   padding: 4rem;
 }
+.boxContainer .noneList,
 .midSection .contents ul .noneList {
   background: var(--cr-w);
   padding: 3rem;
@@ -250,6 +251,7 @@
     border-radius: 0.4rem;
     padding: 0 1.4rem;
   }
+  .boxContainer .noneList,
   .midSection .contents ul .noneList {
     font-size: 1.6rem;
     text-align: center;
