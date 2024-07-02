@@ -370,18 +370,17 @@ const Signup = () => {
             <div className={`${form.formCon} ${form.addItem}`}>
               <div className={form.row}>
                 <input type="text" className={`${mem.phoneInput} ${phoneMsg ? mem.errorInput : ""}`} placeholder="하이픈(-) 제외 숫자만 입력" value={phone} maxLength="11" onChange={phoneChange} />
-                <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
                 <button type="button" className={form.formBtn1} onClick={sendSms}>
                   인증하기
                 </button>
+                <p className={`${mem.error} ${mem.phoneMsg}`}>{phoneMsg}</p>
               </div>
               <div className={form.row}>
                 <input type="text" className={`${mem.authInput} ${authMsg ? mem.errorInput : ""}`} placeholder="인증번호" value={veriCode} onChange={(e) => setVeriCode(e.target.value)} />
-                {/* <p className={mem.time}>00:00</p> */}
-                <p className={`${mem.error} ${mem.phoneMsg}`}>{authMsg}</p>
                 <button type="button" className={form.formBtn2} onClick={verifyCode}>
                   확인
                 </button>
+                <p className={`${mem.error} ${mem.phoneMsg}`}>{authMsg}</p>
               </div>
             </div>
           </div>

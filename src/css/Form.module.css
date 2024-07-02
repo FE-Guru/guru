@@ -146,6 +146,9 @@ span.bur {
 .formGrup .formCon.addItem .row > input {
   flex: 1;
 }
+.formGrup .formCon.addItem .row > p {
+  width: 100%;
+}
 .formGrup .formCon.addItem span.red {
   color: var(--cr-red);
 }
@@ -336,7 +339,7 @@ span.bur {
   min-height: 40vh;
 }
 @media (max-width: 1120px) {
-    .modalprofile {
+  .modalprofile {
     width: 100%;
   }
 }
@@ -345,11 +348,11 @@ span.bur {
     padding: 3%;
   }
   .formStyle.formProfile .formContainer:first-of-type {
-  padding: 3%;
-}
+    padding: 3%;
+  }
   .formStyle.formProfile {
-   flex-direction: column;
-   flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: wrap;
   }
 }
 @media (max-width: 660px) {
