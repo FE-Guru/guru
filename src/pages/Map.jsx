@@ -32,7 +32,35 @@ const Map = ({ jobList, location }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [map, setMap] = useState(null); // 지도 객체 상태
 
+  //console.log('jobList',jobList);
+
   // 지도 스크립트 로드 및 지도 초기화
+  useEffect(() => {
+    loadKakaoMapScript(() => {
+      const mapContainer = document.getElementById("map");
+      if (!mapContainer) {
+        console.error("Map container not found");
+        return;
+      }
+      const mapOption = {
+        center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
+        level: 3,
+      };
+
+      const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
+      setMap(mapInstance);
+    });
+  }, [location.lat, location.lon]);
+
+  // 지도의 중심을 현재 위치로 업데이트
+  useEffect(() => {
+    if (map) {
+      const moveLatLon = new kakao.maps.LatLng(location.lat, location.lon);
+      map.setCenter(moveLatLon);
+    }
+  }, [location, map]);
+
+  // 지도와 마커 클러스터러 설정
   useEffect(() => {
     loadKakaoMapScript(() => {
       const mapContainer = document.getElementById("map");
@@ -79,8 +107,11 @@ const Map = ({ jobList, location }) => {
           try {
             const response = await fetch(`${url}/job/findUserData/${job.emailID}`);
             const data = await response.json();
-            console.log("data", data.image);
-            const imgSrc = data.image ? `${url}/${data.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
+            if (!data) {
+              return { image: "" };
+            }
+            const imgSrc = data.image !== "" ? `${url}/${data.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
+
             const content = document.createElement("div");
             content.innerHTML = `
               <div class="${styles.wrap}">
