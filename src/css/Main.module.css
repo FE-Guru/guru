@@ -344,12 +344,21 @@
     width: 100%;
   }
 
-  .mainBanner {
-    padding: 2rem;
+  .guruBanner {
+    display: flex;
+    justify-content: center;
+  }
+  .BannerImg {
+    margin-top: 15px;
   }
 
-  .guruBanner {
-    justify-content: center;
+  .BannerText h3 {
+    line-height: 4rem;
+  }
+
+  .BannerText p {
+    font-size: 2rem;
+    line-height: 1.25;
   }
 }
 @media (max-width: 990px) {
