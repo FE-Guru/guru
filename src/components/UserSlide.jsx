@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import UserProfile from "./UserProfile";
 import { url } from "../store/ref";
+import ProgressBar from "./ProgressBar";
 
 const UserSlide = ({ item }) => {
   const [swiperIndex, setSwiperIndex] = useState(0);
@@ -102,7 +103,7 @@ const UserSlide = ({ item }) => {
                   <span>님</span>
                 </strong>
                 <label htmlFor="trust">신뢰도</label>
-                <progress id="trust" max="100" value="20"></progress>
+                <ProgressBar user={user}/>
               </div>
             </div>
           </SwiperSlide>
