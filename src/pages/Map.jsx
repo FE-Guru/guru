@@ -1,5 +1,5 @@
 /* global kakao */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { url } from "../store/ref";
 import styles from "../css/Map.module.css";
@@ -31,8 +31,7 @@ const formatDate = (dateString) => {
 const Map = ({ jobList, location }) => {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [map, setMap] = useState(null); // 지도 객체 상태
-
-  //console.log('jobList',jobList);
+  const [markers, setMarkers] = useState([]); // 마커 상태
 
   // 지도 스크립트 로드 및 지도 초기화
   useEffect(() => {
@@ -62,112 +61,93 @@ const Map = ({ jobList, location }) => {
 
   // 지도와 마커 클러스터러 설정
   useEffect(() => {
-    loadKakaoMapScript(() => {
-      const mapContainer = document.getElementById("map");
-      if (!mapContainer) {
-        console.error("Map container not found");
-        return;
-      }
-      const mapOption = {
-        center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
-        level: 3,
-      };
-
-      const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
-      setMap(mapInstance);
-    });
-  }, [location.lat, location.lon]);
-
-  // 지도의 중심을 현재 위치로 업데이트
-  useEffect(() => {
-    if (map) {
-      const moveLatLon = new kakao.maps.LatLng(location.lat, location.lon);
-      map.setCenter(moveLatLon);
-    }
-  }, [location, map]);
-
-  // 지도와 마커 클러스터러 설정
-  useEffect(() => {
-    if (map && jobList.length > 0) {
-      // 마커 클러스터러를 생성합니다
+    if (map && jobList.length > 0 && markers.length === 0) {
       const clusterer = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
         minLevel: 4,
       });
 
-      const markers = jobList.map((job) => {
+      const fetchUser = async (emailID) => {
+        try {
+          const response = await fetch(`${url}/job/findUserData/${emailID}`);
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return await response.json();
+        } catch (error) {
+          console.error("Failed to fetch data", error);
+          return null;
+        }
+      };
+
+      const createMarker = async (job) => {
+        const userData = await fetchUser(job.emailID);
+        if (!userData) return null;
+
+        const imgSrc = userData.image ? `${url}/${userData.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
         const marker = new kakao.maps.Marker({
           position: new kakao.maps.LatLng(job.location.mapY, job.location.mapX), // 각 일거리의 좌표
         });
+
         // 날짜 형식 수정 ex) 2024-06-24 ~ 2024-06-24
         const workStartDate = formatDate(job.workStartDate);
         const workEndDate = formatDate(job.workEndDate);
-        const fetchUser = async () => {
-          try {
-            const response = await fetch(`${url}/job/findUserData/${job.emailID}`);
-            const data = await response.json();
-            const imgSrc = data?.image ? `${url}/${data.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
-            const content = document.createElement("div");
-            content.innerHTML = `
-              <div class="${styles.wrap}">
-                <div class="${styles.info}">
-                  <div class="${styles.title}">
-                    ${job.title}
-                    <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
-                  </div>
-                  <div class="${styles.body}">
-                    <div class="${styles.img}">
-                      <img src="${imgSrc}" >
-                    </div>
-                    <div class="${styles.desc}">
-                      <div class="${styles.ellipsis}">${job.location.address}</div>
-                      <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
-                      <div><a href="#" class="${styles.link}" data-id="${job._id}">리스트로 이동 ></a></div>
-                    </div>
-                  </div>
+
+        const content = document.createElement("div");
+        content.innerHTML = `
+          <div class="${styles.wrap}">
+            <div class="${styles.info}">
+              <div class="${styles.title}">
+                ${job.title}
+                <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
+              </div>
+              <div class="${styles.body}">
+                <div class="${styles.img}">
+                  <img src="${imgSrc}" >
+                </div>
+                <div class="${styles.desc}">
+                  <div class="${styles.ellipsis}">${job.location.address}</div>
+                  <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
+                  <div><a href="#" class="${styles.link}" data-id="${job._id}">리스트로 이동 ></a></div>
                 </div>
               </div>
-            `;
+            </div>
+          </div>
+        `;
 
-            const overlay = new kakao.maps.CustomOverlay({
-              content: content,
-              position: marker.getPosition(),
-            });
+        const overlay = new kakao.maps.CustomOverlay({
+          content: content,
+          position: marker.getPosition(),
+        });
 
-            kakao.maps.event.addListener(marker, "click", function () {
-              overlay.setMap(map);
-            });
+        kakao.maps.event.addListener(marker, "click", function () {
+          overlay.setMap(map);
+        });
 
-            // 오버레이 닫기 함수
-            function closeOverlay() {
-              overlay.setMap(null);
-            }
+        const closeBtn = content.querySelector(`.${styles.close}`);
+        closeBtn.addEventListener("click", () => overlay.setMap(null));
 
-            // 닫기 버튼에 이벤트 리스너 추가
-            const closeBtn = content.querySelector(`.${styles.close}`);
-            closeBtn.addEventListener("click", closeOverlay);
+        const listLink = content.querySelector(`.${styles.link}`);
+        listLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          const jobId = e.target.getAttribute("data-id");
+          navigate(`/job-detail`, { state: { _id: jobId } });
+        });
 
-            // '리스트로 이동 >' 버튼 클릭 이벤트 추가
-            const listLink = content.querySelector(`.${styles.link}`);
-            listLink.addEventListener("click", (e) => {
-              e.preventDefault();
-              const jobId = e.target.getAttribute("data-id");
-              navigate(`/job-detail`, { state: { _id: jobId } });
-            });
-          } catch (error) {
-            console.error("Failed to fetch data", error);
-          }
-        };
-        // 데이터 불러오기 호출
-        fetchUser();
         return marker;
-      });
+      };
 
-      // 클러스터러에 마커들을 추가합니다
-      clusterer.addMarkers(markers);
+      const createMarkers = async () => {
+        const newMarkers = await Promise.all(jobList.map(createMarker));
+        const filteredMarkers = newMarkers.filter((marker) => marker !== null);
+        setMarkers(filteredMarkers);
+        clusterer.addMarkers(filteredMarkers);
+      };
+
+      createMarkers();
     }
-  }, [map, jobList, location, navigate]);
+  }, [map, jobList, location, navigate, markers]);
 
   return (
     <div>

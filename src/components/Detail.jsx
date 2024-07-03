@@ -8,6 +8,7 @@ import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import SatisfactionModal from "./SatisfactionModal";
 import Map from "../pages/Map";
+
 import style from "../css/Detail.module.css";
 
 const Detail = ({ _id, closeDetail }) => {
@@ -23,6 +24,7 @@ const Detail = ({ _id, closeDetail }) => {
   const [status, setStatus] = useState(item?.applicants || []);
   const [btnWrapStatus, setBtnWrapStatus] = useState(0);
   const [location, setLocation] = useState({});
+  const [chatRoom, setChatRoom] = useState(null); // 채팅방 상태 추가
   const data = useSelector((state) => state.findjob);
   const memoizedData = useMemo(() => data[item?._id] || {}, [data, item?._id]);
 
@@ -80,10 +82,6 @@ const Detail = ({ _id, closeDetail }) => {
   }, [item, dispatch]);
 
   useEffect(() => {
-    if (item) {
-      setStatus(item.applicants || []);
-      setBtnWrapStatus(item.status || 0);
-    }
     if (item?.emailID) {
       const fetchUser = async () => {
         try {
@@ -97,6 +95,7 @@ const Detail = ({ _id, closeDetail }) => {
       fetchUser();
     }
   }, [item]);
+
   const showAlert = useCallback((content) => {
     setModalAlert(content);
   }, []);
@@ -286,7 +285,7 @@ const Detail = ({ _id, closeDetail }) => {
                 {item?.location.address} {item?.location.detailedAddress}
               </span>
             </h2>
-            <Map jobList={[item]} location={location} />
+            {item && location.lat && location.lon && <Map jobList={[item]} location={location} />}
           </div>
         )}
         <div className={`btnWrap ${style.detailBtnWRap}`}>
@@ -400,7 +399,6 @@ const Detail = ({ _id, closeDetail }) => {
           ) : null}
         </div>
       </section>
-
       {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlertModal} type="alert">
