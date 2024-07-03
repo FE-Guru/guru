@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCateType } from "../store/findjob";
 import { setCateField, setCateTalent } from "../store/filter";
 import { url } from "../store/ref";
+import Loading from "../components/Loading";
 import JobItem from "../components/JobItem";
 import Filter from "../components/Filter";
 import Map from "./Map";
@@ -214,9 +215,9 @@ const Findjob = () => {
   const closeAlert = useCallback(() => {
     setModalAlert(null);
   }, []);
-
   return (
     <main className={`${cateType} findjob  ${lnbHas ? "has" : ""}`}>
+      {loading && <Loading />}
       <section className="topSection">
         <div className="mw">
           <h2>
@@ -270,7 +271,7 @@ const Findjob = () => {
               </li>
             )}
             {jobList.length === 0 ? (
-              <li className="noneList">필터를 선택해 주세요. 조건에 맞는 일자리가 없습니다.</li>
+              <li className="noneList">조건에 맞는 일자리가 없습니다.</li>
             ) : (
               jobList.map((item) => (
                 <li key={item._id}>

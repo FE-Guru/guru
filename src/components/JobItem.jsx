@@ -52,6 +52,8 @@ const JobItem = ({ item, jobOffer, findjob }) => {
     appliStatus = { text: "완료", val: "stat5" };
   } else if (item.status === -1) {
     appliStatus = { text: "취소", val: "stat-1" };
+  } else if (item.status === -2) {
+    appliStatus = { text: "지원마감", val: "stat-2" };
   } else {
     appliStatus = { text: memoizedData.dFormat, val: "stat1" };
   }
@@ -150,19 +152,13 @@ const JobItem = ({ item, jobOffer, findjob }) => {
     setModalUser(null);
   }, []);
 
-  /*디테일페이지 모달 or 페이지이동*/
-  const goDetail = () => {
-    // if (findjob) {
-    //   navigate("/job-detail", { state: { _id: item._id } });
-    // } else {
-    //   showPopup("getDetail");
-    // }
-    navigate("/job-detail", { state: { _id: item._id } });
-  };
-
   return (
     <div className={`${style.itemWrap} ${findjob ? style.findJob : ""}`}>
-      <div className={`${style.jobItem} ${style[item?.category?.jobType]}`} onClick={goDetail}>
+      <div
+        className={`${style.jobItem} ${style[item?.category?.jobType]}`}
+        onClick={() => {
+          navigate("/job-detail", { state: { _id: item._id } });
+        }}>
         <div className={style.jobInfo}>
           {!jobOffer ? (
             <div className={style.thumb}>

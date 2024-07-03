@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { url } from "../store/ref";
+import Loading from "../components/Loading";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -37,12 +38,11 @@ export function AuthProvider({ children }) {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
   };
+  if (loading) {
+    return <Loading />;
+  }
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, islogin, isLogout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ isAuthenticated, islogin, isLogout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
