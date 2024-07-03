@@ -11,6 +11,10 @@ const UserProfile = ({ show, onClose, user, item }) => {
   const dispatch = useDispatch();
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
+
+  const [trustScore, setTrustScore] = useState();
+  const [totalReviews, setTotalReviews] = useState();
+
   const [satisfactionData, setSatisfactionData] = useState({
     kind: 0,
     onTime: 0,
@@ -57,6 +61,16 @@ const UserProfile = ({ show, onClose, user, item }) => {
     }
   }, [item]);
 
+  //신뢰도 계산 함수
+  const calculateTrustScore = (data) => {
+    const totalStarRating = data.reduce(
+      (sum, item) => sum + item.starRating,
+      0
+    ); // 총 별점 합산
+    const trustScore = totalStarRating / data.length; // 별점의 평균 계산
+    return trustScore;
+  };
+
   // 만족도 조사 계산 함수
   const calculateSatisfactionStats = (data) => {
     const stats = {
@@ -67,9 +81,10 @@ const UserProfile = ({ show, onClose, user, item }) => {
       notOnTime: 0,
       lowQuality: 0,
     };
-
+  
     let reviews = []; // 리뷰 데이터 저장용 배열
-
+    let totalReviews = 0; // 리뷰 총 개수
+  
     data.forEach((item) => {
       stats.kind += item.kind;
       stats.onTime += item.onTime;
@@ -77,32 +92,40 @@ const UserProfile = ({ show, onClose, user, item }) => {
       stats.unkind += item.unkind;
       stats.notOnTime += item.notOnTime;
       stats.lowQuality += item.lowQuality;
-      reviews.push(item.etcDescription); // 리뷰 데이터 추가
+      if (item.etc === 1 && item.etcDescription) {
+        reviews.push(item.etcDescription); // 리뷰 데이터 추가
+        totalReviews++; // 리뷰 개수 증가
+      }
     });
-
-    return { stats, reviews }; // 리뷰 데이터 포함하여 반환
+  
+    return { stats, reviews, totalReviews }; // 리뷰 데이터 및 총 개수 포함하여 반환
   };
-
+  
+  //만족도 조사 데이터 불러오고 할당
   useEffect(() => {
     if (user?.emailID) {
       const fetchSatisfactionID = async () => {
         try {
-          const response = await fetch(`${url}/satisfied/${user.emailID}`, { 
+          const response = await fetch(`${url}/satisfied/${user.emailID}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
             },
             credentials: 'include',
           });
-
+  
           if (response.ok) {
             const data = await response.json();
-            console.log('Satisfaction data received:', data); // 해당 이메일 관련 만족도 조사 찾기
-
-            const { stats, reviews } = calculateSatisfactionStats(data);
+            console.log('data--', data);
+            // 받아온 해당 이메일 관련 만족도 조사 출력
+            const { stats, reviews, totalReviews } = calculateSatisfactionStats(data);
             setSatisfactionData(stats);
             setReviews(reviews); // 리뷰 데이터 설정
-            console.log('계산 완료----', stats);
+            setTotalReviews(totalReviews); // 총 리뷰 개수 설정
+  
+            const trustScore = calculateTrustScore(data); // 신뢰도 계산
+            setTrustScore(trustScore); // 신뢰도 상태 설정
+            // console.log('Trust Score:', trustScore); 
           } else {
             console.error(
               'Failed to fetch satisfaction data:',
@@ -115,10 +138,11 @@ const UserProfile = ({ show, onClose, user, item }) => {
           console.log('satisfactionFail');
         }
       };
-
+  
       fetchSatisfactionID();
     }
   }, [user.emailID]);
+  
 
   const closeAlert = useCallback(() => {
     setModalAlert(null);
@@ -178,7 +202,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
               <span>님</span>
             </strong>
             <label htmlFor="trust">신뢰도</label>
-            <progress id="trust" max="100" value="20"></progress>
+            <progress id="trust" max="5" value={trustScore}></progress>
           </div>
 
           <div className={style.satisfieds}>
@@ -224,11 +248,11 @@ const UserProfile = ({ show, onClose, user, item }) => {
 
       {reviews.length > 0 && (
         <div className={style.otherReviews}>
-          <strong>최근 리뷰 3건</strong>
+          <strong>최근 리뷰 {totalReviews}건</strong>
           {reviews.slice(0, 3).map((review, index) => (
             <div key={index}>
-              <pre>{user?.nickName}님이 남긴 리뷰입니다.</pre>
-              <strong>{review || '리뷰내용 없음'}</strong>
+              <pre>{review || '리뷰내용 없음'}</pre>
+              <strong >{user?.nickName}님의 리뷰</strong>
             </div>
           ))}
         </div>
