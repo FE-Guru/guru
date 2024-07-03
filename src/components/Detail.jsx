@@ -7,9 +7,9 @@ import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import SatisfactionModal from "./SatisfactionModal";
+import CommentForm from "./CommentForm";
 import Map from "../pages/Map";
 import ProgressBar from "./ProgressBar";
-
 import style from "../css/Detail.module.css";
 
 const Detail = ({ _id, closeDetail }) => {
@@ -232,7 +232,7 @@ const Detail = ({ _id, closeDetail }) => {
                 <span>님</span>
               </strong>
               <span>신뢰도</span>
-              <ProgressBar user={author} />  
+              <ProgressBar user={author} id={_id} />
             </label>
           </div>
         </div>
@@ -289,6 +289,7 @@ const Detail = ({ _id, closeDetail }) => {
             {item && location.lat && location.lon && <Map jobList={[item]} location={location} />}
           </div>
         )}
+        <CommentForm btnWrapStatus={btnWrapStatus} id={_id} />
         <div className={`btnWrap ${style.detailBtnWRap}`}>
           {btnWrapStatus === 1 && (
             <>
