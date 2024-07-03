@@ -45,7 +45,7 @@ const ProgressBar = ({ user }) => {
 
   return (
     <>
-      <progress id="trust" max="5" value={trustScore}></progress>
+      <progress id="trust" max="6" value={trustScore}></progress>
     </>
   );
 };
