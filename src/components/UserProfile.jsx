@@ -6,8 +6,10 @@ import Modal from './Modal';
 import ModalAlert from './ModalAlert';
 import SatisfactionModal from './SatisfactionModal';
 import style from '../css/UserProfile.module.css';
+import ProgressBar from './ProgressBar';
 
 const UserProfile = ({ show, onClose, user, item }) => {
+  console.log('userProfileUser--',user);
   const dispatch = useDispatch();
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
@@ -61,16 +63,6 @@ const UserProfile = ({ show, onClose, user, item }) => {
     }
   }, [item]);
 
-  //신뢰도 계산 함수
-  const calculateTrustScore = (data) => {
-    const totalStarRating = data.reduce(
-      (sum, item) => sum + item.starRating,
-      0
-    ); // 총 별점 합산
-    const trustScore = totalStarRating / data.length; // 별점의 평균 계산
-    return trustScore;
-  };
-
   // 만족도 조사 계산 함수
   const calculateSatisfactionStats = (data) => {
     const stats = {
@@ -123,9 +115,6 @@ const UserProfile = ({ show, onClose, user, item }) => {
             setReviews(reviews); // 리뷰 데이터 설정
             setTotalReviews(totalReviews); // 총 리뷰 개수 설정
   
-            const trustScore = calculateTrustScore(data); // 신뢰도 계산
-            setTrustScore(trustScore); // 신뢰도 상태 설정
-            // console.log('Trust Score:', trustScore); 
           } else {
             console.error(
               'Failed to fetch satisfaction data:',
@@ -202,9 +191,9 @@ const UserProfile = ({ show, onClose, user, item }) => {
               <span>님</span>
             </strong>
             <label htmlFor="trust">신뢰도</label>
-            <progress id="trust" max="5" value={trustScore}></progress>
+            <ProgressBar user={user}/>            
           </div>
-
+ 
           <div className={style.satisfieds}>
             <strong>만족도</strong>
             <div>

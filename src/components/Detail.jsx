@@ -8,6 +8,7 @@ import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import SatisfactionModal from "./SatisfactionModal";
 import Map from "../pages/Map";
+import ProgressBar from "./ProgressBar";
 
 import style from "../css/Detail.module.css";
 
@@ -231,7 +232,7 @@ const Detail = ({ _id, closeDetail }) => {
                 <span>님</span>
               </strong>
               <span>신뢰도</span>
-              <progress name="satisfied" max="100" value="70"></progress>
+              <ProgressBar user={author} />  
             </label>
           </div>
         </div>

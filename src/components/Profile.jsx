@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
+import ProgressBar from "../components/ProgressBar";
 import style from "../css/Form.module.css";
 
 const Profile = ({ show, onclose, modal, mode }) => {
@@ -124,7 +125,7 @@ const Profile = ({ show, onclose, modal, mode }) => {
             {getUser.nickName}
             <span> 님</span>
           </span>
-          <progress id="trust" max="100" value="25"></progress>
+          <ProgressBar user={getUser} />
         </div>
         <div className={`${style.formContainer}`}>
           <div className={style.formGrup}>
