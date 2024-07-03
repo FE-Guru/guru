@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
+import Loading from "../components/Loading";
 import Modal from "../components/Modal";
 import ModalAlert from "../components/ModalAlert";
 import Lnb from "../components/Lnb";
@@ -138,6 +139,7 @@ const JobOffer = () => {
 
   return (
     <main className={`subPage jobOffer ${lnbHas ? "has" : ""}`}>
+      {loading && <Loading />}
       <section className="mw">
         <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
         <div className="contents">

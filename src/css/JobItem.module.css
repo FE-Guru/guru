@@ -142,13 +142,19 @@
 .AppInfo > strong.stat2 {
   color: #f7af15;
 }
-.AppInfo > strong.stat3 {
+.AppInfo > strong.stat3,
+.AppInfo > strong.stat4 {
+  color: #a24bec;
+}
+.AppInfo > strong.stat5 {
   color: var(--cr-m-bl1);
 }
 .AppInfo > strong.stat-1 {
   color: var(--cr-red);
 }
-
+.AppInfo > strong.stat-2 {
+  color: var(--cr-g1);
+}
 .AppInfo > div {
   width: 100%;
   padding-left: 3rem;

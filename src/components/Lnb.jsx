@@ -44,6 +44,9 @@ const Lnb = ({ onOFfFilter, statusFilter, onOffChange, statusChange, lnbHas, lnb
                 <button className={statusFilter === 1 ? style.active : ""} onClick={() => statusChange(1)}>
                   모집중
                 </button>
+                <button className={statusFilter === -2 ? style.active : ""} onClick={() => statusChange(-2)}>
+                  지원마감
+                </button>
                 <button className={statusFilter === 2 ? style.active : ""} onClick={() => statusChange(2)}>
                   예약중
                 </button>
