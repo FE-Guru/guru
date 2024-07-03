@@ -98,3 +98,16 @@
 .info .link {
   color: #5085bb;
 }
+/* content2 */
+.jobGroup{
+  overflow-y: scroll;
+}
+.jobItem{
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--cr-line);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.sametitle{
+  font-size: medium;
+}
