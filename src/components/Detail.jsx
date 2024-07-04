@@ -49,7 +49,7 @@ const Detail = ({ _id, closeDetail }) => {
       showAlert("none_id");
     } else {
       const fetchJob = async () => {
-        const res = await fetch(`${url}/job/JobDetail/${_id}`);
+        const res = await fetch(`${url}/JobDetail/${_id}`);
         const result = await res.json();
         dispatch(
           updateItemStatus({
@@ -86,7 +86,7 @@ const Detail = ({ _id, closeDetail }) => {
     if (item?.emailID) {
       const fetchUser = async () => {
         try {
-          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const res = await fetch(`${url}/findUserData/${item.emailID}`);
           const result = await res.json();
           setAuthor(result);
         } catch (error) {
@@ -113,7 +113,7 @@ const Detail = ({ _id, closeDetail }) => {
 
   const deleteJob = useCallback(async () => {
     try {
-      const response = await fetch(`${url}/job/deleteJob/${_id}`, {
+      const response = await fetch(`${url}/deleteJob/${_id}`, {
         method: "DELETE",
       });
       const res = await response.json();
@@ -126,7 +126,7 @@ const Detail = ({ _id, closeDetail }) => {
   }, [_id, showAlert]);
 
   const application = async () => {
-    const response = await fetch(`${url}/job/application/${_id}`, {
+    const response = await fetch(`${url}/application/${_id}`, {
       method: "PUT",
       credentials: "include",
     });
@@ -149,7 +149,7 @@ const Detail = ({ _id, closeDetail }) => {
   };
 
   const appCancell = async () => {
-    const response = await fetch(`${url}/job/appCancell/${_id}`, {
+    const response = await fetch(`${url}/appCancell/${_id}`, {
       method: "PUT",
       credentials: "include",
     });

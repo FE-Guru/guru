@@ -77,7 +77,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
     if (item?.emailID) {
       const fetchUser = async () => {
         try {
-          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const res = await fetch(`${url}/findUserData/${item.emailID}`);
           const result = await res.json();
           setAuthor(result);
         } catch (error) {
@@ -99,7 +99,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
             setModalAlert("cancellJob");
           } else if (matchingID) {
             try {
-              const response = await fetch(`${url}/job/findUserData/${matchingID}`, {
+              const response = await fetch(`${url}/findUserData/${matchingID}`, {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",

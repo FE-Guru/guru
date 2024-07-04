@@ -1,15 +1,15 @@
-import { useCallback, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateItemStatus } from '../store/updateItemStatus';
-import { url } from '../store/ref';
-import Modal from './Modal';
-import ModalAlert from './ModalAlert';
-import SatisfactionModal from './SatisfactionModal';
-import style from '../css/UserProfile.module.css';
-import ProgressBar from './ProgressBar';
+import { useCallback, useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updateItemStatus } from "../store/updateItemStatus";
+import { url } from "../store/ref";
+import Modal from "./Modal";
+import ModalAlert from "./ModalAlert";
+import SatisfactionModal from "./SatisfactionModal";
+import style from "../css/UserProfile.module.css";
+import ProgressBar from "./ProgressBar";
 
 const UserProfile = ({ show, onClose, user, item }) => {
-  console.log('userProfileUser--',user);
+  console.log("userProfileUser--", user);
   const dispatch = useDispatch();
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
@@ -30,21 +30,19 @@ const UserProfile = ({ show, onClose, user, item }) => {
   const [author, setAuthor] = useState(null);
 
   const fetchOfferCancell = useCallback(async () => {
-    const response = await fetch(`${url}/job/appCancell/${item._id}`, {
-      method: 'PUT',
+    const response = await fetch(`${url}/appCancell/${item._id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
     });
     const data = await response.json();
     if (response.ok) {
-      dispatch(
-        updateItemStatus({ id: data.jobPost._id, status: data.jobPost.status })
-      );
-      setModalAlert('offerCancellOk');
+      dispatch(updateItemStatus({ id: data.jobPost._id, status: data.jobPost.status }));
+      setModalAlert("offerCancellOk");
     } else {
-      setModalAlert('offerCancellFile');
+      setModalAlert("offerCancellFile");
     }
   }, [dispatch, item._id]);
 
@@ -52,7 +50,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
     if (item?.emailID) {
       const fetchUser = async () => {
         try {
-          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const res = await fetch(`${url}/findUserData/${item.emailID}`);
           const result = await res.json();
           setAuthor(result);
         } catch (error) {
@@ -73,10 +71,10 @@ const UserProfile = ({ show, onClose, user, item }) => {
       notOnTime: 0,
       lowQuality: 0,
     };
-  
+
     let reviews = []; // 리뷰 데이터 저장용 배열
     let totalReviews = 0; // 리뷰 총 개수
-  
+
     data.forEach((item) => {
       stats.kind += item.kind;
       stats.onTime += item.onTime;
@@ -89,49 +87,44 @@ const UserProfile = ({ show, onClose, user, item }) => {
         totalReviews++; // 리뷰 개수 증가
       }
     });
-  
+
     return { stats, reviews, totalReviews }; // 리뷰 데이터 및 총 개수 포함하여 반환
   };
-  
+
   //만족도 조사 데이터 불러오고 할당
   useEffect(() => {
     if (user?.emailID) {
       const fetchSatisfactionID = async () => {
         try {
           const response = await fetch(`${url}/satisfied/${user.emailID}`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            credentials: 'include',
+            credentials: "include",
           });
-  
+
           if (response.ok) {
             const data = await response.json();
-            console.log('data--', data);
+            console.log("data--", data);
             // 받아온 해당 이메일 관련 만족도 조사 출력
             const { stats, reviews, totalReviews } = calculateSatisfactionStats(data);
             setSatisfactionData(stats);
             setReviews(reviews); // 리뷰 데이터 설정
             setTotalReviews(totalReviews); // 총 리뷰 개수 설정
-  
           } else {
-            console.error(
-              'Failed to fetch satisfaction data:',
-              response.status
-            );
-            console.log('satisfactionFail');
+            console.error("Failed to fetch satisfaction data:", response.status);
+            console.log("satisfactionFail");
           }
         } catch (error) {
-          console.error('Error fetching satisfaction data:', error);
-          console.log('satisfactionFail');
+          console.error("Error fetching satisfaction data:", error);
+          console.log("satisfactionFail");
         }
       };
-  
+
       fetchSatisfactionID();
     }
   }, [user.emailID]);
-  
 
   const closeAlert = useCallback(() => {
     setModalAlert(null);
@@ -146,43 +139,36 @@ const UserProfile = ({ show, onClose, user, item }) => {
   };
 
   const hiring = async () => {
-    const response = await fetch(`${url}/job/hiring`, {
-      method: 'PUT',
+    const response = await fetch(`${url}/hiring`, {
+      method: "PUT",
       body: JSON.stringify({
         jobPostID: item._id,
         AppliUser: user.emailID,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
     });
     const data = await response.json();
 
     if (response.ok) {
       dispatch(updateItemStatus({ id: data._id, status: data.status }));
       setBtnWrapStatus(data.status);
-      setModalAlert('hiringOk');
+      setModalAlert("hiringOk");
     } else {
       console.log(data.message);
     }
   };
   const appDelete = () => {
-    setModalAlert('offerCancell');
+    setModalAlert("offerCancell");
   };
 
   return (
     <div className={style.userProfile}>
       <div className={style.userCard}>
         <div className={style.thumb}>
-          {!user?.image ? (
-            <img
-              src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`}
-              alt="이미지 없음"
-            />
-          ) : (
-            <img src={`${url}/${user?.image}`} alt="프로필 이미지" />
-          )}
+          {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
         </div>
         <div className={style.userInfo}>
           <div>
@@ -191,9 +177,9 @@ const UserProfile = ({ show, onClose, user, item }) => {
               <span>님</span>
             </strong>
             <label htmlFor="trust">신뢰도</label>
-            <ProgressBar user={user}/>            
+            <ProgressBar user={user} />
           </div>
- 
+
           <div className={style.satisfieds}>
             <strong>만족도</strong>
             <div>
@@ -224,15 +210,15 @@ const UserProfile = ({ show, onClose, user, item }) => {
       </div>
       <div className={style.profileInfo}>
         <strong>경력</strong>
-        <span>{user?.career ? user.career : '-'}</span>
+        <span>{user?.career ? user.career : "-"}</span>
         <strong>면허/자격증</strong>
-        <span>{user?.certi ? user.certi : '-'}</span>
+        <span>{user?.certi ? user.certi : "-"}</span>
         <strong>재능/스킬</strong>
-        <span>{user?.skill ? user.skill : '-'}</span>
+        <span>{user?.skill ? user.skill : "-"}</span>
         <strong>선호 요일/시간</strong>
-        <span>{user?.time ? user.time : '-'}</span>
+        <span>{user?.time ? user.time : "-"}</span>
         <strong>자기소개</strong>
-        <span>{user?.introduce ? user.introduce : '-'}</span>
+        <span>{user?.introduce ? user.introduce : "-"}</span>
       </div>
 
       {reviews.length > 0 && (
@@ -240,8 +226,8 @@ const UserProfile = ({ show, onClose, user, item }) => {
           <strong>최근 리뷰 {totalReviews}건</strong>
           {reviews.slice(0, 3).map((review, index) => (
             <div key={index}>
-              <pre>{review || '리뷰내용 없음'}</pre>
-              <strong >{user?.nickName}님의 리뷰</strong>
+              <pre>{review || "리뷰내용 없음"}</pre>
+              <strong>{user?.nickName}님의 리뷰</strong>
             </div>
           ))}
         </div>
@@ -265,20 +251,14 @@ const UserProfile = ({ show, onClose, user, item }) => {
             <button className="btn primary" onClick={onClose}>
               확인
             </button>
-            <button
-              className="btn yellow"
-              onClick={() => setPopupVisible(true)}
-            >
+            <button className="btn yellow" onClick={() => setPopupVisible(true)}>
               결제 및 완료
             </button>
           </>
         ) : btnWrapStatus === 3 ? (
           <>
             {user?.emailID === item?.emailID ? (
-              <button
-                className="btn yellow"
-                onClick={() => setPopupVisible(true)}
-              >
+              <button className="btn yellow" onClick={() => setPopupVisible(true)}>
                 결제 및 완료
               </button>
             ) : (
@@ -304,41 +284,14 @@ const UserProfile = ({ show, onClose, user, item }) => {
       </div>
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === 'hiringOk' && (
-            <ModalAlert
-              close={closeAlert}
-              title={'프로필 메시지'}
-              desc={'채용이 정상적으로 완료되었습니다'}
-              error={false}
-              confirm={false}
-              throwFn={reload}
-            />
-          )}
-          {modalAlert === 'offerCancellOk' && (
-            <ModalAlert
-              close={closeAlert}
-              title={'취소 메시지'}
-              desc={'채용 취소가 정상적으로 처리되었습니다.'}
-              error={false}
-              confirm={false}
-              throwFn={reload}
-            />
-          )}
-          {modalAlert === 'offerCancellFile' && (
-            <ModalAlert
-              close={closeAlert}
-              title={'취소 메시지'}
-              desc={'채용 취소 중 오류가 발생되었습니다.'}
-              error={true}
-              confirm={false}
-              throwFn={reload}
-            />
-          )}
+          {modalAlert === "hiringOk" && <ModalAlert close={closeAlert} title={"프로필 메시지"} desc={"채용이 정상적으로 완료되었습니다"} error={false} confirm={false} throwFn={reload} />}
+          {modalAlert === "offerCancellOk" && <ModalAlert close={closeAlert} title={"취소 메시지"} desc={"채용 취소가 정상적으로 처리되었습니다."} error={false} confirm={false} throwFn={reload} />}
+          {modalAlert === "offerCancellFile" && <ModalAlert close={closeAlert} title={"취소 메시지"} desc={"채용 취소 중 오류가 발생되었습니다."} error={true} confirm={false} throwFn={reload} />}
 
-          {modalAlert === 'offerCancell' && (
+          {modalAlert === "offerCancell" && (
             <ModalAlert
               close={closeAlert}
-              title={'취소 메시지'}
+              title={"취소 메시지"}
               desc={
                 <>
                   취소하시면 지금 공고로 다시 모집이 불가능하며
@@ -355,14 +308,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
           )}
         </Modal>
       )}
-      {popupVisible && (
-        <SatisfactionModal
-          onClose={closeAlert}
-          type="alert"
-          item={item}
-          author={author}
-        />
-      )}
+      {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />}
     </div>
   );
 };

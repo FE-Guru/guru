@@ -16,7 +16,7 @@ const MainOffline = () => {
             async (position) => {
               const { latitude, longitude } = position.coords;
               setLocation({ lat: latitude, lon: longitude });
-              const response = await fetch(`${url}/job/mainOffline?&lat=${latitude}&lon=${longitude}`, {
+              const response = await fetch(`${url}/mainOffline?&lat=${latitude}&lon=${longitude}`, {
                 method: "GET",
                 headers: {
                   "Content-Type": "application/json",
