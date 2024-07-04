@@ -10,8 +10,8 @@ const SignupOk = () => {
     const userName = query.get("userName");
     const nickName = query.get("nickName");
     const phone = query.get("phone");
-    const account = query.get("account");
-    console.log("가입완료:", { emailID, userName, nickName, phone, account });
+    // const account = query.get("account");
+    console.log("가입완료:", { emailID, userName, nickName, phone });
   }, [location.search]);
 
   return (
@@ -38,10 +38,10 @@ const SignupOk = () => {
             <span>연락처</span>
             <strong>{query.get("phone")}</strong>
           </p>
-          <p>
+          {/* <p>
             <span>계좌번호</span>
             <strong>{query.get("account")}</strong>
-          </p>
+          </p> */}
         </div>
       </section>
       <div className='btnWrap'>

@@ -34,25 +34,40 @@ const MainSlide = () => {
           setSwiper(e);
         }}>
         <SwiperSlide>
-          <div className="mainSlider1">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-            원데이 집사를 찾아야 할때
+          <div
+            className="mainSlider slider01"
+            style={{
+              backgroundImage: `url("${process.env.PUBLIC_URL}/img/common/Main_Vis1.jpg")`,
+            }}>
+            <div className="sliderTxt">
+              <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+              원데이 집사를 찾아야 할때
+            </div>
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis1.jpg`} alt="Vis1" />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="mainSlider2">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-            초단기 알바를 구할떄
+          <div
+            className="mainSlider slider02"
+            style={{
+              backgroundImage: `url("${process.env.PUBLIC_URL}/img/common/Main_Vis2.jpg")`,
+            }}>
+            <div className="sliderTxt">
+              <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+              초단기 알바를 구할때
+            </div>
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis2.jpg`} alt="Vis2" />
         </SwiperSlide>
         <SwiperSlide>
-          <div className="mainSlider3">
-            <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-            우리 댕댕이 산책이 필요할때
+          <div
+            className="mainSlider slider03"
+            style={{
+              backgroundImage: `url("${process.env.PUBLIC_URL}/img/common/Main_Vis3.jpg")`,
+            }}>
+            <div className="sliderTxt">
+              <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
+              우리 댕댕이 산책이 필요할때
+            </div>
           </div>
-          <img src={`${process.env.PUBLIC_URL}/img/common/Main_Vis3.jpg`} alt="Vis3" />
         </SwiperSlide>
       </Swiper>
       <div className="pagination">

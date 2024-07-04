@@ -1,9 +1,9 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useCallback, useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import ModalAlert from "../components/ModalAlert";
 import UserProfile from "./UserProfile";
 import { url } from "../store/ref";
+import ProgressBar from "./ProgressBar";
 
 const UserSlide = ({ item }) => {
   const [swiperIndex, setSwiperIndex] = useState(0);
@@ -11,7 +11,6 @@ const UserSlide = ({ item }) => {
   const [itemAppli, setItemAppli] = useState();
   const [userList, setUserList] = useState([]);
   const [modal, setModal] = useState(null);
-  const [modalAlert, setModalAlert] = useState(null);
 
   const prevPage = () => {
     swiper?.slidePrev();
@@ -66,12 +65,6 @@ const UserSlide = ({ item }) => {
   const closePopup = useCallback(() => {
     setModal(null);
   }, []);
-  const showAlert = useCallback((content) => {
-    setModalAlert(content);
-  }, []);
-  const closeAlert = useCallback(() => {
-    setModalAlert(null);
-  }, [modalAlert]);
 
   const userProfile = (user) => {
     showPopup("userProfile", user);
@@ -85,7 +78,7 @@ const UserSlide = ({ item }) => {
           setSwiper(e);
         }}
         breakpoints={{
-          340: {
+          320: {
             slidesPerView: 2,
             spaceBetween: 8,
           },
@@ -102,7 +95,7 @@ const UserSlide = ({ item }) => {
           <SwiperSlide key={user?._id}>
             <div className="userCard" onClick={() => userProfile(user)}>
               <div className="thumb">
-                <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" />
+                {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
               </div>
               <div className="userInfo">
                 <strong>
@@ -110,7 +103,7 @@ const UserSlide = ({ item }) => {
                   <span>님</span>
                 </strong>
                 <label htmlFor="trust">신뢰도</label>
-                <progress id="trust" max="100" value="20"></progress>
+                <ProgressBar user={user}/>
               </div>
             </div>
           </SwiperSlide>
@@ -126,7 +119,6 @@ const UserSlide = ({ item }) => {
         <Modal show={modal !== null} onClose={closePopup} type="userProfile">
           {modal.content === "userProfile" && (
             <div>
-              <h3 style={{ marginBottom: "1.4rem" }}>{modal.user.nickName}님 상세보기</h3>
               <UserProfile show={modal !== null} onClose={closePopup} user={modal.user} item={item} />
             </div>
           )}

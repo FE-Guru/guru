@@ -18,6 +18,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
   const memoizedData = useMemo(() => data[item?._id] || {}, [data, item?._id]);
   const address = item?.location?.address?.split(" ");
   const newAddress = address?.slice(0, 2).join(" ");
+  const [author, setAuthor] = useState(null);
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(null);
   const [modalUser, setModalUser] = useState(null);
@@ -39,13 +40,20 @@ const JobItem = ({ item, jobOffer, findjob }) => {
   }, [item?.category?.jobType]);
 
   /*모집상태 바인딩*/
+  //[2 - 예약중 // 3,4 - 완료대기 // 5 - 완료]
   let appliStatus;
   if (item.status === 2) {
     appliStatus = { text: "예약중", val: "stat2" };
   } else if (item.status === 3) {
-    appliStatus = { text: "완료", val: "stat3" };
+    appliStatus = { text: "완료대기", val: "stat3" };
+  } else if (item.status === 4) {
+    appliStatus = { text: "완료대기", val: "stat4" };
+  } else if (item.status === 5) {
+    appliStatus = { text: "완료", val: "stat5" };
   } else if (item.status === -1) {
     appliStatus = { text: "취소", val: "stat-1" };
+  } else if (item.status === -2) {
+    appliStatus = { text: "지원마감", val: "stat-2" };
   } else {
     appliStatus = { text: memoizedData.dFormat, val: "stat1" };
   }
@@ -63,6 +71,22 @@ const JobItem = ({ item, jobOffer, findjob }) => {
       );
     }
   }, [item, dispatch]);
+
+  /* 작성자 확인 */
+  useEffect(() => {
+    if (item?.emailID) {
+      const fetchUser = async () => {
+        try {
+          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const result = await res.json();
+          setAuthor(result);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchUser();
+    }
+  }, [item]);
 
   /*지원자 확인 클릭이벤트*/
   const aapliHandler = () => {
@@ -128,22 +152,17 @@ const JobItem = ({ item, jobOffer, findjob }) => {
     setModalUser(null);
   }, []);
 
-  /*디테일페이지 모달 or 페이지이동*/
-  const goDetail = () => {
-    if (findjob) {
-      navigate("/job-detail", { state: { _id: item._id } });
-    } else {
-      showPopup("getDetail");
-    }
-  };
-
   return (
     <div className={`${style.itemWrap} ${findjob ? style.findJob : ""}`}>
-      <div className={`${style.jobItem} ${style[item?.category?.jobType]}`} onClick={goDetail}>
+      <div
+        className={`${style.jobItem} ${style[item?.category?.jobType]}`}
+        onClick={() => {
+          navigate("/job-detail", { state: { _id: item._id } });
+        }}>
         <div className={style.jobInfo}>
           {!jobOffer ? (
             <div className={style.thumb}>
-              <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" />
+              {!author?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${author?.image}`} alt="프로필 이미지" />}
             </div>
           ) : null}
           <div className={style.jobDes}>

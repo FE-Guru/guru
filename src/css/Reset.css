@@ -79,6 +79,7 @@ input[type="reset"] {
   -moz-appearance: none;
   -webkit-appearance: none;
 }
+textarea,
 input,
 input:focus {
   outline: none;

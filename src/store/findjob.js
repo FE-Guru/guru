@@ -31,7 +31,7 @@ const calculateDFormat = (endDate) => {
 const findjobSlice = createSlice({
   name: "findjob",
   initialState: {
-    cateType: "",
+    cateType: "onLine",
   },
   reducers: {
     setCateType: (state, action) => {
@@ -45,7 +45,6 @@ const findjobSlice = createSlice({
         endDate: formatDate(new Date(endDate)),
         dFormat: calculateDFormat(new Date(endDate)),
       };
-      console.log("업데이트 상태:", state);
     },
   },
 });

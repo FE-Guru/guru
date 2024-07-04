@@ -62,8 +62,17 @@
   color: var(--cr-red);
 }
 
-.phoneGrup {
-  display: block;
+.phoneMsg {
+  margin-top: 7px;
+}
+
+.formCon {
+  position: relative;
+  height: 5rem;
+}
+
+.errorForm .formCon {
+  display: block !important;
 }
 
 .phoneInner {
@@ -71,31 +80,39 @@
   flex-direction: column;
 }
 
-.phoneGrup {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
 .phoneAuth {
-  justify-content: space-between;
-}
-
-.phoneAuth,
-.phoneConfirm {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  flex-direction: row;
   gap: 10px;
   margin-top: 10px;
 }
 
-.phoneAuth input {
-  width: calc(100% - 12rem);
+.phoneAuth .phoneInput {
+  width: calc(80% - 0.05rem);
+}
+
+.phoneConfirm .authInput {
+  width: calc(80% - 5rem) !important;
+}
+
+.errorInput {
+  width: calc(90% - 0.05rem) !important;
+  border-color: var(--cr-red) !important;
+}
+
+.errorForm .phoneConfirm .authInput.errorInput {
+  width: calc(80% - 5rem) !important;
 }
 
 .time {
   color: var(--cr-red);
   font-size: 1.48rem;
+}
+
+.greenBtn,
+.yellowBtn {
+  flex-shrink: 0;
 }
 
 .greenBtn {
@@ -144,8 +161,7 @@
 }
 
 .loginCon {
-  width: 100%;
-  padding: 10px;
+  width: 85%;
 }
 
 .emailLabel {
@@ -230,7 +246,7 @@
   color: var(--cr-bl1);
   font-weight: 700;
   height: 4.2rem;
-  width: 13rem;
+  width: 30rem;
   padding-top: 1.2rem;
 }
 
@@ -244,29 +260,15 @@
 
 /*acctDelete*/
 .delDesc {
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.78;
   letter-spacing: -0.25px;
   color: var(--cr-g1);
 }
 
-.delDesc p {
-  padding: 30px 0 0;
-}
-
 /* acctbye */
-.spanMsgCon span:first-of-type {
-  margin-top: 20px;
-}
-
-.spanMsgCon span:last-of-type {
-  margin-top: -20px;
-}
-
 .spanMsg {
-  font-size: 1.85rem !important;
+  font-size: 1.85rem;
+  margin-top: 0.5rem;
 }
 
 /* findacct*/
@@ -303,6 +305,11 @@
   margin: 5rem 0;
 }
 
+.findmsg {
+  display: block;
+  margin-bottom: 3.5rem;
+  color: var(--cr-red);
+}
 .findLabel {
   margin-bottom: 25px;
 }
@@ -311,4 +318,18 @@
   width: 30%;
   margin: 0 auto;
   display: block;
+}
+
+/* resetconfirm*/
+.mainBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 660px) {
+  .delDesc {
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
 }

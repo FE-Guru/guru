@@ -1,5 +1,7 @@
 /* global kakao */
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { url } from '../store/ref';
 import styles from '../css/Map.module.css';
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
@@ -26,57 +28,42 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('ko-KR', options);
 };
 
-// 현재 사용자 위치 계산
-const getDistance = (lat1, lon1, lat2, lon2, unit) => {
-  if (lat1 === lat2 && lon1 === lon2) {
-    return 0;
-  } else {
-    const radlat1 = (Math.PI * lat1) / 180;
-    const radlat2 = (Math.PI * lat2) / 180;
-    const theta = lon1 - lon2;
-    const radtheta = (Math.PI * theta) / 180;
-    let dist =
-      Math.sin(radlat1) * Math.sin(radlat2) +
-      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    if (dist > 1) {
-      dist = 1;
-    }
-    dist = Math.acos(dist);
-    dist = (dist * 180) / Math.PI;
-    dist = dist * 60 * 1.1515;
-    if (unit === 'K') {
-      dist = dist * 1.609344;
-    }
-    if (unit === 'N') {
-      dist = dist * 0.8684;
-    }
-    return dist;
-  }
-};
+const Map = ({ jobList, location }) => {
+  const navigate = useNavigate();
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [samePositionJobs, setSamePositionJobs] = useState([]);
 
-const Map = ({ jobList, updateJobList }) => {
-  const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 }); // 기본 위치 설정
-  const [map, setMap] = useState(null); // 지도 객체 상태
+  const findSamePositionJobs = useCallback((jobs) => {
+    const samePositions = [];
+    const checkedPositions = new Set();
 
-  // 현재 위치 파악
-  const getCurrentLocation = useCallback(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error(error);
-          // Geolocation 실패 시 기본 위치 유지
-        }
-      );
-    }
+    jobs.forEach((job, index) => {
+      const jobPos = `${job.location.mapX},${job.location.mapY}`;
+      if (checkedPositions.has(jobPos)) return;
+
+      const sameJobs = jobs.filter((otherJob, otherIndex) => {
+        return (
+          index !== otherIndex &&
+          job.location.mapX === otherJob.location.mapX &&
+          job.location.mapY === otherJob.location.mapY
+        );
+      });
+
+      if (sameJobs.length > 0) {
+        samePositions.push([job, ...sameJobs]);
+        checkedPositions.add(jobPos);
+      }
+    });
+
+    return samePositions;
   }, []);
 
-  // 지도 스크립트 로드 및 지도 초기화
+  useEffect(() => {
+    setSamePositionJobs(findSamePositionJobs(jobList));
+    //console.log(samePositionJobs);
+  }, [jobList, findSamePositionJobs]);
+
   useEffect(() => {
     loadKakaoMapScript(() => {
       const mapContainer = document.getElementById('map');
@@ -85,19 +72,15 @@ const Map = ({ jobList, updateJobList }) => {
         return;
       }
       const mapOption = {
-        center: new kakao.maps.LatLng(location.lat, location.lon), // 지도 중심좌표를 현재 내 위치로 지정
+        center: new kakao.maps.LatLng(location.lat, location.lon),
         level: 3,
       };
 
       const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
       setMap(mapInstance);
-
-      // 현재 위치를 비동기로 가져오기
-      getCurrentLocation();
     });
-  }, [getCurrentLocation, location.lat, location.lon]);
+  }, [location.lat, location.lon]);
 
-  // 지도의 중심을 현재 위치로 업데이트
   useEffect(() => {
     if (map) {
       const moveLatLon = new kakao.maps.LatLng(location.lat, location.lon);
@@ -105,94 +88,159 @@ const Map = ({ jobList, updateJobList }) => {
     }
   }, [location, map]);
 
-  // 지도와 마커 클러스터러 설정
+  const fetchUser = async (emailID) => {
+    try {
+      const response = await fetch(`${url}/job/findUserData/${emailID}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Failed to fetch data', error);
+      return null;
+    }
+  };
+
+  const createOverlayContent = (
+    job,
+    imgSrc,
+    workStartDate,
+    workEndDate,
+    isSamePositionJob,
+    groupContent,
+    groupIndex
+  ) => {
+    return `
+      <div class="${styles.wrap}">
+        <div class="${styles.info}">
+          <div class="${styles.title}">
+            ${
+              isSamePositionJob
+                ? `총 ${samePositionJobs[groupIndex].length} 건의 일자리`
+                : job.title
+            }
+            <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
+          </div>
+          <div class="${styles.body} ${
+      isSamePositionJob ? styles.positionJob : ''
+    }">
+            ${
+              isSamePositionJob
+                ? groupContent
+                : `
+              <div class="${styles.img}">
+                <img src="${imgSrc}">
+              </div>
+              <div class="${styles.desc}">
+                <div class="${styles.ellipsis}">${job.location.address}</div>
+                <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
+                <div><a href="#" class="${styles.link}" data-id="${job._id}">리스트로 이동 ></a></div>
+              </div>
+            `
+            }
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  const createMarker = useCallback(
+    async (job) => {
+      const userData = await fetchUser(job.emailID);
+      if (!userData) return null;
+
+      const imgSrc = userData.image
+        ? `${url}/${userData.image}`
+        : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
+      const marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(job.location.mapY, job.location.mapX),
+      });
+
+      const workStartDate = formatDate(job.workStartDate);
+      const workEndDate = formatDate(job.workEndDate);
+      const isSamePositionJob = samePositionJobs.some((group) =>
+        group.some((grouplist) => grouplist._id === job._id)
+      );
+      const groupIndex = samePositionJobs.findIndex((group) =>
+        group.some((grouplist) => grouplist._id === job._id)
+      );
+      const groupContent =
+        groupIndex >= 0
+          ? samePositionJobs[groupIndex]
+              .map(
+                (grouplist, index) => `
+              <div class="${styles.jobItem}" key="${index}">
+                <div class="${styles.sametitle}">${grouplist.title}</div>
+                <div class="${styles.samejibun}">${formatDate(
+                  grouplist.workStartDate
+                )} ~ ${formatDate(grouplist.workEndDate)}</div>
+                <div><a href="#" class="${styles.link}" data-id="${
+                  grouplist._id
+                }">리스트로 이동 ></a></div>
+              </div>
+            `
+              )
+              .join('')
+          : '';
+
+      const overlay = new kakao.maps.CustomOverlay({
+        content: createOverlayContent(
+          job,
+          imgSrc,
+          workStartDate,
+          workEndDate,
+          isSamePositionJob,
+          groupContent,
+          groupIndex
+        ),
+        position: marker.getPosition(),
+      });
+
+      kakao.maps.event.addListener(marker, 'click', function () {
+        overlay.setMap(map);
+      });
+
+      const content = overlay.a.querySelector(`.${styles.wrap}`);
+      content
+        .querySelectorAll(`.${styles.close}`)
+        .forEach((closeBtn) =>
+          closeBtn.addEventListener('click', () => overlay.setMap(null))
+        );
+      content.querySelectorAll(`.${styles.link}`).forEach((link) =>
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const jobId = e.target.getAttribute('data-id');
+          navigate(`/job-detail`, { state: { _id: jobId } });
+        })
+      );
+
+      return marker;
+    },
+    [navigate, samePositionJobs, map]
+  );
+
   useEffect(() => {
-    if (map && jobList.length > 0) {
-      // 마커 클러스터러를 생성합니다
+    if (map && jobList.length > 0 && markers.length === 0) {
       const clusterer = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
-        minLevel: 4,
+        minLevel: 2.6,
       });
 
-      const markers = jobList.map((job) => {
-        const marker = new kakao.maps.Marker({
-          position: new kakao.maps.LatLng(job.location.mapY, job.location.mapX), // 각 일거리의 좌표
-        });
+      const createMarkers = async () => {
+        const newMarkers = await Promise.all(jobList.map(createMarker));
+        const filteredMarkers = newMarkers.filter((marker) => marker !== null);
+        setMarkers(filteredMarkers);
+        clusterer.addMarkers(filteredMarkers);
+      };
 
-        // 날짜 형식 수정 ex) 2024-06-24 ~ 2024-06-24
-        const workStartDate = formatDate(job.workStartDate);
-        const workEndDate = formatDate(job.workEndDate);
-
-        const content = document.createElement('div');
-        content.innerHTML = `
-          <div class="${styles.wrap}">
-            <div class="${styles.info}">
-              <div class="${styles.title}">
-                ${job.title}
-                <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
-              </div>
-              <div class="${styles.body}">
-                <div class="${styles.img}">
-                  <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="63" height="60">
-                </div>
-                <div class="${styles.desc}">
-                  <div class="${styles.ellipsis}">${job.location.address}</div>
-                  <div class="${styles.jibun}">${workStartDate} ~ ${workEndDate}</div>
-                  <div><a href="${job.link}" target="_blank" class="${styles.link}">리스트로 이동 ></a></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        const overlay = new kakao.maps.CustomOverlay({
-          content: content,
-          position: marker.getPosition(),
-        });
-
-        kakao.maps.event.addListener(marker, 'click', function () {
-          overlay.setMap(map);
-        });
-
-        // 오버레이 닫기 함수
-        function closeOverlay() {
-          overlay.setMap(null);
-        }
-
-        // 닫기 버튼에 이벤트 리스너 추가
-        const closeBtn = content.querySelector(`.${styles.close}`);
-        closeBtn.addEventListener('click', closeOverlay);
-
-        return marker;
-      });
-
-      // 클러스터러에 마커들을 추가합니다
-      clusterer.addMarkers(markers);
-
-      // 현재위치 기준으로 가까운 순 리스트 만들기
-      const newJobList = jobList
-        .map((job) => ({
-          ...job,
-          distance: getDistance(
-            location.lat,
-            location.lon,
-            job.location.mapY,
-            job.location.mapX,
-            'K'
-          ),
-        }))
-        .sort((a, b) => a.distance - b.distance);
-
-      console.log('새로운 배열 newJobList -> ', newJobList); // 여기에 distance 보관됨
-      // Findjob.jsx로 newJobList 전달
-      updateJobList(newJobList);
+      createMarkers();
     }
-  }, [map, jobList, location]);
+  }, [map, jobList, createMarker, markers.length]);
 
   return (
     <div>
-      <div id="map" style={{ width: '100%', height: '400px' }}></div>
+      <div id="map" className={styles.map}></div>
     </div>
   );
 };

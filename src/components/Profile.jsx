@@ -1,104 +1,149 @@
 import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import style from "../css/Form.module.css";
-import { useState } from "react";
 import { url } from "../store/ref";
+import Modal from "../components/Modal";
+import ModalAlert from "../components/ModalAlert";
+import ProgressBar from "../components/ProgressBar";
+import style from "../css/Form.module.css";
 
-const Profile = ({ show, onclose  }) => {
-  const { register, handleSubmit, setValue } = useForm();
-  const [files, setFiles] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
+const Profile = ({ show, onclose, modal, mode }) => {
   const user = useSelector((state) => state.user.user);
-  const nickName = user ? user?.nickName : null;
+  const emailID = user ? user?.emailID : null;
+  const [getUser, setGetUser] = useState("");
+  const [files, setFiles] = useState("");
+  const [imgPath, setImgPath] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [modalAlert, setModalAlert] = useState(null);
+  const { register, handleSubmit, setValue } = useForm();
 
-  const handleFileChange = (e) => {
+  useEffect(() => {
+    const findUser = async () => {
+      if (!emailID) return;
+      try {
+        const res = await fetch(`${url}/findUser/${emailID}`, {
+          method: "GET",
+        });
+        const result = await res.json();
+        if (res.ok) {
+          setValue("career", result.career || "");
+          setValue("certi", result.certi || "");
+          setValue("skill", result.skill || "");
+          setValue("time", result.time || "");
+          setValue("introduce", result.introduce || "");
+          setImgPath(result.image ? result.image : null);
+          setGetUser(result);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    findUser();
+  }, [emailID, setValue]);
+
+  const showAlert = (content) => {
+    setModalAlert(content);
+  };
+  const closeAlert = () => {
+    if (modalAlert === "isOk" && onclose) {
+      onclose();
+    }
+    setModalAlert(null);
+  };
+  if (modal) {
+    if (!show) {
+      return null;
+    }
+  }
+
+  const imgChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFiles(e.target.files);
-      setImagePreview(URL.createObjectURL(file));
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/bmp", "image/svg+xml", "image/webp", "image/tiff"];
+      if (!validImageTypes.includes(file.type)) {
+        setModalAlert("noImageType");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setFiles([file]);
     }
   };
-  //프로필 등록 함수
-  const profileWrite = async (val) => {
-    const { career, certi, skill, time, introduce } = val;
 
+  const onSubmit = async (val) => {
+    const { career, certi, skill, time, introduce } = val;
     const data = new FormData();
-    data.append("files", files[0]);
     data.append("career", career);
     data.append("certi", certi);
     data.append("skill", skill);
     data.append("time", time);
     data.append("introduce", introduce);
-
-    // FormData 내용 출력
-    data.forEach((value, key) => {
-      console.log(key, value);
-    });
-
+    if (files?.[0]) {
+      data.set("files", files[0]);
+    }
     try {
       const res = await fetch(`${url}/profileWrite`, {
         method: "PUT",
         body: data,
         credentials: "include",
       });
-
+      const result = await res.json();
       if (res.ok) {
-        const result = await res.json();
-        console.log(result);
-        alert("정상처리");
-        onclose();
+        showAlert("isOk");
       } else {
+        showAlert("failed");
         console.error("Failed to submit profile:", res.statusText);
       }
     } catch (error) {
+      showAlert("failed");
       console.error("Error:", error);
     }
   };
-  if (!show) {
-    return null;
-  }
 
   return (
     <div className={style.modalprofile}>
-      <h3>프로필 등록</h3>
-      <form className={`${style.formStyle} ${style.formProfile}`} onSubmit={handleSubmit(profileWrite)}>
+      {modal && <h3>프로필 등록 </h3>}
+      <form className={`${style.formStyle} ${style.formProfile}`} onSubmit={handleSubmit(onSubmit)}>
         <div className={style.formContainer}>
           <div className={style.formThumb}>
-            {imagePreview ? <img src={imagePreview} alt="Profile Preview" /> : <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="logo" />}
-            <input type="file" name="files" id="files" onChange={handleFileChange} />
+            {imageSrc ? (
+              <img src={imageSrc} alt="변경된 이미지" />
+            ) : getUser?.image ? (
+              <img src={`${url}/${getUser?.image}`} alt="등록된 이미지" />
+            ) : (
+              <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="logo" />
+            )}
+            <input type="file" name="files" id="files" onChange={imgChange} />
             <i className="fa-solid fa-camera-retro">
               <p>이미지 등록</p>
             </i>
           </div>
-          <span>{nickName}<span> 님</span></span>
-          <progress id="trust" max="100" value="25"></progress>
+          <span>
+            {getUser.nickName}
+            <span> 님</span>
+          </span>
+          <ProgressBar user={getUser} />
         </div>
         <div className={`${style.formContainer}`}>
           <div className={style.formGrup}>
             <span>경력</span>
             <div className={`${style.formCon} ${style.addItem}`}>
               <input {...register("career")} placeholder="경력을 입력해주세요." />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
-              </button>
             </div>
           </div>
           <div className={style.formGrup}>
             <span>면허 / 자격증</span>
             <div className={`${style.formCon} ${style.addItem}`}>
               <input {...register("certi")} placeholder="면허 / 자격증을 입력해주세요." />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
-              </button>
             </div>
           </div>
           <div className={style.formGrup}>
             <span>재능 / 스킬</span>
             <div className={`${style.formCon} ${style.addItem}`}>
               <input {...register("skill")} placeholder="재능 / 스킬을 입력해주세요." />
-              <button type="button" className={style.addBtn}>
-                <i className="fa-solid fa-plus"></i>
-              </button>
             </div>
           </div>
           <div className={style.formGrup}>
@@ -116,10 +161,17 @@ const Profile = ({ show, onclose  }) => {
         </div>
         <div className="btnWrap">
           <button type="submit" className="btn primary yellow">
-            프로필 등록
+            프로필 {mode}
           </button>
         </div>
       </form>
+      {modalAlert && (
+        <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
+          {modalAlert === "isOk" && <ModalAlert close={closeAlert} desc={`프로필이 정상적으로 ${mode}되었습니다.`} error={false} confirm={false} />}
+          {modalAlert === "noImageType" && <ModalAlert close={closeAlert} desc={"유효하지 않는 이미지 파일 형식입니다."} error={true} confirm={false} />}
+          {modalAlert === "failed" && <ModalAlert close={closeAlert} desc={`프로필 ${mode} 중 오류가 생겼습니다.`} error={true} confirm={false} />}
+        </Modal>
+      )}
     </div>
   );
 };
