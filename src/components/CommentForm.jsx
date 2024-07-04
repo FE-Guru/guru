@@ -31,7 +31,7 @@ const CommentForm = ({ btnWrapStatus, id }) => {
 
   const fetchComment = async () => {
     try {
-      const res = await fetch(`${url}/job/comment/${id}`, {
+      const res = await fetch(`${url}/comment/${id}`, {
         method: "GET",
       });
       const data = await res.json();
@@ -53,7 +53,7 @@ const CommentForm = ({ btnWrapStatus, id }) => {
   const onSubmit = async (val) => {
     const { content } = val;
     try {
-      const res = await fetch(`${url}/job/commentWrit/${id}`, {
+      const res = await fetch(`${url}/commentWrit/${id}`, {
         method: "POST",
         body: JSON.stringify({
           content,
@@ -79,7 +79,7 @@ const CommentForm = ({ btnWrapStatus, id }) => {
   const commentDel = useCallback(
     async (commentId) => {
       try {
-        const response = await fetch(`${url}/job/commentDel/${commentId}`, {
+        const response = await fetch(`${url}/commentDel/${commentId}`, {
           method: "DELETE",
         });
         const res = await response.json();
@@ -98,7 +98,7 @@ const CommentForm = ({ btnWrapStatus, id }) => {
 
   const commentEdit = async (commentId) => {
     try {
-      const response = await fetch(`${url}/job/commentEdit/${commentId}`, {
+      const response = await fetch(`${url}/commentEdit/${commentId}`, {
         method: "PUT",
         body: JSON.stringify({ content: editContent }),
         headers: {

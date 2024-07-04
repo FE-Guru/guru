@@ -60,7 +60,7 @@ const JobOffer = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await fetch(`${url}/job/jobOffer?page=${page}&jobType=${jobType}&status=${status}`, {
+      const response = await fetch(`${url}/jobOffer?page=${page}&jobType=${jobType}&status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

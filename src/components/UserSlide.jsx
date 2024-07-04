@@ -36,7 +36,7 @@ const UserSlide = ({ item }) => {
     const fetchData = async () => {
       if (itemAppli) {
         try {
-          const response = await fetch(`${url}/job/userList`, {
+          const response = await fetch(`${url}/userList`, {
             method: "POST",
             body: JSON.stringify({
               itemAppli,
@@ -103,7 +103,7 @@ const UserSlide = ({ item }) => {
                   <span>님</span>
                 </strong>
                 <label htmlFor="trust">신뢰도</label>
-                <ProgressBar user={user}/>
+                <ProgressBar user={user} />
               </div>
             </div>
           </SwiperSlide>

@@ -213,7 +213,7 @@ const JobWrit = () => {
     if (workStartTime && workEndTime) {
       const workStartTimeUTC = new Date(workStartTime.value).toISOString();
       const workEndTimeUTC = new Date(workEndTime.value).toISOString();
-      const response = await fetch(`${url}/job/jobWrit`, {
+      const response = await fetch(`${url}/jobWrit`, {
         method: "POST",
         body: JSON.stringify({
           title,

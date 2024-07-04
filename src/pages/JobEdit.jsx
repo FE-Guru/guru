@@ -92,7 +92,7 @@ const JobEdit = () => {
       showAlert("none_id");
     } else {
       const fetchJob = async () => {
-        const res = await fetch(`${url}/job/jobEdit/${_id}`, {
+        const res = await fetch(`${url}/jobEdit/${_id}`, {
           method: "GET",
         });
         const result = await res.json();
@@ -270,7 +270,7 @@ const JobEdit = () => {
     if (workStartTime && workEndTime) {
       const workStartTimeUTC = new Date(workStartTime.value).toISOString();
       const workEndTimeUTC = new Date(workEndTime.value).toISOString();
-      const response = await fetch(`${url}/job/jobEdit/${_id}`, {
+      const response = await fetch(`${url}/jobEdit/${_id}`, {
         method: "PUT",
         body: JSON.stringify({
           title,

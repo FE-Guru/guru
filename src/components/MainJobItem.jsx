@@ -43,7 +43,7 @@ const MainJobItem = ({ item, tpye }) => {
     if (item?.emailID) {
       const fetchUser = async () => {
         try {
-          const res = await fetch(`${url}/job/findUserData/${item.emailID}`);
+          const res = await fetch(`${url}/findUserData/${item.emailID}`);
           const result = await res.json();
           setAuthor(result);
         } catch (error) {

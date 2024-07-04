@@ -8,7 +8,7 @@ const MainOnline = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${url}/job/mainOnline`, {
+        const response = await fetch(`${url}/mainOnline`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -80,7 +80,7 @@ const Findjob = () => {
 
             const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
             const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
-            const response = await fetch(`${url}/job/${endpoint}?page=${page}&talent=${talent}&field=${field}&startCateTime=${cateTime[0]}&endCateTime=${cateTime[1]}${queryType}`, {
+            const response = await fetch(`${url}/${endpoint}?page=${page}&talent=${talent}&field=${field}&startCateTime=${cateTime[0]}&endCateTime=${cateTime[1]}${queryType}`, {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
@@ -125,7 +125,7 @@ const Findjob = () => {
           dispatch(setCateTalent("all"));
           const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
           const endpoint = cateType === "offLine" ? "alloffLine" : "allonLine";
-          const response = await fetch(`${url}/job/${endpoint}?titleText=${titleText}${queryType}`, {
+          const response = await fetch(`${url}/${endpoint}?titleText=${titleText}${queryType}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

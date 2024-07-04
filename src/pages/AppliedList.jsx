@@ -59,7 +59,7 @@ const AppliedList = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await fetch(`${url}/job/applied?page=${page}&jobType=${jobType}&status=${status}`, {
+      const response = await fetch(`${url}/applied?page=${page}&jobType=${jobType}&status=${status}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
