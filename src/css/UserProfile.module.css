@@ -89,7 +89,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--cr-line);
-  width: calc(100% / 3);
+  width: 33.3%;
   height: 3.2rem;
   font-size: 1.3rem;
   border-radius: 0.4rem;
