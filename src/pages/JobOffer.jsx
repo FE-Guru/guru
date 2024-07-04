@@ -57,6 +57,7 @@ const JobOffer = () => {
   }, [loadPage]);
 
   const fetchData = async (page, jobType, status, reset) => {
+    const token = localStorage.getItem("token");
     if (loading) return;
     setLoading(true);
     try {
@@ -64,8 +65,8 @@ const JobOffer = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
       const data = await response.json();
       if (response.ok) {

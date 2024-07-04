@@ -126,9 +126,12 @@ const Detail = ({ _id, closeDetail }) => {
   }, [_id, showAlert]);
 
   const application = async () => {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${url}/application/${_id}`, {
       method: "PUT",
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     if (response.ok) {
@@ -149,9 +152,12 @@ const Detail = ({ _id, closeDetail }) => {
   };
 
   const appCancell = async () => {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${url}/appCancell/${_id}`, {
       method: "PUT",
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     const data = await response.json();
     if (response.ok) {

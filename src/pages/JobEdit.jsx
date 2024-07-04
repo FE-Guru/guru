@@ -265,6 +265,7 @@ const JobEdit = () => {
   // };
 
   const onSubmit = async (data) => {
+    const token = localStorage.getItem("token");
     const { title, endDate, detailedAddress, pay, cateTalent, cateField, desc } = data;
 
     if (workStartTime && workEndTime) {
@@ -295,8 +296,8 @@ const JobEdit = () => {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
       if (response.ok) {
         showAlert("WriteOk");
