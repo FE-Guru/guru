@@ -317,7 +317,7 @@ const Detail = ({ _id, closeDetail }) => {
                   {status?.some((applicant) => applicant.emailID === user?.emailID && applicant.status === 1) ? (
                     <>
                       <button className="btn tertiary" onClick={appCancell}>
-                        지원취소(모집전)
+                        지원취소
                       </button>
                       <button className="btn primary" onClick={() => navigate(-1)}>
                         뒤로가기
