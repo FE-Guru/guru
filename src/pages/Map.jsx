@@ -1,31 +1,31 @@
 /* global kakao */
-import { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { url } from '../store/ref';
-import styles from '../css/Map.module.css';
+import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { url } from "../store/ref";
+import styles from "../css/Map.module.css";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
-  const script = document.createElement('script');
+  const script = document.createElement("script");
   script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}&libraries=services,clusterer`;
   script.async = true;
   script.onload = () => {
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(callback);
     } else {
-      console.error('Failed to load Kakao Maps API.');
+      console.error("Failed to load Kakao Maps API.");
     }
   };
   script.onerror = () => {
-    console.error('Error loading Kakao Maps API script.');
+    console.error("Error loading Kakao Maps API script.");
   };
   document.head.appendChild(script);
 };
 
 // 날짜 포맷 함수
 const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return new Date(dateString).toLocaleDateString('ko-KR', options);
+  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  return new Date(dateString).toLocaleDateString("ko-KR", options);
 };
 
 const Map = ({ jobList, location }) => {
@@ -43,11 +43,7 @@ const Map = ({ jobList, location }) => {
       if (checkedPositions.has(jobPos)) return;
 
       const sameJobs = jobs.filter((otherJob, otherIndex) => {
-        return (
-          index !== otherIndex &&
-          job.location.mapX === otherJob.location.mapX &&
-          job.location.mapY === otherJob.location.mapY
-        );
+        return index !== otherIndex && job.location.mapX === otherJob.location.mapX && job.location.mapY === otherJob.location.mapY;
       });
 
       if (sameJobs.length > 0) {
@@ -65,9 +61,9 @@ const Map = ({ jobList, location }) => {
 
   useEffect(() => {
     loadKakaoMapScript(() => {
-      const mapContainer = document.getElementById('map');
+      const mapContainer = document.getElementById("map");
       if (!mapContainer) {
-        console.error('Map container not found');
+        console.error("Map container not found");
         return;
       }
       const mapOption = {
@@ -91,40 +87,24 @@ const Map = ({ jobList, location }) => {
     try {
       const response = await fetch(`${url}/job/findUserData/${emailID}`);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       return await response.json();
     } catch (error) {
-      console.error('Failed to fetch data', error);
+      console.error("Failed to fetch data", error);
       return null;
     }
   };
 
-  const createOverlayContent = (
-    job,
-    imgSrc,
-    workStartDate,
-    workEndDate,
-    isSamePositionJob,
-    groupContent
-  ) => {
+  const createOverlayContent = (job, imgSrc, workStartDate, workEndDate, isSamePositionJob, groupContent) => {
     return `
       <div class="${styles.wrap}">
         <div class="${styles.info}">
           <div class="${styles.title}">
-            ${
-              isSamePositionJob
-                ? `총 ${samePositionJobs.reduce(
-                    (acc, group) => acc + group.length,
-                    0
-                  )} 건의 일자리`
-                : job.title
-            }
+            ${isSamePositionJob ? `총 ${samePositionJobs.reduce((acc, group) => acc + group.length, 0)} 건의 일자리` : job.title}
             <i class="fa-solid fa-xmark ${styles.close}" title="닫기"></i>
           </div>
-          <div class="${styles.body}" style="max-height: ${
-      isSamePositionJob ? '200px' : 'auto'
-    }; overflow-y: ${isSamePositionJob ? 'auto' : 'hidden'};">
+          <div class="${styles.body} ${isSamePositionJob ? styles.positionJob : ""}">
             ${
               isSamePositionJob
                 ? groupContent
@@ -150,18 +130,14 @@ const Map = ({ jobList, location }) => {
       const userData = await fetchUser(job.emailID);
       if (!userData) return null;
 
-      const imgSrc = userData.image
-        ? `${url}/${userData.image}`
-        : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
+      const imgSrc = userData.image ? `${url}/${userData.image}` : `${process.env.PUBLIC_URL}/img/common/no_img.jpg`;
       const marker = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(job.location.mapY, job.location.mapX),
       });
 
       const workStartDate = formatDate(job.workStartDate);
       const workEndDate = formatDate(job.workEndDate);
-      const isSamePositionJob = samePositionJobs.some((group) =>
-        group.some((grouplist) => grouplist._id === job._id)
-      );
+      const isSamePositionJob = samePositionJobs.some((group) => group.some((grouplist) => grouplist._id === job._id));
       const groupContent = samePositionJobs
         .map(
           (group, groupIndex) => `
@@ -171,47 +147,32 @@ const Map = ({ jobList, location }) => {
             (grouplist, index) => `
           <div class="${styles.jobItem}" key="${index}">
             <div class="${styles.sametitle}">${grouplist.title}</div>
-            <div class="${styles.samejibun}">${formatDate(
-              grouplist.workStartDate
-            )} ~ ${formatDate(grouplist.workEndDate)}</div>
-            <div><a href="#" class="${styles.link}" data-id="${
-              grouplist._id
-            }">리스트로 이동 ></a></div>
+            <div class="${styles.samejibun}">${formatDate(grouplist.workStartDate)} ~ ${formatDate(grouplist.workEndDate)}</div>
+            <div><a href="#" class="${styles.link}" data-id="${grouplist._id}">리스트로 이동 ></a></div>
           </div>
         `
           )
-          .join('')}
+          .join("")}
       </div>
     `
         )
-        .join('');
+        .join("");
 
       const overlay = new kakao.maps.CustomOverlay({
-        content: createOverlayContent(
-          job,
-          imgSrc,
-          workStartDate,
-          workEndDate,
-          isSamePositionJob,
-          groupContent
-        ),
+        content: createOverlayContent(job, imgSrc, workStartDate, workEndDate, isSamePositionJob, groupContent),
         position: marker.getPosition(),
       });
 
-      kakao.maps.event.addListener(marker, 'click', function () {
+      kakao.maps.event.addListener(marker, "click", function () {
         overlay.setMap(map);
       });
 
       const content = overlay.a.querySelector(`.${styles.wrap}`);
-      content
-        .querySelectorAll(`.${styles.close}`)
-        .forEach((closeBtn) =>
-          closeBtn.addEventListener('click', () => overlay.setMap(null))
-        );
+      content.querySelectorAll(`.${styles.close}`).forEach((closeBtn) => closeBtn.addEventListener("click", () => overlay.setMap(null)));
       content.querySelectorAll(`.${styles.link}`).forEach((link) =>
-        link.addEventListener('click', (e) => {
+        link.addEventListener("click", (e) => {
           e.preventDefault();
-          const jobId = e.target.getAttribute('data-id');
+          const jobId = e.target.getAttribute("data-id");
           navigate(`/job-detail`, { state: { _id: jobId } });
         })
       );
