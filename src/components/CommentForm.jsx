@@ -51,6 +51,7 @@ const CommentForm = ({ btnWrapStatus, id }) => {
   }, [id]);
 
   const onSubmit = async (val) => {
+    const token = localStorage.getItem("token");
     const { content } = val;
     try {
       const res = await fetch(`${url}/commentWrit/${id}`, {
@@ -60,8 +61,8 @@ const CommentForm = ({ btnWrapStatus, id }) => {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
       if (res.ok) {
         showAlert("isOk");
@@ -97,14 +98,15 @@ const CommentForm = ({ btnWrapStatus, id }) => {
   );
 
   const commentEdit = async (commentId) => {
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${url}/commentEdit/${commentId}`, {
         method: "PUT",
         body: JSON.stringify({ content: editContent }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
       const res = await response.json();
       if (res.message === "ok") {

@@ -74,6 +74,7 @@ const Profile = ({ show, onclose, modal, mode }) => {
   };
 
   const onSubmit = async (val) => {
+    const token = localStorage.getItem("token");
     const { career, certi, skill, time, introduce } = val;
     const data = new FormData();
     data.append("career", career);
@@ -88,6 +89,9 @@ const Profile = ({ show, onclose, modal, mode }) => {
       const res = await fetch(`${url}/profileWrite`, {
         method: "PUT",
         body: data,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         credentials: "include",
       });
       const result = await res.json();

@@ -209,7 +209,7 @@ const JobWrit = () => {
 
   const onSubmit = async (data) => {
     const { title, endDate, detailedAddress, pay, cateTalent, cateField, desc } = data;
-
+    const token = localStorage.getItem("token");
     if (workStartTime && workEndTime) {
       const workStartTimeUTC = new Date(workStartTime.value).toISOString();
       const workEndTimeUTC = new Date(workEndTime.value).toISOString();
@@ -238,8 +238,8 @@ const JobWrit = () => {
         }),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
       });
       if (response.ok) {
         showAlert("WriteOk");

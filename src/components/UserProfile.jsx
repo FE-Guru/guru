@@ -30,12 +30,13 @@ const UserProfile = ({ show, onClose, user, item }) => {
   const [author, setAuthor] = useState(null);
 
   const fetchOfferCancell = useCallback(async () => {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${url}/appCancell/${item._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
     });
     const data = await response.json();
     if (response.ok) {
@@ -139,6 +140,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
   };
 
   const hiring = async () => {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${url}/hiring`, {
       method: "PUT",
       body: JSON.stringify({
@@ -147,8 +149,8 @@ const UserProfile = ({ show, onClose, user, item }) => {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      credentials: "include",
     });
     const data = await response.json();
 
