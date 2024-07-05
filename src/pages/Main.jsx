@@ -105,7 +105,7 @@ const Main = () => {
             </p>
             <img src={`${process.env.PUBLIC_URL}/img/common/mcate2.png`} alt="교육·강사" />
           </div>
-          <div onClick={() => talentLinkClick("대행업무", "offLine")}>
+          <div onClick={() => talentLinkClick("교육·강사", "offLine")}>
             <strong>교육·강사</strong>
             <p>
               # 입시 #외국어
