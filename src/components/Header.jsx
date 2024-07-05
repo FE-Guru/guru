@@ -64,7 +64,9 @@ const Header = () => {
   }, [certified]);
 
   useEffect(() => {
-    setIsMypage(false);
+    if (isAuthenticated) {
+      setIsMypage(false);
+    }
   }, [location]);
 
   useEffect(() => {
