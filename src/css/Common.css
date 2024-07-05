@@ -494,6 +494,7 @@ main.has .lnbCompo .filterWrap > div {
   h2 {
     font-size: 2.8rem;
   }
+  .topSection h2 > span,
   h2 > span,
   .lnbCompo h2 > span {
     font-size: 1.6rem;
@@ -545,6 +546,7 @@ main.has .lnbCompo .filterWrap > div {
   h2 {
     font-size: 2.4rem;
   }
+  .topSection h2 > span,
   h2 > span {
     font-size: 1.4rem;
     padding-bottom: 0rem;
