@@ -43,17 +43,17 @@ const Main = () => {
           <img src={`/img/common/cate2.png`} alt="cate1" />
           SNS
         </div>
-        <div onClick={() => fieldLinkClick("대행업무", "onLine")}>
+        <div onClick={() => fieldLinkClick("참여형", "onLine")}>
+          <img src={`/img/common/cate5.png`} alt="cate1" />
+          참여형
+        </div>
+        <div onClick={() => fieldLinkClick("대행업무", "offLine")}>
           <img src={`/img/common/cate3.png`} alt="cate1" />
           대행업무
         </div>
-        <div onClick={() => fieldLinkClick("서비스", "onLine")}>
+        <div onClick={() => fieldLinkClick("서비스", "offLine")}>
           <img src={`/img/common/cate4.png`} alt="cate1" />
           서비스
-        </div>
-        <div onClick={() => fieldLinkClick("참여형", "onLine")}>
-          <img src={`/img/common/cate4.png`} alt="cate1" />
-          참여형
         </div>
       </section>
       <section className={`${style.MainOnline}`}>
