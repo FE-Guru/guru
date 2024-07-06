@@ -58,8 +58,10 @@ const Header = () => {
   }, [dispatch, location]);
 
   useEffect(() => {
-    if (certified === false) {
-      showPopup("profile");
+    if (isAuthenticated) {
+      if (certified === false) {
+        showPopup("profile");
+      }
     }
   }, [certified]);
 

@@ -43,17 +43,17 @@ const Main = () => {
           <img src={`/img/common/cate2.png`} alt="cate1" />
           SNS
         </div>
-        <div onClick={() => fieldLinkClick("대행업무", "onLine")}>
+        <div onClick={() => fieldLinkClick("참여형", "onLine")}>
+          <img src={`/img/common/cate5.png`} alt="cate1" />
+          참여형
+        </div>
+        <div onClick={() => fieldLinkClick("대행업무", "offLine")}>
           <img src={`/img/common/cate3.png`} alt="cate1" />
           대행업무
         </div>
-        <div onClick={() => fieldLinkClick("서비스", "onLine")}>
+        <div onClick={() => fieldLinkClick("서비스", "offLine")}>
           <img src={`/img/common/cate4.png`} alt="cate1" />
           서비스
-        </div>
-        <div onClick={() => fieldLinkClick("참여형", "onLine")}>
-          <img src={`/img/common/cate4.png`} alt="cate1" />
-          참여형
         </div>
       </section>
       <section className={`${style.MainOnline}`}>
@@ -105,7 +105,7 @@ const Main = () => {
             </p>
             <img src={`${process.env.PUBLIC_URL}/img/common/mcate2.png`} alt="교육·강사" />
           </div>
-          <div onClick={() => talentLinkClick("대행업무", "offLine")}>
+          <div onClick={() => talentLinkClick("교육·강사", "offLine")}>
             <strong>교육·강사</strong>
             <p>
               # 입시 #외국어
