@@ -433,6 +433,10 @@ const Detail = ({ _id, closeDetail }) => {
           {btnWrapStatus === 3 && (
             <>
               {user?.emailID === item?.emailID ? (
+                <>
+                <button className="btn primary" onClick={() => navigate(-1)}>
+                  뒤로가기
+                </button>
                 <button
                   className="btn yellow"
                   onClick={() => {
@@ -441,6 +445,7 @@ const Detail = ({ _id, closeDetail }) => {
                 >
                   결제 및 완료
                 </button>
+              </>
               ) : (
                 <>
                   <p>상대방이 완료처리 전입니다.</p>
