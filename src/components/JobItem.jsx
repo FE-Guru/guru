@@ -93,7 +93,7 @@ const JobItem = ({ item, jobOffer, findjob }) => {
     if (item.status === 1 && item.applicants.length === 0) {
       setModalAlert("noneAppli");
     } else if (matchingUser) {
-      if (item.status === 2 || item.status === 3 || item.status === -1) {
+      if (item.status === 2 || item.status === 3 || item.status === 4 || item.status === 5 || item.status === -1) {
         const fetchMatchingUser = async () => {
           if (item.status === -1 && matchingStatus === 2) {
             setModalAlert("cancellJob");
