@@ -192,15 +192,18 @@ const JobItem = ({ item, jobOffer, findjob }) => {
                     수정하기
                   </button>
                 )}
-
-                <button
-                  className="btn yellow"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    aapliHandler();
-                  }}>
-                  지원자 확인
-                </button>
+                {item?.status === -2 ? (
+                  <p>지원한 사람이 없습니다.</p>
+                ) : (
+                  <button
+                    className="btn yellow"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      aapliHandler();
+                    }}>
+                    지원자 확인
+                  </button>
+                )}
               </div>
             ) : null}
           </div>
