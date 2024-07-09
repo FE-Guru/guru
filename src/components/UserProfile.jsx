@@ -9,7 +9,6 @@ import style from "../css/UserProfile.module.css";
 import ProgressBar from "./ProgressBar";
 
 const UserProfile = ({ show, onClose, user, item }) => {
-  console.log("userProfileUser--", user);
   const dispatch = useDispatch();
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
@@ -25,7 +24,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
     notOnTime: 0,
     lowQuality: 0,
   });
-  const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
+  const [reviews, setReviews] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [author, setAuthor] = useState(null);
 
@@ -62,7 +61,6 @@ const UserProfile = ({ show, onClose, user, item }) => {
     }
   }, [item]);
 
-  // 만족도 조사 계산 함수
   const calculateSatisfactionStats = (data) => {
     const stats = {
       kind: 0,
@@ -73,8 +71,8 @@ const UserProfile = ({ show, onClose, user, item }) => {
       lowQuality: 0,
     };
 
-    let reviews = []; // 리뷰 데이터 저장용 배열
-    let totalReviews = 0; // 리뷰 총 개수
+    const reviews = [];
+    let totalReviews = 0;
 
     data.forEach((item) => {
       stats.kind += item.kind;
@@ -83,16 +81,21 @@ const UserProfile = ({ show, onClose, user, item }) => {
       stats.unkind += item.unkind;
       stats.notOnTime += item.notOnTime;
       stats.lowQuality += item.lowQuality;
+
       if (item.etc === 1 && item.etcDescription) {
-        reviews.push(item.etcDescription); // 리뷰 데이터 추가
-        totalReviews++; // 리뷰 개수 증가
+        reviews.push({
+          etcDescription: item.etcDescription,
+          respondentNick: item.repondentNick,
+          respondentID: item.repondentID,
+        });
+        totalReviews++;
       }
     });
+    // console.log('reviews',reviews)
 
-    return { stats, reviews, totalReviews }; // 리뷰 데이터 및 총 개수 포함하여 반환
+    return { stats, reviews, totalReviews };
   };
 
-  //만족도 조사 데이터 불러오고 할당
   useEffect(() => {
     if (user?.emailID) {
       const fetchSatisfactionID = async () => {
@@ -107,34 +110,32 @@ const UserProfile = ({ show, onClose, user, item }) => {
 
           if (response.ok) {
             const data = await response.json();
-            console.log("data--", data);
-            // 받아온 해당 이메일 관련 만족도 조사 출력
+            // console.log('받아온 데이터 -- ',data)
             const { stats, reviews, totalReviews } = calculateSatisfactionStats(data);
             setSatisfactionData(stats);
-            setReviews(reviews); // 리뷰 데이터 설정
-            setTotalReviews(totalReviews); // 총 리뷰 개수 설정
+            setReviews(reviews);
+            setTotalReviews(totalReviews);
           } else {
             console.error("Failed to fetch satisfaction data:", response.status);
-            console.log("satisfactionFail");
           }
         } catch (error) {
           console.error("Error fetching satisfaction data:", error);
-          console.log("satisfactionFail");
         }
       };
 
       fetchSatisfactionID();
     }
-  }, [user.emailID]);
+  }, [user?.emailID]);
 
   const closeAlert = useCallback(() => {
     setModalAlert(null);
-    setPopupVisible(false); // 모달 닫기
+    setPopupVisible(false);
   }, []);
 
   if (!show) {
     return null;
   }
+
   const reload = () => {
     window.location.reload();
   };
@@ -162,9 +163,11 @@ const UserProfile = ({ show, onClose, user, item }) => {
       console.log(data.message);
     }
   };
+
   const appDelete = () => {
     setModalAlert("offerCancell");
   };
+
 
   return (
     <div className={style.userProfile}>
@@ -228,8 +231,8 @@ const UserProfile = ({ show, onClose, user, item }) => {
           <strong>최근 리뷰 {totalReviews}건</strong>
           {reviews.slice(0, 3).map((review, index) => (
             <div key={index}>
-              <pre>{review || "리뷰내용 없음"}</pre>
-              <strong>{user?.nickName}님의 리뷰</strong>
+              <pre>{review.etcDescription || "리뷰내용 없음"}</pre>
+              <strong>{review.respondentNick} 님의 리뷰</strong>
             </div>
           ))}
         </div>
@@ -310,6 +313,7 @@ const UserProfile = ({ show, onClose, user, item }) => {
           )}
         </Modal>
       )}
+
       {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />}
     </div>
   );

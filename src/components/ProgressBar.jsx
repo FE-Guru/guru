@@ -3,6 +3,7 @@ import { url } from '../store/ref';
 
 // 신뢰도 계산 함수
 const calculateTrustScore = (data) => {
+  if (data.length === 0) return 0; // 데이터가 없을 경우 0 반환
   const totalStarRating = data.reduce((sum, item) => sum + item.starRating, 0); // 총 별점 합산
   const trustScore = totalStarRating / data.length; // 별점의 평균 계산
   return trustScore;
@@ -42,6 +43,9 @@ const ProgressBar = ({ user }) => {
 
     fetchSatisfactionID();
   }, [user]);
+
+   // NaN인지 확인하고, NaN일 경우 0으로 설정
+   const progressValue = isNaN(trustScore) ? 0 : trustScore;
 
   return (
     <>

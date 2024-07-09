@@ -190,9 +190,17 @@ main .lnbCompo {
 .btnWrap {
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
+}
+.btnWrap > p {
+  width: 100%;
+  order: -1;
+  text-align: center;
+  padding: 0.5rem 0 1.2rem 0;
+  color: #5f5f5f;
 }
 .btnWrap .btn {
   width: 15.8rem;
