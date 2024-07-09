@@ -7,15 +7,14 @@ import ModalAlert from "./ModalAlert";
 import SatisfactionModal from "./SatisfactionModal";
 import style from "../css/UserProfile.module.css";
 import ProgressBar from "./ProgressBar";
+import PaymentModal from "./PaymentModal";
 
 const UserProfile = ({ show, onClose, user, item }) => {
   const dispatch = useDispatch();
   const [modalAlert, setModalAlert] = useState(null);
   const [btnWrapStatus, setBtnWrapStatus] = useState(item.status);
-
   const [trustScore, setTrustScore] = useState();
   const [totalReviews, setTotalReviews] = useState();
-
   const [satisfactionData, setSatisfactionData] = useState({
     kind: 0,
     onTime: 0,
@@ -27,6 +26,9 @@ const UserProfile = ({ show, onClose, user, item }) => {
   const [reviews, setReviews] = useState([]);
   const [popupVisible, setPopupVisible] = useState(false);
   const [author, setAuthor] = useState(null);
+  const [paymentModalVisible, setPaymentModalVisible] = useState(false);
+  const [evaluationVisible, setEvaluationVisible] = useState(false);
+  const [matchedUser, setMatchedUser] = useState(null);
 
   const fetchOfferCancell = useCallback(async () => {
     const token = localStorage.getItem("token");
@@ -58,6 +60,14 @@ const UserProfile = ({ show, onClose, user, item }) => {
         }
       };
       fetchUser();
+    }
+  }, [item]);
+  useEffect(() => {
+    if (item) {
+      const matchedApplicant = item?.applicants.find((applicant) => applicant.status === 2 && applicant.matched === true);
+      if (matchedApplicant) {
+        setMatchedUser(matchedApplicant);
+      }
     }
   }, [item]);
 
@@ -167,7 +177,10 @@ const UserProfile = ({ show, onClose, user, item }) => {
   const appDelete = () => {
     setModalAlert("offerCancell");
   };
-
+  const handlePaymentSuccess = () => {
+    setPaymentModalVisible(false);
+    setEvaluationVisible(true);
+  };
 
   return (
     <div className={style.userProfile}>
@@ -262,18 +275,23 @@ const UserProfile = ({ show, onClose, user, item }) => {
           </>
         ) : btnWrapStatus === 3 ? (
           <>
-            {user?.emailID === item?.emailID ? (
-              <button className="btn yellow" onClick={() => setPopupVisible(true)}>
-                결제 및 완료
-              </button>
-            ) : (
-              <>
-                <p>상대방이 완료처리 전입니다.</p>
-                <button className="btn primary" onClick={onClose}>
-                  확인
-                </button>
-              </>
-            )}
+            <button className="btn primary" onClick={onClose}>
+              확인
+            </button>
+            <button
+              className="btn yellow"
+              onClick={() => {
+                setPaymentModalVisible(true); // '결제 및 완료' 버튼을 클릭하면 PaymentModal을 표시합니다.
+              }}>
+              결제 및 완료
+            </button>
+          </>
+        ) : btnWrapStatus === 4 ? (
+          <>
+            <p>상대방이 완료처리 전입니다.</p>
+            <button className="btn primary" onClick={onClose}>
+              확인
+            </button>
           </>
         ) : btnWrapStatus === -1 ? (
           <>
@@ -315,6 +333,8 @@ const UserProfile = ({ show, onClose, user, item }) => {
       )}
 
       {popupVisible && <SatisfactionModal onClose={closeAlert} type="alert" item={item} author={author} />}
+      {paymentModalVisible && <PaymentModal onClose={() => setPaymentModalVisible(false)} onSuccess={handlePaymentSuccess} author={author} matchedUser={matchedUser} item={item} />}
+      {evaluationVisible && <SatisfactionModal onClose={() => setEvaluationVisible(false)} type="alert" item={item} author={author} />}
     </div>
   );
 };
