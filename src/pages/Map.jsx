@@ -180,7 +180,7 @@ const Map = ({ jobList, location }) => {
   );
 
   useEffect(() => {
-    if (map && jobList.length > 0 && markers.length === 0) {
+    if (map && jobList.length > 0) {
       const clusterer = new kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
