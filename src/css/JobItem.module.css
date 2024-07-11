@@ -329,10 +329,10 @@
     width: 100%;
   }
   .jobDes > h4 {
-    width: calc(100% - 9rem);
+    width: calc(100% - 10rem);
   }
   .AppInfo {
-    width: 9rem;
+    width: 10rem;
     border-left: 0;
     position: absolute;
     top: 3.8rem;
@@ -343,6 +343,9 @@
   }
   .AppInfo > div {
     display: none;
+  }
+  .jobItem .jobInfo .jobDes > div {
+    width: 100%;
   }
   .jobItem .jobInfo .jobDes > div strong {
     font-size: 2rem;
