@@ -297,6 +297,9 @@
   .userSlide .userNextBtn {
     left: 65.8%;
   }
+  .userSlide .userCard .userInfo > * {
+    width: 100%;
+  }
 }
 @media (max-width: 660px) {
   .userSlide {
@@ -312,9 +315,6 @@
   }
   .userSlide .userCard {
     flex: 1;
-  }
-  .userSlide .userCard .userInfo > * {
-    width: 100%;
   }
 }
 @media (max-width: 410px) {
