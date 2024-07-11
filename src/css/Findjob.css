@@ -192,11 +192,15 @@
     top: auto;
     margin: 3.5rem 0 0 0;
     transform: translate(0, 0);
+    margin-bottom: 1rem;
   }
 }
 @media (max-width: 990px) {
   .topSection {
     margin-bottom: 10rem;
+  }
+  .topSection .tab {
+    margin-bottom: 0;
   }
   .topSection label {
     position: absolute;
