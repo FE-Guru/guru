@@ -433,9 +433,9 @@ const Signup = () => {
           {modalAlert === "required" && <ModalAlert close={closeAlert} desc={"약관 필수사항을 모두 선택해주세요!"} error={true} confirm={false} />}
           {modalAlert === "userrequired" && <ModalAlert close={closeAlert} desc={"입력하신 정보를 확인해주세요!"} error={true} confirm={false} />}
           {modalAlert === "alreadyexist" && <ModalAlert close={closeAlert} desc={"이미 존재하는 이메일아이디 입니다."} error={true} confirm={false} />}
-          {modalAlert === "authsend" && <ModalAlert close={closeAlert} desc={"인증번호 전송이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authsend" && <ModalAlert close={closeAlert} desc={"인증번호 전송이 완료되었습니다."} error={false} confirm={false} />}
           {modalAlert === "authsendfailed" && <ModalAlert close={closeAlert} desc={"입력하신 번호를 확인해주세요"} error={true} confirm={false} />}
-          {modalAlert === "authsuccess" && <ModalAlert close={closeAlert} desc={"인증이 완료되었습니다."} error={false} confirm={true} />}
+          {modalAlert === "authsuccess" && <ModalAlert close={closeAlert} desc={"인증이 완료되었습니다."} error={false} confirm={false} />}
           {modalAlert === "authfailed" && <ModalAlert close={closeAlert} desc={"인증번호를 다시 확인해주세요."} error={true} confirm={false} />}
           {modalAlert === "notauth" && <ModalAlert close={closeAlert} desc={"인증 확인 버튼을 눌러주세요."} error={true} confirm={false} />}
         </Modal>
