@@ -68,6 +68,7 @@ const Detail = ({ _id, closeDetail }) => {
           setStatus(result.applicants);
           setBtnWrapStatus(result.status);
           setItem(result);
+          // console.log('result',result);
         } catch (error) {
           console.error(error);
         }

@@ -8,40 +8,44 @@ const MainOffline = () => {
   const [jobList, setJobList] = useState([]);
   const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              const { latitude, longitude } = position.coords;
-              setLocation({ lat: latitude, lon: longitude });
-              const response = await fetch(`${url}/mainOffline?&lat=${latitude}&lon=${longitude}`, {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-              const data = await response.json();
-              if (response.ok) {
-                setJobList(data);
-              } else {
-                console.log("notAuthorized");
-              }
-            },
-            (error) => {
-              console.error("Error getting geolocation:", error);
-            }
-          );
-        } else {
-          console.error("Geolocation is not supported by this browser.");
-        }
-      } catch (error) {
-        console.error(error.message);
+  const fetchJobs = async (latitude, longitude) => {
+    try {
+      const response = await fetch(`${url}/mainOffline?&lat=${latitude}&lon=${longitude}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setJobList(data);
+      } else {
+        console.log("notAuthorized");
       }
-    };
-    fetchData();
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lon: longitude });
+          fetchJobs(latitude, longitude);
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+          fetchJobs(location.lat, location.lon); // 기본 위치로 데이터 가져오기
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+      fetchJobs(location.lat, location.lon); // 기본 위치로 데이터 가져오기
+    }
   }, []);
+
   return (
     <div className={style.offWrap}>
       <div className={style.mainMap}>
