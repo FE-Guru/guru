@@ -67,53 +67,63 @@ const Findjob = () => {
 
   const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
 
-  // 데이터 가져오는 함수
-  const fetchData = async (page, talent, field, cateTime, reset) => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const { latitude, longitude } = position.coords;
-            setLocation({ lat: latitude, lon: longitude });
-
-            const queryType = cateType === "offLine" ? `&lat=${latitude}&lon=${longitude}` : "";
-            const endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
-            const response = await fetch(`${url}/${endpoint}?page=${page}&talent=${talent}&field=${field}&startCateTime=${cateTime[0]}&endCateTime=${cateTime[1]}${queryType}`, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-            const data = await response.json();
-            if (response.ok) {
-              const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
-              setTotalJobs(totalCount);
-              setJobList((prevJobList) => {
-                if (reset) return data;
-                const newJobList = [...prevJobList, ...data];
-                return newJobList;
-              });
-            } else {
-              setModalAlert("notAuthorized");
-            }
-            setLoading(false); // 로딩 상태 false로 설정
-          },
-          (error) => {
-            console.error("Error getting geolocation:", error);
-            setLoading(false); // 오류 시 로딩 상태 false로 설정
-          }
-        );
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-        setLoading(false); // 지원되지 않을 경우 로딩 상태 false로 설정
-      }
-    } catch (error) {
-      console.error(error.message);
-      setLoading(false); // 오류 발생 시 로딩 상태 false로 설정
+ // 데이터 가져오는 함수 수정
+const fetchData = async (page, talent, field, cateTime, reset) => {
+  if (loading) return;
+  setLoading(true);
+  try {
+    let queryType = "";
+    let endpoint = cateType === "offLine" ? "findoffLine" : "findonLine";
+    
+    if (cateType === "offLine" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ lat: latitude, lon: longitude });
+          queryType = `&lat=${latitude}&lon=${longitude}`;
+          await fetchJobs(endpoint, page, talent, field, cateTime, queryType, reset);
+        },
+        async (error) => {
+          console.error("Error getting geolocation:", error);
+          await fetchJobs(endpoint, page, talent, field, cateTime, queryType, reset);
+        }
+      );
+    } else {
+      await fetchJobs(endpoint, page, talent, field, cateTime, queryType, reset);
     }
-  };
+  } catch (error) {
+    console.error(error.message);
+    setLoading(false);
+  }
+};
+
+const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, reset) => {
+  try {
+    const response = await fetch(`${url}/${endpoint}?page=${page}&talent=${talent}&field=${field}&startCateTime=${cateTime[0]}&endCateTime=${cateTime[1]}${queryType}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    if (response.ok) {
+      const totalCount = parseInt(response.headers.get("X-Total-Count"), 10);
+      setTotalJobs(totalCount);
+      setJobList((prevJobList) => {
+        if (reset) return data;
+        const newJobList = [...prevJobList, ...data];
+        return newJobList;
+      });
+    } else {
+      setModalAlert("notAuthorized");
+    }
+  } catch (error) {
+    console.error(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const searchTitle = async () => {
     if (navigator.geolocation) {
