@@ -101,7 +101,6 @@ GURU
  │ │ │ ├ cate5.png
          ...
  │ │ │ └ userSlide_arrow.svg
- │ ├ .DS_Store
  │ ├ favicon.ico
  │ ├ index.html
  │ ├ logo192.png
@@ -187,13 +186,12 @@ GURU
  │ │ ├ store.js
  │ │ ├ updateItemStatus.js
  │ │ └ userStore.js
- │ ├ .DS_Store
  │ ├ App.js
  │ ├ App.test.js
  │ ├ index.js
  │ ├ reportWebVitals.js
  │ └ setupTests.js
- ├ .env
+ ├ .env (.gitignore에 포함돼 있음)
  ├ .gitignore
  ├ package-lock.json
  ├ package.json
@@ -208,7 +206,7 @@ GURU_SERVER
  │ └ User.js
  ├ node_modules
  ├ uploads
- ├ .env
+ ├ .env (.gitignore에 포함돼 있음)
  ├ .gitignore
  ├ index.js
  ├ job.js
