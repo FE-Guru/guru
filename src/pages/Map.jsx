@@ -6,9 +6,32 @@ import styles from "../css/Map.module.css";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
+  if (window.kakao && window.kakao.maps) {
+    window.kakao.maps.load(callback);
+    return;
+  }
+
+  const appKey = process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY;
+  if (!appKey) {
+    console.error("Missing REACT_APP_MAP_JAVASCRIPT_APPKEY. Kakao map will not be loaded.");
+    return;
+  }
+
+  const existingScript = document.querySelector('script[data-kakao-map="true"]');
+  if (existingScript) {
+    existingScript.addEventListener("load", () => {
+      if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(callback);
+      }
+    });
+    return;
+  }
+
   const script = document.createElement("script");
-  script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}&libraries=services,clusterer`;
+  const mapUrl = process.env.REACT_APP_MAP_URL || "//dapi.kakao.com/v2/maps/sdk.js?";
+  script.src = `${mapUrl}appkey=${appKey}&libraries=services,clusterer&autoload=false`;
   script.async = true;
+  script.dataset.kakaoMap = "true";
   script.onload = () => {
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(callback);
