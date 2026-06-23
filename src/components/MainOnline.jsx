@@ -29,7 +29,10 @@ const MainOnline = () => {
     <div className={style.onWrap}>
       <ul className={style.jobList}>
         {jobList.length === 0 ? (
-          <li>등록된 온라인 일자리가 없습니다.</li>
+          <li className={style.emptyJob}>
+            <strong>등록된 온라인 일자리가 없습니다.</strong>
+            <span>새로운 일자리가 등록되면 이곳에서 확인할 수 있어요.</span>
+          </li>
         ) : (
           jobList.map((item) => (
             <li key={item._id}>

@@ -56,6 +56,7 @@ const Map = ({ jobList, location }) => {
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [samePositionJobs, setSamePositionJobs] = useState([]);
+  const hasMapKey = Boolean(process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY);
 
   const findSamePositionJobs = useCallback((jobs) => {
     const samePositions = [];
@@ -84,6 +85,8 @@ const Map = ({ jobList, location }) => {
   }, [jobList, findSamePositionJobs]);
 
   useEffect(() => {
+    if (!hasMapKey) return;
+
     loadKakaoMapScript(() => {
       const mapContainer = document.getElementById("map");
       if (!mapContainer) {
@@ -98,7 +101,7 @@ const Map = ({ jobList, location }) => {
       const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
       setMap(mapInstance);
     });
-  }, [location.lat, location.lon]);
+  }, [hasMapKey, location.lat, location.lon]);
 
   useEffect(() => {
     if (map) {
@@ -223,7 +226,14 @@ const Map = ({ jobList, location }) => {
 
   return (
     <div>
-      <div id="map" className={styles.map}></div>
+      {hasMapKey ? (
+        <div id="map" className={styles.map}></div>
+      ) : (
+        <div className={styles.mapFallback}>
+          <strong>지도를 표시할 수 없습니다.</strong>
+          <span>카카오 지도 앱키가 설정되면 이 영역에 지도가 표시됩니다.</span>
+        </div>
+      )}
     </div>
   );
 };
