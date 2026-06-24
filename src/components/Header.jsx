@@ -165,11 +165,8 @@ const Header = () => {
           </div>
         ) : (
           <div className={style.logoutDiv}>
-            <Link to="/login" className={style.goLogin}>
-              <i className="fa-regular fa-user"></i>
-            </Link>
-            <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
-              회원가입
+            <Link to="/login" className={`${style.goJoin} btn primary yellow`}>
+              로그인
             </Link>
           </div>
         )}
@@ -194,9 +191,6 @@ const Header = () => {
           </>
         ) : (
           <div className={style.logoutBtn}>
-            <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
-              회원가입
-            </Link>
             <Link to="/login" className={`${style.goLogin} btn primary yellow`}>
               로그인
             </Link>
@@ -205,16 +199,16 @@ const Header = () => {
         <ul>
           {isAuthenticated ? <li>빠른메뉴</li> : <li>메뉴</li>}
           <li>
-            <Link to="/findjob">일자리 찾기</Link>
+            <Link to="/findjob">일자리찾기</Link>
           </li>
           <li>
-            <Link to="/applied-list">내가 지원한 일자리</Link>
+            <Link to="/applied-list">지원목록</Link>
           </li>
           <li>
             <Link to="/job-write">구인글 작성</Link>
           </li>
           <li>
-            <Link to="/job-offer">구인 관리</Link>
+            <Link to="/job-offer">구인관리</Link>
           </li>
         </ul>
         {isAuthenticated && (
@@ -240,7 +234,7 @@ const Header = () => {
       )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "invalidaccess" && <ModalAlert close={closeAlert} desc={"로그인 중 에러가 발생하였습니다."} error={true} confirm={false} />}
+          {modalAlert === "invalidaccess" && <ModalAlert close={closeAlert} desc={"로그인 중 오류가 발생했습니다."} error={true} confirm={false} />}
         </Modal>
       )}
     </header>
