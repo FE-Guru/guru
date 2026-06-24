@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
 import Loading from "../components/Loading";
@@ -9,6 +10,7 @@ import Lnb from "../components/Lnb";
 import JobItem from "../components/JobItem";
 
 const AppliedList = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const [jobList, setJobList] = useState([]);
   const [filteredJobList, setFilteredJobList] = useState([]);
@@ -36,9 +38,9 @@ const AppliedList = () => {
   useEffect(() => {
     dispatch(
       setPageInfo({
-        menuKR: "지원목록",
-        menuEn: "Application List",
-        currentPage: { pageName: "지원목록", path: "/applied-list" },
+        menuKR: "page.appliedList",
+        menuEn: "page.appliedListEn",
+        currentPage: { pageName: "page.appliedList", path: "/applied-list" },
       })
     );
   }, [dispatch]);
@@ -134,7 +136,7 @@ const AppliedList = () => {
           </div>
           <ul className="boxContainer">
             {jobList.length === 0 ? (
-              <li className="noneList">지원한 이력이 없습니다.</li>
+              <li className="noneList">{t("common.appliedJobEmpty")}</li>
             ) : (
               jobList.map((item) => (
                 <li key={item._id}>
@@ -147,7 +149,7 @@ const AppliedList = () => {
       </section>
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={t("common.loginRequired")} error={true} confirm={false} goPage={"/login"} />}
         </Modal>
       )}
     </main>

@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, A11y } from "swiper/modules";
 
 const MainSlide = () => {
+  const { t } = useTranslation();
   const [swiperIndex, setSwiperIndex] = useState(0);
   const [swiper, setSwiper] = useState(null);
   const prevPage = () => {
@@ -41,7 +43,7 @@ const MainSlide = () => {
             }}>
             <div className="sliderTxt">
               <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-              원데이 집사를 찾아야 할때
+              {t("main.slideHelper")}
             </div>
           </div>
         </SwiperSlide>
@@ -53,7 +55,7 @@ const MainSlide = () => {
             }}>
             <div className="sliderTxt">
               <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-              초단기 알바를 구할때
+              {t("main.slideShortJob")}
             </div>
           </div>
         </SwiperSlide>
@@ -65,7 +67,7 @@ const MainSlide = () => {
             }}>
             <div className="sliderTxt">
               <img src={`${process.env.PUBLIC_URL}/img/common/VisLogo.png`} alt="VisLogo" />
-              우리 댕댕이 산책이 필요할때
+              {t("main.slideDogWalk")}
             </div>
           </div>
         </SwiperSlide>

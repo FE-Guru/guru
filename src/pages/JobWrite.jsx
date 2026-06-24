@@ -1,10 +1,11 @@
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { setPageInfo } from "../store/pageInfo";
 import { useForm, Controller } from "react-hook-form";
 import { url } from "../store/ref";
 import DatePicker from "react-datepicker";
-import { ko } from "date-fns/locale";
+import { enUS, ko } from "date-fns/locale";
 import Select from "react-select";
 import DaumPostcode from "react-daum-postcode";
 import Lnb from "../components/Lnb";
@@ -14,6 +15,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import style from "../css/Form.module.css";
 
 const JobWrit = () => {
+  const { t, i18n } = useTranslation();
+  const datePickerLocale = i18n.language === "en" ? enUS : ko;
   const dispatch = useDispatch();
   const [modal, setModal] = useState(null);
   const [modalAlert, setModalAlert] = useState(null);
@@ -77,9 +80,9 @@ const JobWrit = () => {
   useEffect(() => {
     dispatch(
       setPageInfo({
-        menuKR: "구인글 작성",
-        menuEn: "Job Write",
-        currentPage: { pageName: "구인글 작성", path: "/job-wirt" },
+        menuKR: "page.jobWrite",
+        menuEn: "page.jobWriteEn",
+        currentPage: { pageName: "page.jobWrite", path: "/job-wirt" },
       })
     );
   }, [dispatch]);
@@ -150,19 +153,19 @@ const JobWrit = () => {
   };
 
   const cateTalentOp = [
-    { value: "재능무관", label: "재능무관" },
-    { value: "디자인", label: "디자인" },
-    { value: "IT·기술", label: "IT·기술" },
-    { value: "교육·강사", label: "교육·강사" },
-    { value: "서비스", label: "서비스" },
+    { value: "재능무관", label: t("filter.anyTalent") },
+    { value: "디자인", label: t("filter.design") },
+    { value: "IT·기술", label: t("filter.itTech") },
+    { value: "교육·강사", label: t("filter.education") },
+    { value: "서비스", label: t("filter.service") },
   ];
   const cateFieldOp = [
-    { value: "분야무관", label: "분야무관" },
-    { value: "배포/체험단", label: "배포/체험단" },
-    { value: "대행업무", label: "대행업무" },
+    { value: "분야무관", label: t("filter.anyField") },
+    { value: "배포/체험단", label: t("filter.sampling") },
+    { value: "대행업무", label: t("filter.agency") },
     { value: "SNS", label: "SNS" },
-    { value: "참여형", label: "참여형" },
-    { value: "서비스", label: "서비스" },
+    { value: "참여형", label: t("filter.participation") },
+    { value: "서비스", label: t("filter.service") },
   ];
 
   /*pay */
@@ -254,100 +257,100 @@ const JobWrit = () => {
       <section className="mw">
         <Lnb />
         <div className="contents">
-          <p className="h3Coment noti">※ 모든 입력값은 필수항목입니다.</p>
+          <p className="h3Coment noti">{t("common.requiredNotice")}</p>
           <form className={style.formStyle} onSubmit={handleSubmit(onSubmit)}>
             <div className={`${style.formContainer} full`}>
               <div className={`${style.formGrup} ${errors.title ? style["has-error"] : style["has-success"]}`}>
-                <span>제목</span>
+                <span>{t("form.title")}</span>
                 <div className={style.formCon}>
                   <input
                     {...register("title", {
-                      required: "제목은 필수 입력값입니다.",
+                      required: true,
                     })}
-                    placeholder="제목 입력"
+                    placeholder={t("form.titlePlaceholder")}
                   />
-                  {errors.title && <p className={style["error-message"]}>{errors.title.message}</p>}
+                  {errors.title && <p className={style["error-message"]}>{t("form.validation.titleRequired")}</p>}
                 </div>
               </div>
 
               <div className={`${style.formGrup} ${style.formLabels}`}>
-                <span>유형선택</span>
+                <span>{t("form.type")}</span>
                 <label>
                   <input type="radio" name="cateType" value={"onLine"} onChange={jobTypeFn} checked={jobType === "onLine"} />
-                  <span>온라인</span>
+                  <span>{t("filter.online")}</span>
                 </label>
                 <label>
                   <input type="radio" name="cateType" value={"offLine"} onChange={jobTypeFn} checked={jobType === "offLine"} />
-                  <span>오프라인</span>
+                  <span>{t("filter.offline")}</span>
                 </label>
               </div>
               {isOffline && (
                 <div className={`${style.formGrup} ${style.address} ${errors.zonecode || errors.detailedAddress ? style["has-error"] : style["has-success"]}`} data-name="address">
-                  <span>주소</span>
+                  <span>{t("form.address")}</span>
                   <div className={style.flexWrap}>
-                    <input type="text" value={zonecode} className={style.zonecode} placeholder="우편번호" readOnly {...register("zonecode", { required: true })} />
+                    <input type="text" value={zonecode} className={style.zonecode} placeholder={t("form.postalCode")} readOnly {...register("zonecode", { required: true })} />
                     <button type="button" className={style.addressBtn} onClick={() => showPopup("findAddress")}>
-                      주소검색
+                      {t("form.addressSearch")}
                     </button>
                     <div>{address}</div>
                     <input
                       {...register("detailedAddress", {
-                        required: "상세주소는 필수 입력값입니다.",
+                        required: true,
                       })}
-                      placeholder="상세주소를 입력해주세요."
+                      placeholder={t("form.detailAddressPlaceholder")}
                     />
-                    {(errors.zonecode || errors.detailedAddress) && <p className={style["error-message"]}>주소는 필수 입력값입니다.</p>}
+                    {(errors.zonecode || errors.detailedAddress) && <p className={style["error-message"]}>{t("form.validation.addressRequired")}</p>}
                   </div>
                 </div>
               )}
               <div className={`${style.formGrup} ${errors.endDate ? style["has-error"] : style["has-success"]}`}>
-                <span>구인 마감</span>
+                <span>{t("form.deadline")}</span>
                 <div className={`${style.formCon} ${style.dateWrap}`}>
                   <Controller
                     name="endDate"
                     control={control}
-                    rules={{ required: "구인 마감 날짜는 필수 입력값입니다." }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <DatePicker
-                        locale={ko}
+                        locale={datePickerLocale}
                         dateFormat="yyyy-MM-dd"
                         minDate={new Date()}
                         closeOnScroll={true}
-                        placeholderText="구인 마감 날짜 선택"
+                        placeholderText={t("form.deadlinePlaceholder")}
                         selected={field.value}
                         onChange={field.onChange}
                       />
                     )}
                   />
-                  {errors.endDate && <p className={style["error-message"]}>{errors.endDate.message}</p>}
+                  {errors.endDate && <p className={style["error-message"]}>{t("form.validation.deadlineRequired")}</p>}
                 </div>
               </div>
 
               <div className={`${style.formGrup} ${errors.workDate ? style["has-error"] : style["has-success"]}`}>
-                <span>근로 날짜</span>
+                <span>{t("form.workDate")}</span>
                 <div className={`${style.formCon} ${style.dateWrap}`}>
                   <Controller
                     name="workDate"
                     control={control}
-                    rules={{ required: "근로 날짜는 필수 입력값입니다." }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <DatePicker
-                        locale={ko}
+                        locale={datePickerLocale}
                         dateFormat="yyyy-MM-dd"
                         minDate={endDate || new Date()}
                         closeOnScroll={true}
-                        placeholderText="근로 날짜 선택"
+                        placeholderText={t("form.workDatePlaceholder")}
                         selected={field.value || workDate}
                         onChange={(date) => workDateChange(date, field)}
                       />
                     )}
                   />
-                  {errors.workDate && <p className={style["error-message"]}>{errors.workDate.message}</p>}
+                  {errors.workDate && <p className={style["error-message"]}>{t("form.validation.workDateRequired")}</p>}
                 </div>
               </div>
 
               <div className={`${style.formGrup} ${errors.workStartTime || errors.workEndTime ? style["has-error"] : style["has-success"]}`}>
-                <span>근로 시간</span>
+                <span>{t("form.workHours")}</span>
                 <div className={`${style.selectWrap} ${style.formCon}`}>
                   <Controller
                     name="workStartTime"
@@ -359,7 +362,7 @@ const JobWrit = () => {
                         options={workStartTimeOp}
                         className={style.select}
                         styles={customStyles}
-                        placeholder="시작시간"
+                        placeholder={t("form.startTime")}
                         onChange={(selectedOption) => {
                           setWorkStartTime(selectedOption);
                           field.onChange(selectedOption);
@@ -378,7 +381,7 @@ const JobWrit = () => {
                         options={filteredEndTimeOp}
                         className={style.select}
                         styles={customStyles}
-                        placeholder="마감시간"
+                        placeholder={t("form.endTime")}
                         onChange={(selectedOption) => {
                           field.onChange(selectedOption);
                           setWorkEndTime(selectedOption);
@@ -386,31 +389,31 @@ const JobWrit = () => {
                       />
                     )}
                   />
-                  {(errors.workStartTime || errors.workEndTime) && <p className={style["error-message"]}>근로시간은 필수 선택입니다.</p>}
+                  {(errors.workStartTime || errors.workEndTime) && <p className={style["error-message"]}>{t("form.validation.workHoursRequired")}</p>}
                 </div>
               </div>
               <div className={`${style.formGrup} ${errors.pay ? style["has-error"] : style["has-success"]}`}>
-                <span>임금</span>
+                <span>{t("form.pay")}</span>
                 <div className={`${style.formCon} ${style.addItem}`}>
                   <Controller
                     name="pay"
-                    rules={{ required: "임금은 필수 입력 값입니다." }}
+                    rules={{ required: true }}
                     control={control}
                     defaultValue=""
-                    render={({ field }) => <input {...field} type="text" placeholder="금액 입력" value={formatPay(field.value)} onChange={(e) => field.onChange(setPayFn(e))} />}
+                    render={({ field }) => <input {...field} type="text" placeholder={t("form.payPlaceholder")} value={formatPay(field.value)} onChange={(e) => field.onChange(setPayFn(e))} />}
                   />
-                  <span>원</span>
-                  {errors.pay && <p className={style["error-message"]}>{errors.pay.message}</p>}
+                  <span>{t("common.currency")}</span>
+                  {errors.pay && <p className={style["error-message"]}>{t("form.validation.payRequired")}</p>}
                 </div>
               </div>
 
               <div className={`${style.formGrup} ${errors.cateTalent ? style["has-error"] : style["has-success"]}`}>
-                <span>필요한 재능</span>
+                <span>{t("form.talent")}</span>
                 <div className={style.formCon}>
                   <Controller
                     name="cateTalent"
                     control={control}
-                    rules={{ required: "필요한 재능은 필수 선택입니다." }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -420,21 +423,21 @@ const JobWrit = () => {
                         }}
                         styles={customStyles}
                         className={`${style.select} ${style.selectFull}`}
-                        placeholder="재능 선택"
+                        placeholder={t("form.talentPlaceholder")}
                       />
                     )}
                   />
-                  {errors.cateTalent && <p className={style["error-message"]}>{errors.cateTalent.message}</p>}
+                  {errors.cateTalent && <p className={style["error-message"]}>{t("form.validation.talentRequired")}</p>}
                 </div>
               </div>
 
               <div className={`${style.formGrup} ${errors.cateField ? style["has-error"] : style["has-success"]}`}>
-                <span>필요한 분야</span>
+                <span>{t("form.category")}</span>
                 <div className={style.formCon}>
                   <Controller
                     name="cateField"
                     control={control}
-                    rules={{ required: "필요한 재능은 필수 선택입니다." }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -444,30 +447,30 @@ const JobWrit = () => {
                         }}
                         styles={customStyles}
                         className={`${style.select} ${style.selectFull}`}
-                        placeholder="분야 선택"
+                        placeholder={t("form.categoryPlaceholder")}
                       />
                     )}
                   />
-                  {errors.cateField && <p className={style["error-message"]}>{errors.cateField.message}</p>}
+                  {errors.cateField && <p className={style["error-message"]}>{t("form.validation.categoryRequired")}</p>}
                 </div>
               </div>
               <div className={`${style.formGrup} ${errors.desc ? style["has-error"] : style["has-success"]}`}>
-                <span>설명</span>
+                <span>{t("form.description")}</span>
                 <div className={style.formCon}>
                   <textarea
                     id="desc"
                     {...register("desc", {
-                      required: "설명은 필수 입력값입니다.",
+                      required: true,
                     })}
-                    placeholder="자세한 설명을 작성해주세요."
+                    placeholder={t("form.descriptionPlaceholder")}
                   />
-                  {errors.desc && <p className={style["error-message"]}>{errors.desc.message}</p>}
+                  {errors.desc && <p className={style["error-message"]}>{t("form.validation.descriptionRequired")}</p>}
                 </div>
               </div>
             </div>
             <div className="btnWrap">
               <button type="submit" className="btn primary yellow">
-                구인글 작성
+                {t("nav.jobWrite")}
               </button>
             </div>
           </form>
@@ -477,7 +480,7 @@ const JobWrit = () => {
         <Modal show={modal !== null} onClose={closePopup} type="address">
           {modal === "findAddress" && (
             <div className={style.addressModal}>
-              <h3>주소검색</h3>
+              <h3>{t("form.addressSearch")}</h3>
               <DaumPostcode onComplete={completeHandler} />
             </div>
           )}
@@ -487,7 +490,7 @@ const JobWrit = () => {
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
           {modalAlert === "WriteOk" && <ModalAlert close={closeAlert} desc={"구인글이 정상적으로 등록되었습니다."} error={false} confirm={false} goPage={"/job-offer"} />}
           {modalAlert === "Error" && <ModalAlert close={closeAlert} desc={"구인글 등록 중 오류가 발생했습니다."} error={true} confirm={false} />}
-          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={"로그인이 필요한 페이지입니다."} error={true} confirm={false} goPage={"/login"} />}
+          {modalAlert === "notAuthorized" && <ModalAlert close={closeAlert} desc={t("common.loginRequired")} error={true} confirm={false} goPage={"/login"} />}
         </Modal>
       )}
     </main>
