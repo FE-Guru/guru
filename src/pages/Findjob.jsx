@@ -65,8 +65,6 @@ const Findjob = () => {
     }
   }, [loadPage]);
 
-  const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
-
  // 데이터 가져오는 함수 수정
 const fetchData = async (page, talent, field, cateTime, reset) => {
   if (loading) return;
@@ -271,7 +269,6 @@ const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, res
         />
         <div className="contents">
           <div className="conTitle">
-            <h3>{pageH3}</h3>
             <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="JobList">

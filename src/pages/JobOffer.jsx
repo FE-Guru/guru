@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
 import Loading from "../components/Loading";
@@ -10,7 +10,6 @@ import JobItem from "../components/JobItem";
 
 const JobOffer = () => {
   const dispatch = useDispatch();
-  const currentPage = useSelector((state) => state.pageInfo.currentPage);
   const [jobList, setJobList] = useState([]);
   const [filteredJobList, setFilteredJobList] = useState([]);
   const [onOFffilter, setOnOffFilter] = useState("all");
@@ -145,7 +144,6 @@ const JobOffer = () => {
         <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
         <div className="contents">
           <div className="conTitle">
-            <h3> {currentPage.pageName}</h3>
             <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="boxContainer">

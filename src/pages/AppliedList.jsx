@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { setPageInfo } from "../store/pageInfo";
 import { url } from "../store/ref";
 import Loading from "../components/Loading";
@@ -19,7 +19,6 @@ const AppliedList = () => {
   const [loading, setLoading] = useState(false);
   const [lnbHas, setLnbHas] = useState(false);
   const [modalAlert, setModalAlert] = useState(null);
-  const currentPage = useSelector((state) => state.pageInfo.currentPage);
 
   /*스크롤 이벤트 중복 방지*/
   const throttle = (func, delay) => {
@@ -131,7 +130,6 @@ const AppliedList = () => {
         <Lnb onOFfFilter={onOFffilter} statusFilter={statusFilter} onOffChange={onOffChange} statusChange={statusChange} lnbHas={lnbHas} lnbHandler={lnbHandler} />
         <div className="contents">
           <div className="conTitle">
-            <h3> {currentPage.pageName}</h3>
             <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="boxContainer">

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { setPageInfo } from "../store/pageInfo";
 import { useForm, Controller } from "react-hook-form";
@@ -15,7 +15,6 @@ import style from "../css/Form.module.css";
 
 const JobWrit = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
   const [modal, setModal] = useState(null);
   const [modalAlert, setModalAlert] = useState(null);
   const [isOffline, setIsOffline] = useState(false);
@@ -75,7 +74,6 @@ const JobWrit = () => {
   const workStartTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
   const workEndTimeOp = useMemo(() => selectTimeOp(workDate), [workDate]);
 
-  const currentPage = useSelector((state) => state.pageInfo.currentPage);
   useEffect(() => {
     dispatch(
       setPageInfo({
@@ -256,10 +254,7 @@ const JobWrit = () => {
       <section className="mw">
         <Lnb />
         <div className="contents">
-          <h3>
-            {currentPage.pageName}
-            <span className="h3Coment noti">※ 모든 입력값은 필수항목입니다.</span>
-          </h3>
+          <p className="h3Coment noti">※ 모든 입력값은 필수항목입니다.</p>
           <form className={style.formStyle} onSubmit={handleSubmit(onSubmit)}>
             <div className={`${style.formContainer} full`}>
               <div className={`${style.formGrup} ${errors.title ? style["has-error"] : style["has-success"]}`}>

@@ -39,14 +39,6 @@
   position: relative;
 }
 
-.filter strong::before {
-  content: "";
-  width: 4px;
-  height: 4px;
-  background: var(--cr-bl1);
-  display: block;
-  margin-right: 0.6rem;
-}
 .filter strong::after {
   content: "▼";
   position: absolute;
