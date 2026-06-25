@@ -1,26 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { setDates } from "../store/findjob";
 import { url } from "../store/ref";
 import style from "../css/Main.module.css";
 
 const MainJobItem = ({ item, tpye }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const data = useSelector((state) => state.findjob);
   const memoizedData = useMemo(() => data[item?._id] || {}, [data, item?._id]);
   const [author, setAuthor] = useState(null);
   const newAddress = item.location.address.split(" ").slice(0, 2).join(" ");
+  const categoryLabel = (value) => {
+    const labels = {
+      재능무관: t("filter.anyTalent"),
+      디자인: t("filter.design"),
+      "IT·기술": t("filter.itTech"),
+      "교육·강사": t("filter.education"),
+      서비스: t("filter.service"),
+      분야무관: t("filter.anyField"),
+      "배포/체험단": t("filter.sampling"),
+      SNS: t("filter.sns"),
+      대행업무: t("filter.agency"),
+      참여형: t("filter.participation"),
+    };
+    return labels[value] || value;
+  };
 
   /*모집상태 바인딩*/
   let appliStatus;
   if (item.status === 2) {
-    appliStatus = { text: "예약중", val: "stat2" };
+    appliStatus = { text: t("filter.reserved"), val: "stat2" };
   } else if (item.status === 3) {
-    appliStatus = { text: "완료", val: "stat3" };
+    appliStatus = { text: t("filter.complete"), val: "stat3" };
   } else if (item.status === -1) {
-    appliStatus = { text: "취소", val: "stat-1" };
+    appliStatus = { text: t("filter.canceled"), val: "stat-1" };
   } else {
     appliStatus = { text: memoizedData.dFormat, val: "stat1" };
   }
@@ -63,18 +80,18 @@ const MainJobItem = ({ item, tpye }) => {
         <div className={style.itemTop}>
           <h3>{item?.title}</h3>
           {tpye === "offLine" && <span>{newAddress}</span>}
-          <span>#{item?.category?.talent}</span>
-          <span>#{item?.category?.field}</span>
+          <span>#{categoryLabel(item?.category?.talent)}</span>
+          <span>#{categoryLabel(item?.category?.field)}</span>
         </div>
         <strong>{appliStatus.text}</strong>
       </div>
       <div>
         <div>
-          건당 <strong>{item?.pay.toLocaleString("ko-KR")}</strong>
-          <span>원</span>
+          {t("common.perTask")} <strong>{item?.pay.toLocaleString("ko-KR")}</strong>
+          <span>{t("common.currency")}</span>
         </div>
         <div className={style.thumb}>
-          {!author?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${author?.image}`} alt="프로필 이미지" />}
+          {!author?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt={t("common.imageMissing")} /> : <img src={`${url}/${author?.image}`} alt={t("common.profileImage")} />}
         </div>
       </div>
     </div>

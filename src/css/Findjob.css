@@ -114,18 +114,6 @@
   font-weight: 800;
   line-height: 3rem;
   position: relative;
-  padding-left: 1rem;
-}
-.filter > div > strong::before {
-  content: "";
-  display: block;
-  width: 4px;
-  height: 4px;
-  background: var(--cr-bl1);
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
 }
 
 /*Right Con*/

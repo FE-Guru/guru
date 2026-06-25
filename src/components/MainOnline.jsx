@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { url } from "../store/ref";
 import MainJobItem from "./MainJobItem";
 import style from "../css/Main.module.css";
 
 const MainOnline = () => {
+  const { t } = useTranslation();
   const [jobList, setJobList] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +31,10 @@ const MainOnline = () => {
     <div className={style.onWrap}>
       <ul className={style.jobList}>
         {jobList.length === 0 ? (
-          <li>등록된 온라인 일자리가 없습니다.</li>
+          <li className={style.emptyJob}>
+            <strong>{t("main.emptyOnlineTitle")}</strong>
+            <span>{t("main.emptyOnlineDesc")}</span>
+          </li>
         ) : (
           jobList.map((item) => (
             <li key={item._id}>

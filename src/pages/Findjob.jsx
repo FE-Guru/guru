@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { setCateType } from "../store/findjob";
 import { setCateField, setCateTalent } from "../store/filter";
 import { url } from "../store/ref";
@@ -10,6 +11,7 @@ import Map from "./Map";
 import "../css/Findjob.css";
 
 const Findjob = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const cateType = useSelector((state) => state.findjob.cateType);
   const cateTalent = useSelector((state) => state.filter.cateTalent);
@@ -64,8 +66,6 @@ const Findjob = () => {
       fetchData(loadPage, cateTalent, cateField, cateTime, false);
     }
   }, [loadPage]);
-
-  const pageH3 = cateType === "onLine" ? "온라인" : "오프라인";
 
  // 데이터 가져오는 함수 수정
 const fetchData = async (page, talent, field, cateTime, reset) => {
@@ -231,15 +231,15 @@ const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, res
       <section className="topSection">
         <div className="mw">
           <h2>
-            일자리 찾기
-            <span>Find Job</span>
+            {t("page.findJob")}
+            <span>{t("page.findJobEn")}</span>
           </h2>
           <div className="tab">
             <button onClick={callOnLine} className={`${cateType === "onLine" ? "on" : ""}`}>
-              온라인
+              {t("filter.online")}
             </button>
             <button onClick={callOffLine} className={`${cateType === "offLine" ? "on" : ""}`}>
-              오프라인
+              {t("filter.offline")}
             </button>
           </div>
           <label>
@@ -247,7 +247,7 @@ const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, res
               type="text"
               value={titleText}
               onChange={(e) => setTitleText(e.target.value)}
-              placeholder="키워드를 입력해주세요."
+              placeholder={t("common.keywordPlaceholder")}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   searchTitle();
@@ -271,7 +271,6 @@ const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, res
         />
         <div className="contents">
           <div className="conTitle">
-            <h3>{pageH3}</h3>
             <button className="LobHandler" onClick={lnbHandler}></button>
           </div>
           <ul className="JobList">
@@ -281,7 +280,7 @@ const fetchJobs = async (endpoint, page, talent, field, cateTime, queryType, res
               </li>
             )}
             {jobList.length === 0 ? (
-              <li className="noneList">조건에 맞는 일자리가 없습니다.</li>
+              <li className="noneList">{t("common.jobEmpty")}</li>
             ) : (
               jobList.map((item) => (
                 <li key={item._id}>

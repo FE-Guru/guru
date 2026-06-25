@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { url } from "../store/ref";
 import MainJobItem from "./MainJobItem";
 import Map from "../pages/Map";
 import style from "../css/Main.module.css";
 
 const MainOffline = () => {
+  const { t } = useTranslation();
   const [jobList, setJobList] = useState([]);
   const [location, setLocation] = useState({ lat: 37.529325, lon: 126.965706 });
 
@@ -53,7 +55,10 @@ const MainOffline = () => {
       </div>
       <ul className={style.jobList}>
         {jobList.length === 0 ? (
-          <li>등록된 온라인 일자리가 없습니다.</li>
+          <li className={style.emptyJob}>
+            <strong>{t("main.emptyOfflineTitle")}</strong>
+            <span>{t("main.emptyOfflineDesc")}</span>
+          </li>
         ) : (
           jobList.map((item) => (
             <li key={item._id}>

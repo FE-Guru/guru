@@ -13,8 +13,24 @@ const Login = () => {
   const [redirect, setRedirect] = useState(false);
   const [modalAlert, setModalAlert] = useState(null);
   const { islogin } = useAuth();
+  const isDev = process.env.NODE_ENV === "development";
+  const devUser = {
+    emailID: "test@guru.local",
+    password: "1234",
+    userName: "개발테스트",
+    nickName: "dev-user",
+    phone: "01000000000",
+    auth: "user",
+    account: "",
+  };
   const closeAlert = () => {
     setModalAlert(null);
+  };
+
+  const completeLogin = (data) => {
+    localStorage.setItem("token", data.token);
+    islogin();
+    setRedirect(true);
   };
 
   const login = async (e) => {
@@ -30,9 +46,7 @@ const Login = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("token", data.token);
-        islogin();
-        setRedirect(true);
+        completeLogin(data);
       } else {
         const errorData = await response.json();
         console.log("로그인 중 에러 발생", errorData);
@@ -40,6 +54,45 @@ const Login = () => {
       }
     } catch (error) {
       console.error("로그인 오류 발생:", error);
+    }
+  };
+
+  const devLogin = async () => {
+    try {
+      const signupResponse = await fetch(`${url}/signup`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(devUser),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!signupResponse.ok && signupResponse.status !== 409) {
+        throw new Error("Failed to create dev user");
+      }
+
+      const loginResponse = await fetch(`${url}/login`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          emailID: devUser.emailID,
+          password: devUser.password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!loginResponse.ok) {
+        throw new Error("Failed to login dev user");
+      }
+
+      const data = await loginResponse.json();
+      completeLogin(data);
+    } catch (error) {
+      console.error("Dev login failed:", error);
+      setModalAlert("loginfailed");
     }
   };
 
@@ -91,6 +144,17 @@ const Login = () => {
                 로그인
               </button>
             </div>
+            {isDev && (
+              <div className={mem.devBtnWrap}>
+                <button
+                  type='button'
+                  className={`btn primary ${mem.innerBtn}`}
+                  onClick={devLogin}
+                >
+                  임시 로그인
+                </button>
+              </div>
+            )}
           </form>
           <p className={mem.links}>
             <Link to='/findacct'>아이디/비밀번호 찾기</Link>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { userState } from "../store/userStore";
 import { url } from "../store/ref";
 import { useAuth } from "../assets/AuthContext";
@@ -10,6 +11,7 @@ import Profile from "../components/Profile";
 import style from "../css/Header.module.css";
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -134,6 +136,10 @@ const Header = () => {
     setIsIconChanged(!isIconChanged);
     setIsMypage(!isMypage);
   };
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    localStorage.setItem("language", language);
+  };
 
   return (
     <header className={style.header}>
@@ -145,31 +151,36 @@ const Header = () => {
       <div className={style.gnb}>
         <nav>
           <NavLink to="/findjob" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
-            일자리찾기
+            {t("nav.findJob")}
           </NavLink>
           <NavLink to="/applied-list" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
-            지원목록
+            {t("nav.appliedList")}
           </NavLink>
           <NavLink to="/job-offer" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
-            구인관리
+            {t("nav.jobOffer")}
           </NavLink>
           <NavLink to="/job-write" className={({ isActive }) => (isActive ? `${style.active}` : "")}>
-            구인글 작성
+            {t("nav.jobWrite")}
           </NavLink>
         </nav>
+        <div className={style.langToggle} aria-label={t("language.label")}>
+          <button type="button" className={i18n.language === "ko" ? style.activeLang : ""} onClick={() => changeLanguage("ko")}>
+            KO
+          </button>
+          <button type="button" className={i18n.language === "en" ? style.activeLang : ""} onClick={() => changeLanguage("en")}>
+            EN
+          </button>
+        </div>
         {isAuthenticated ? (
           <div className={style.loginDiv}>
             <div className={style.thumb} onClick={mypageClick}>
-              {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
+              {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt={t("common.imageMissing")} /> : <img src={`${url}/${user?.image}`} alt={t("common.profileImage")} />}
             </div>
           </div>
         ) : (
           <div className={style.logoutDiv}>
-            <Link to="/login" className={style.goLogin}>
-              <i className="fa-regular fa-user"></i>
-            </Link>
-            <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
-              회원가입
+            <Link to="/login" className={`${style.goJoin} btn primary yellow`}>
+              {t("nav.login")}
             </Link>
           </div>
         )}
@@ -181,53 +192,50 @@ const Header = () => {
       <div className={style.mypage} style={{ display: isMypage && visible ? "flex" : "none" }}>
         {isAuthenticated ? (
           <>
-            <span>현재 로그인 계정</span>
+            <span>{t("menu.currentAccount")}</span>
             <div className={style.myprofile}>
               <div className={style.profileThumb}>
-                {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt="이미지 없음" /> : <img src={`${url}/${user?.image}`} alt="프로필 이미지" />}
+                {!user?.image ? <img src={`${process.env.PUBLIC_URL}/img/common/no_img.jpg`} alt={t("common.imageMissing")} /> : <img src={`${url}/${user?.image}`} alt={t("common.profileImage")} />}
               </div>
               <div>
-                <h2>{nickName ? nickName : "닉네임을 설정해주세요"}</h2>
+                <h2>{nickName ? nickName : t("menu.noNickname")}</h2>
                 <p>{emailID}</p>
               </div>
             </div>
           </>
         ) : (
           <div className={style.logoutBtn}>
-            <Link to="/signup" className={`${style.goJoin} btn primary yellow`}>
-              회원가입
-            </Link>
             <Link to="/login" className={`${style.goLogin} btn primary yellow`}>
-              로그인
+              {t("nav.login")}
             </Link>
           </div>
         )}
         <ul>
-          {isAuthenticated ? <li>빠른메뉴</li> : <li>메뉴</li>}
+          {isAuthenticated ? <li>{t("menu.quickMenu")}</li> : <li>{t("menu.menu")}</li>}
           <li>
-            <Link to="/findjob">일자리 찾기</Link>
+            <Link to="/findjob">{t("nav.findJob")}</Link>
           </li>
           <li>
-            <Link to="/applied-list">내가 지원한 일자리</Link>
+            <Link to="/applied-list">{t("nav.appliedList")}</Link>
           </li>
           <li>
-            <Link to="/job-write">구인글 작성</Link>
+            <Link to="/job-write">{t("nav.jobWrite")}</Link>
           </li>
           <li>
-            <Link to="/job-offer">구인 관리</Link>
+            <Link to="/job-offer">{t("nav.jobOffer")}</Link>
           </li>
         </ul>
         {isAuthenticated && (
           <ul>
             <li>
-              <Link to="/mypage/profileedit">프로필 수정</Link>
+              <Link to="/mypage/profileedit">{t("menu.profileEdit")}</Link>
             </li>
             <li>
-              <Link to="/mypage/personaledit">회원정보 수정</Link>
+              <Link to="/mypage/personaledit">{t("menu.personalEdit")}</Link>
             </li>
             <li>
               <Link to="/logout" onClick={logout}>
-                로그아웃
+                {t("nav.logout")}
               </Link>
             </li>
           </ul>
@@ -240,7 +248,7 @@ const Header = () => {
       )}
       {modalAlert && (
         <Modal show={modalAlert !== null} onClose={closeAlert} type="alert">
-          {modalAlert === "invalidaccess" && <ModalAlert close={closeAlert} desc={"로그인 중 에러가 발생하였습니다."} error={true} confirm={false} />}
+          {modalAlert === "invalidaccess" && <ModalAlert close={closeAlert} desc={t("common.loginError")} error={true} confirm={false} />}
         </Modal>
       )}
     </header>

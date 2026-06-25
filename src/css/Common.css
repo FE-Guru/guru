@@ -14,8 +14,6 @@
   --lg-gap: 6.8rem;
   --md-gap: 2.8rem;
   --sm-gap: 1.8rem;
-  --email-icon: url("../assets/images/email.png");
-  --pw-icon: url("../assets/images/pw.svg");
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
@@ -143,6 +141,9 @@ progress::-webkit-progress-value {
 .LobHandler::after {
   content: "필터";
 }
+html:lang(en) .LobHandler::after {
+  content: "Filter";
+}
 
 .appliedList .contents > .boxContainer,
 .jobOffer .contents > .boxContainer {
@@ -263,6 +264,9 @@ main .lnbCompo {
   font-size: 1.6rem;
   border: 3px solid var(--cr-bl1);
   border-radius: 0.4rem;
+}
+.react-datepicker__triangle {
+  display: none;
 }
 .react-datepicker__header {
   font-size: 1.6rem;
@@ -411,6 +415,9 @@ main .lnbCompo {
   .LobHandler::after {
     content: "필터";
     font-size: 1.8rem;
+  }
+  html:lang(en) .LobHandler::after {
+    content: "Filter";
   }
 
   .btnWrap {

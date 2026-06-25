@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./assets/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Header from "./components/Header";
+import TranslationObserver from "./components/TranslationObserver";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import FindAcct from "./pages/FindAcct";
@@ -31,6 +32,7 @@ function App() {
   return (
     <AuthProvider>
       <div className='App'>
+        <TranslationObserver />
         <Header />
         <Routes>
           <Route path='/' element={<Main />} />

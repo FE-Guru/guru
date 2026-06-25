@@ -98,6 +98,41 @@
   width: 100%;
 }
 
+.onWrap .jobList .emptyJob,
+.offWrap .jobList .emptyJob {
+  width: 100%;
+  min-height: 17rem;
+  padding: 4rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.72);
+  border: 2px solid var(--cr-bl1);
+  border-radius: 1rem;
+}
+
+.onWrap .jobList .emptyJob {
+  box-shadow: 3px 3px 3px 0px #dcb25adb;
+}
+
+.offWrap .jobList .emptyJob {
+  box-shadow: 3px 3px 3px 0px #b4b1b133;
+}
+
+.emptyJob strong {
+  font-size: 2.2rem;
+  font-weight: 900;
+}
+
+.emptyJob span {
+  color: #666;
+  font-size: 1.6rem;
+  line-height: 1.45;
+}
+
 .itemWrap {
   padding: 3rem 6rem;
   display: flex;

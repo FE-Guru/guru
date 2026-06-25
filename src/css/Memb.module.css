@@ -152,6 +152,22 @@
   align-items: center;
 }
 
+.devBtnWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -15px 0 25px;
+}
+
+.devBtnWrap > button {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .boxCon {
   height: 340px;
   display: flex;
@@ -164,32 +180,62 @@
   width: 85%;
 }
 
+.loginCon .form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.loginCon .form > :global(.full) {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.loginCon .btnWrap {
+  margin: 0;
+}
+
+.loginCon .devBtnWrap {
+  margin: -0.8rem 0 0;
+}
+
 .emailLabel {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .emailLabel::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   position: absolute;
-  right: 1.6rem;
-  top: 1.6rem;
-  background-image: var(--email-icon);
-  background-size: contain;
-  background-repeat: no-repeat;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #747474;
+  mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='7' r='4' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  pointer-events: none;
+  transition: background-color 0.2s ease;
 }
 
 .pwLabel::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   position: absolute;
-  right: 1.6rem;
-  top: 1.6rem;
-  background-image: var(--pw-icon);
-  background-size: contain;
-  background-repeat: no-repeat;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #747474;
+  mask-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='4' y='11' width='16' height='10' rx='2' stroke='%23000' stroke-width='2'/%3E%3Cpath d='M8 11V8C8 5.79086 9.79086 4 12 4C14.2091 4 16 5.79086 16 8V11' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M12 15V17' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  pointer-events: none;
+  transition: background-color 0.2s ease;
 }
 
 .loginLabel {
@@ -202,8 +248,13 @@
   width: 100%;
   height: 45px;
   box-sizing: border-box;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   border-bottom: 1px solid #ccc;
+  padding-right: 4.8rem;
+}
+
+.loginLabel:focus-within::before {
+  background-color: var(--cr-bl1);
 }
 
 .loginLabel .placeholder {
@@ -237,7 +288,7 @@
   display: flex;
   justify-content: space-between;
   color: var(--cr-g1);
-  margin-top: 20px;
+  margin-top: 0.4rem;
   width: 100%;
 }
 

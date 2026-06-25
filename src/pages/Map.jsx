@@ -6,9 +6,32 @@ import styles from "../css/Map.module.css";
 
 // Kakao Maps API 스크립트를 동적으로 추가하는 함수
 const loadKakaoMapScript = (callback) => {
+  if (window.kakao && window.kakao.maps) {
+    window.kakao.maps.load(callback);
+    return;
+  }
+
+  const appKey = process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY;
+  if (!appKey) {
+    console.error("Missing REACT_APP_MAP_JAVASCRIPT_APPKEY. Kakao map will not be loaded.");
+    return;
+  }
+
+  const existingScript = document.querySelector('script[data-kakao-map="true"]');
+  if (existingScript) {
+    existingScript.addEventListener("load", () => {
+      if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(callback);
+      }
+    });
+    return;
+  }
+
   const script = document.createElement("script");
-  script.src = `${process.env.REACT_APP_MAP_URL}appkey=${process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY}&libraries=services,clusterer`;
+  const mapUrl = process.env.REACT_APP_MAP_URL || "//dapi.kakao.com/v2/maps/sdk.js?";
+  script.src = `${mapUrl}appkey=${appKey}&libraries=services,clusterer&autoload=false`;
   script.async = true;
+  script.dataset.kakaoMap = "true";
   script.onload = () => {
     if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(callback);
@@ -33,6 +56,7 @@ const Map = ({ jobList, location }) => {
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [samePositionJobs, setSamePositionJobs] = useState([]);
+  const hasMapKey = Boolean(process.env.REACT_APP_MAP_JAVASCRIPT_APPKEY);
 
   const findSamePositionJobs = useCallback((jobs) => {
     const samePositions = [];
@@ -61,6 +85,8 @@ const Map = ({ jobList, location }) => {
   }, [jobList, findSamePositionJobs]);
 
   useEffect(() => {
+    if (!hasMapKey) return;
+
     loadKakaoMapScript(() => {
       const mapContainer = document.getElementById("map");
       if (!mapContainer) {
@@ -75,7 +101,7 @@ const Map = ({ jobList, location }) => {
       const mapInstance = new kakao.maps.Map(mapContainer, mapOption);
       setMap(mapInstance);
     });
-  }, [location.lat, location.lon]);
+  }, [hasMapKey, location.lat, location.lon]);
 
   useEffect(() => {
     if (map) {
@@ -200,7 +226,14 @@ const Map = ({ jobList, location }) => {
 
   return (
     <div>
-      <div id="map" className={styles.map}></div>
+      {hasMapKey ? (
+        <div id="map" className={styles.map}></div>
+      ) : (
+        <div className={styles.mapFallback}>
+          <strong>지도를 표시할 수 없습니다.</strong>
+          <span>카카오 지도 앱키가 설정되면 이 영역에 지도가 표시됩니다.</span>
+        </div>
+      )}
     </div>
   );
 };

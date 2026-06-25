@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { userState } from "../store/userStore";
 import { url } from "../store/ref";
 import Modal from "../components/Modal";
@@ -12,6 +13,8 @@ import mem from "../css/Memb.module.css";
 import { useDispatch } from "react-redux";
 
 const Signup = () => {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.language === "en";
   const [modal, setModal] = useState(null);
   const [modalAlert, setModalAlert] = useState(null);
 
@@ -411,20 +414,20 @@ const Signup = () => {
       <Modal show={modal !== null} onClose={closePopup}>
         {modal === "content1" && (
           <div className={style.terms}>
-            <h3 className={style.termsTitle}>이용약관</h3>
-            <pre>{service}</pre>
+            <h3 className={style.termsTitle}>{t("legal.serviceTitle")}</h3>
+            <pre>{isEnglish ? t("legal.serviceText") : service}</pre>
           </div>
         )}
         {modal === "content2" && (
           <div className={style.terms}>
-            <h3 className={style.termsTitle}>개인정보 약관</h3>
-            <pre>{privacy}</pre>
+            <h3 className={style.termsTitle}>{t("legal.privacyTitle")}</h3>
+            <pre>{isEnglish ? t("legal.privacyText") : privacy}</pre>
           </div>
         )}
         {modal === "content3" && (
           <div className={style.terms}>
-            <h3 className={style.termsTitle}>마케팅 활용 동의</h3>
-            <pre>{marketing}</pre>
+            <h3 className={style.termsTitle}>{t("legal.marketingTitle")}</h3>
+            <pre>{isEnglish ? t("legal.marketingText") : marketing}</pre>
           </div>
         )}
       </Modal>
